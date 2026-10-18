@@ -91,6 +91,13 @@
           <p class="fav-empty-title">В избранном пока пусто</p>
           <p class="fav-empty-text">Нажми на сердечко в карточке клуба — он останется здесь.</p>
         </div>
+
+        {{- /* Таб «Авторские» пока ведёт сюда: раздел не реализован,
+             а пустая сетка вместо ответа запутывает. */ -}}
+        <div class="no-results fav-empty" data-author-empty hidden>
+          <p class="fav-empty-title">Раздел пока не реализован.</p>
+          <p class="fav-empty-text">Ознакомиться с идеей раздела и проголосовать за разработку можно <a class="fav-empty-link" href="https://github.com/victoretc/book-club-static/issues/1" target="_blank" rel="noopener">по ссылке</a>.</p>
+        </div>
       </div>
 
       <aside class="sidebar category-sidebar">

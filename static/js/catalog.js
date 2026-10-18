@@ -17,6 +17,7 @@
   var viewBtns = Array.prototype.slice.call(document.querySelectorAll('[data-view-mode]'))
   var empty = document.querySelector('[data-catalog-empty]')
   var favEmpty = document.querySelector('[data-fav-empty]')
+  var authorEmpty = document.querySelector('[data-author-empty]')
   var filtersSection = document.querySelector('.filters-section')
   var scrollTopBtn = document.querySelector('[data-scroll-top]')
 
@@ -57,10 +58,13 @@
 
   function applyFilters() {
     var q = query.trim().toLowerCase()
+    // Таб «Авторские» — заглушка: клубы не фильтруются, вместо сетки
+    // показывается блок «Раздел пока не реализован».
+    var authorMode = activeType === 'author'
     var visible = 0
 
     wraps.forEach(function (wrap) {
-      var typeOk = wrap.getAttribute('data-type') === activeType
+      var typeOk = !authorMode && wrap.getAttribute('data-type') === activeType
       var searchOk = !q || (wrap.getAttribute('data-search') || '').indexOf(q) !== -1
       var url = wrap.getAttribute('data-url')
       var favOk = !favOnly || favorites.indexOf(url) !== -1
@@ -71,8 +75,12 @@
 
     // В режиме избранного пустая сетка — это «ещё ничего не сохранили»,
     // а не «ничего не найдено»: картинка 404 здесь врала бы.
-    if (empty) empty.hidden = visible !== 0 || favOnly
-    if (favEmpty) favEmpty.hidden = visible !== 0 || !favOnly
+    if (empty) empty.hidden = visible !== 0 || favOnly || authorMode
+    if (favEmpty) favEmpty.hidden = visible !== 0 || !favOnly || authorMode
+    if (authorEmpty) authorEmpty.hidden = !authorMode
+    // Пустой список нельзя оставлять в потоке: он нулевой высоты, но gap
+    // колонки (24px) всё равно тянет блок пустого состояния ниже сайдбара.
+    if (list) list.hidden = visible === 0
   }
 
   // === Уведомление о добавлении/удалении ===

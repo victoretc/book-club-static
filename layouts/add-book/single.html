@@ -1,56 +1,61 @@
 {{- define "main" -}}
-<div class="add-book">
-  <div class="add-book-card">
-    <h1 class="add-book-title">Добавить книгу</h1>
-    <p class="add-book-lead">
-      Каталог «Читальная» — статический сайт: книги в него добавляются вручную.
-      Если хотите предложить книгу — создайте заявку на GitHub. После проверки она появится в каталоге.
-    </p>
+<div class="add-book-page">
+  {{- $trail := slice (dict "label" "Главная" "url" "/") (dict "label" "Добавить книгу") -}}
+  {{ partial "breadcrumbs.html" (dict "trail" $trail) }}
 
-    <ol class="add-book-steps">
-      <li>Нажмите кнопку «Создать запрос» — откроется форма на GitHub.</li>
-      <li>Заполните четыре поля: название, авторы, год издания и описание.</li>
-      <li>Отправьте заявку. Категорию подберёт администратор.</li>
-      <li>Когда книга пройдёт проверку, она появится на сайте.</li>
-    </ol>
+  <div class="add-book">
+    <div class="add-book-card">
+      <h1 class="add-book-title">Добавить книгу</h1>
+      <p class="add-book-lead">
+        Каталог «Читальная» — статический сайт: книги в него добавляются вручную.
+        Если хотите предложить книгу — создайте заявку на GitHub. После проверки она появится в каталоге.
+      </p>
 
-    <div class="add-book-fields">
-      <h2 class="add-book-subtitle">Что указать</h2>
-      <table class="add-book-table">
-        <tr>
-          <td>Название</td>
-          <td>Чистый код</td>
-        </tr>
-        <tr>
-          <td>Автор(ы)</td>
-          <td>Роберт Мартин</td>
-        </tr>
-        <tr>
-          <td>Год издания</td>
-          <td>2008</td>
-        </tr>
-        <tr>
-          <td>Описание</td>
-          <td>Кратко о книге: о чём она и кому пригодится</td>
-        </tr>
-      </table>
+      <ol class="add-book-steps">
+        <li>Нажмите кнопку «Создать запрос» — откроется форма на GitHub.</li>
+        <li>Заполните четыре поля: название, авторы, год издания и описание.</li>
+        <li>Отправьте заявку. Категорию подберёт администратор.</li>
+        <li>Когда книга пройдёт проверку, она появится на сайте.</li>
+      </ol>
+
+      <div class="add-book-fields">
+        <h2 class="add-book-subtitle">Что указать</h2>
+        <table class="add-book-table">
+          <tr>
+            <td>Название</td>
+            <td>Чистый код</td>
+          </tr>
+          <tr>
+            <td>Автор(ы)</td>
+            <td>Роберт Мартин</td>
+          </tr>
+          <tr>
+            <td>Год издания</td>
+            <td>2008</td>
+          </tr>
+          <tr>
+            <td>Описание</td>
+            <td>Кратко о книге: о чём она и кому пригодится</td>
+          </tr>
+        </table>
+      </div>
+
+      <a
+        href="https://github.com/victoretc/book-club-static/issues/new?template=book_request.yml"
+        class="base-btn base-btn--primary"
+      >
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M5 12h14"/>
+          <path d="M12 5v14"/>
+        </svg>
+        Создать запрос
+      </a>
+
+      <p class="add-book-note">
+        Для отправки заявки нужен аккаунт GitHub — он бесплатный и создаётся за минуту на
+        <a href="https://github.com/signup" class="add-book-link">github.com/signup</a>.
+      </p>
     </div>
-
-    <a
-      href="https://github.com/victoretc/book-club-static/issues/new?template=book_request.yml"
-      class="base-btn base-btn--primary"
-    >
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-        <path d="M5 12h14"/>
-        <path d="M12 5v14"/>
-      </svg>
-      Создать запрос
-    </a>
-
-    <p class="add-book-note">
-      Для отправки заявки нужен аккаунт GitHub — он бесплатный и создаётся за минуту на
-      <a href="https://github.com/signup" class="add-book-link">github.com/signup</a>.
-    </p>
   </div>
 </div>
 {{- end -}}

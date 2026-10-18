@@ -576,6 +576,12 @@ main {
   width: 100%;
 }
 
+/* display:flex/grid выше по специфичности перебивает атрибут hidden —
+   подтверждаем, что скрытый список действительно исчезает из потока. */
+.clubs-list[hidden] {
+  display: none;
+}
+
 @media (min-width: 768px) {
   .clubs-list--grid {
     display: grid;
@@ -913,6 +919,17 @@ main {
   line-height: 1.5;
   color: var(--color-text-secondary);
   margin: 0;
+}
+
+.fav-empty-link {
+  color: var(--color-brand);
+  font-weight: 500;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.fav-empty-link:hover {
+  text-decoration: none;
 }
 
 @media (max-width: 900px) {
@@ -1897,6 +1914,15 @@ main {
 }
 
 /* ===== Add book page ===== */
+/* Крошки на всю ширину (как .detail-page), карточка — по центру. */
+.add-book-page {
+  width: 100%;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
 .add-book {
   display: flex;
   justify-content: center;
