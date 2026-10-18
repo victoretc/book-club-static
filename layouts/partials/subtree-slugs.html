@@ -1,0 +1,6 @@
+{{- $node := .node -}}
+{{- $acc := append $node.slug .acc -}}
+{{- range $node.children -}}
+  {{- $acc = partial "subtree-slugs.html" (dict "node" . "acc" $acc) -}}
+{{- end -}}
+{{- return $acc -}}

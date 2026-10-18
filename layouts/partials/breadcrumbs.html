@@ -1,0 +1,15 @@
+{{- /* Аргументы: dict "trail" (список dict: label + optional url), "trailingSlash" (bool) */ -}}
+{{- $trail := .trail -}}
+<nav class="breadcrumbs-nav" aria-label="Хлебные крошки">
+  <div class="breadcrumbs-nav__trail">
+    {{- range $i, $crumb := $trail }}
+      {{- if $crumb.url }}
+        <a href="{{ $crumb.url | relURL }}" class="crumb crumb--link">{{ $crumb.label }}</a>
+      {{- else }}
+        <span class="crumb crumb--current">{{ $crumb.label }}</span>
+      {{- end }}
+      {{- if lt (add $i 1) (len $trail) }}<span class="crumb-sep">/</span>{{ end }}
+    {{- end }}
+    {{- if .trailingSlash }}<span class="crumb-sep">/</span>{{ end }}
+  </div>
+</nav>

@@ -1,0 +1,10 @@
+{{- /* ru-дата как в toLocaleDateString('ru-RU'): "1 февраля 2026 г." */ -}}
+{{- /* Вход: строка "2026-02-01" или "2026-02-01T10:00:00Z" */ -}}
+{{- $raw := printf "%v" . -}}
+{{- $date := index (split $raw "T") 0 -}}
+{{- $parts := split $date "-" -}}
+{{- $year := index $parts 0 -}}
+{{- $month := int (index $parts 1) -}}
+{{- $day := int (index $parts 2) -}}
+{{- $months := slice "января" "февраля" "марта" "апреля" "мая" "июня" "июля" "августа" "сентября" "октября" "ноября" "декабря" -}}
+{{- printf "%d %s %s г." $day (index $months (sub $month 1)) $year -}}

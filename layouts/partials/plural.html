@@ -1,0 +1,11 @@
+{{- /* partial "plural.html" (dict "n" 3 "one" "участник" "few" "участника" "many" "участников") */ -}}
+{{- $n := int .n -}}
+{{- $mod10 := mod $n 10 -}}
+{{- $mod100 := mod $n 100 -}}
+{{- if and (eq $mod10 1) (ne $mod100 11) -}}
+  {{- .one -}}
+{{- else if and (ge $mod10 2) (le $mod10 4) (or (lt $mod100 10) (ge $mod100 20)) -}}
+  {{- .few -}}
+{{- else -}}
+  {{- .many -}}
+{{- end -}}

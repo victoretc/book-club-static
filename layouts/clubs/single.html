@@ -1,0 +1,162 @@
+{{- define "main" -}}
+{{- /* Валидация front matter — падаем билдом при ошибках */ -}}
+{{- $type := .Params.club_type | default "book" -}}
+{{- if not (in (slice "book" "author") $type) }}
+  {{- errorf "Клуб %s: club_type должен быть book или author, получено %q" .File.Path $type -}}
+{{- end -}}
+{{- $cats := .Params.categories | default slice -}}
+{{- if lt (len $cats) 1 }}
+  {{- errorf "Клуб %s: не заполнено categories (slug из data/categories.yml)" .File.Path -}}
+{{- end -}}
+{{- range $c := $cats }}
+  {{- if not (partial "category-by-slug.html" (dict "slug" $c)) }}
+    {{- errorf "Клуб %s: неизвестная категория %q" $.File.Path $c -}}
+  {{- end -}}
+{{- end -}}
+{{- $n := int (.Params.members_count | default 0) -}}
+{{- if lt $n 0 }}
+  {{- errorf "Клуб %s: members_count не может быть отрицательным" .File.Path -}}
+{{- end -}}
+{{- range .Params.reviews }}
+  {{- $a := int (.assessment | default 0) -}}
+  {{- if or (lt $a 1) (gt $a 5) }}
+    {{- errorf "Клуб %s: assessment отзыва должен быть 1..5, получено %d" $.File.Path $a -}}
+  {{- end -}}
+{{- end -}}
+{{- if eq $type "book" }}
+  {{- if not .Params.book_title }}
+    {{- errorf "Клуб %s: для book-клуба нужен book_title" .File.Path -}}
+  {{- end -}}
+{{- else }}
+  {{- if not .Params.author_name }}
+    {{- errorf "Клуб %s: для author-клуба нужен author_name" .File.Path -}}
+  {{- end -}}
+{{- end -}}
+
+{{- /* Крошки: Клубы / <путь категорий, ссылки> / название */ -}}
+{{- $catSlug := index $cats 0 -}}
+{{- $catPath := partial "category-path.html" (dict "slug" $catSlug) -}}
+{{- $trail := slice (dict "label" "Клубы" "url" "/clubs/") -}}
+{{- range $catPath }}
+  {{- $trail = $trail | append (dict "label" .name "url" (printf "/categories/%s/" .slug)) -}}
+{{- end -}}
+{{- $trail = $trail | append (dict "label" .Title) -}}
+
+{{- $isAuthor := eq $type "author" -}}
+{{- $reviews := .Params.reviews | default slice -}}
+{{- $rvOne := partial "plural.html" (dict "n" (len $reviews) "one" "отзыв" "few" "отзыва" "many" "отзывов") -}}
+{{- $one := partial "plural.html" (dict "n" $n "one" "участник" "few" "участника" "many" "участников") -}}
+
+<div class="detail-page">
+  {{ partial "breadcrumbs.html" (dict "trail" $trail) }}
+
+  <div class="detail-card-wrap">
+    <div class="detail-card">
+      {{- if $isAuthor }}
+      <div class="card-head author-head">
+        {{- with .Params.author_photo }}
+        <img src="{{ . | relURL }}" alt="{{ $.Params.author_name }}" class="author-photo">
+        {{- else }}
+        <span class="author-photo author-photo--placeholder">{{ substr $.Params.author_name 0 1 | upper }}</span>
+        {{- end }}
+        <div class="author-head-info">
+          <span class="club-type-badge">Авторский клуб</span>
+          <h1 class="card-title">{{ .Params.author_name }}</h1>
+        </div>
+      </div>
+      {{- else }}
+      <div class="card-head">
+        <h1 class="card-title">{{ .Params.book_title }}</h1>
+        {{- with .Params.publication_year }}<span class="year-badge">{{ . }}</span>{{ end }}
+      </div>
+      {{- end }}
+
+      {{- if not $isAuthor }}
+      <p class="card-author">{{ .Params.book_authors }}</p>
+      {{- end }}
+
+      <div class="card-divider"></div>
+
+      {{- if and $isAuthor .Params.author_bio }}
+      <p class="card-desc">{{ .Params.author_bio }}</p>
+      {{- else }}
+      <p class="card-desc">{{ .Description | default .Params.description }}</p>
+      {{- end }}
+
+      {{- if $isAuthor }}
+      <div class="now-reading">
+        Читают сейчас: «{{ .Params.book_title }}»
+        {{- with .Params.book_authors }} — {{ . }}{{ end }}
+        {{- with .Params.publication_year }} ({{ . }}){{ end }}
+      </div>
+      {{- end }}
+
+      <div class="card-stats">
+        <span class="stat">
+          <span class="stat-num">{{ $n }}</span>
+          {{ $one }}
+        </span>
+        <span class="stat-sep">•</span>
+        <span class="stat">
+          <span class="stat-num">{{ len $reviews }}</span>
+          {{ $rvOne }}
+        </span>
+      </div>
+
+      <div class="card-divider"></div>
+
+      {{- if or .Params.telegram_chat_link .Params.max_chat_link }}
+      <div class="card-actions">
+        {{- with .Params.telegram_chat_link }}
+        <a class="base-btn base-btn--brand-outline" href="{{ . }}" target="_blank" rel="noopener">Telegram чат</a>
+        {{- end }}
+        {{- with .Params.max_chat_link }}
+        <a class="base-btn base-btn--outline" href="{{ . }}" target="_blank" rel="noopener">Max чат</a>
+        {{- end }}
+      </div>
+
+      <div class="card-divider"></div>
+      {{- end }}
+
+      <div class="reviews">
+        <div class="reviews-head">
+          <h2 class="reviews-title">Отзывы участников</h2>
+        </div>
+
+        {{- if $reviews }}
+        <div class="reviews-list">
+          {{- range $i, $r := $reviews }}
+          {{- $stars := "" -}}
+          {{- range $s := seq 1 5 -}}
+            {{- if le $s (int $r.assessment) -}}{{- $stars = printf "%s★" $stars -}}{{- else -}}{{- $stars = printf "%s☆" $stars -}}{{- end -}}
+          {{- end -}}
+          {{- $date := "" -}}
+          {{- with $r.created }}{{ $date = partial "date-ru.html" . }}{{ end -}}
+          <div class="review-card">
+            <div class="review-head">
+              <div class="reviewer">
+                <span class="reviewer-avatar">{{ substr $r.user 0 1 | upper }}</span>
+                <span class="reviewer-name">{{ $r.user }}</span>
+              </div>
+              <div class="review-meta">
+                <span class="stars">{{ $stars }}</span>
+                <span class="pages-badge">{{ $r.read_pages }} стр.</span>
+              </div>
+            </div>
+
+            <p class="review-text">{{ $r.review }}</p>
+
+            <div class="review-foot">
+              <span class="review-date">{{ $date }}</span>
+            </div>
+          </div>
+          {{- end }}
+        </div>
+        {{- else }}
+        <div class="empty">Пока нет отзывов. Будьте первым!</div>
+        {{- end }}
+      </div>
+    </div>
+  </div>
+</div>
+{{- end -}}

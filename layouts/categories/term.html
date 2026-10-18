@@ -1,0 +1,14 @@
+{{- define "main" -}}
+{{- /* /categories/<slug>/ — список клубов категории */ -}}
+{{- $slug := path.Base (.RelPermalink | strings.TrimSuffix "/") -}}
+{{- $path := partial "category-path.html" (dict "slug" $slug) -}}
+{{- $n := len $path -}}
+{{- $trail := slice (dict "label" "Клубы" "url" "/clubs/") -}}
+{{- range $i, $node := $path -}}
+  {{- if lt (add $i 1) $n -}}
+    {{- $trail = $trail | append (dict "label" $node.name "url" (printf "/categories/%s/" $node.slug)) -}}
+  {{- end -}}
+{{- end -}}
+{{- $trail = $trail | append (dict "label" (index $path (sub $n 1)).name) -}}
+{{ partial "catalog.html" (dict "activeSlug" $slug "trail" $trail) }}
+{{- end -}}

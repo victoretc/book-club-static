@@ -1,0 +1,27 @@
+baseURL = 'https://johnmakarov.github.io/book-club-static/'
+languageCode = 'ru-ru'
+defaultContentLanguage = 'ru'
+title = 'Читальная'
+hasCJKLanguage = false
+enableRobotsTXT = true
+summaryLength = 30
+
+[pagination]
+  pagerSize = 20
+
+[taxonomies]
+  category = 'categories'
+
+[markup]
+  [markup.goldmark]
+    [markup.goldmark.renderer]
+      unsafe = true
+  [markup.highlight]
+    style = 'dracula'
+    noClasses = true
+
+[menu]
+  [[menu.main]]
+    name = 'Клубы'
+    url = '/clubs/'
+    weight = 10

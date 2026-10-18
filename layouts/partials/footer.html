@@ -1,0 +1,28 @@
+<footer class="footer">
+  <div class="footer-inner">
+    <div class="footer-main">
+      <div class="footer-brand">
+        <a href="{{ "/" | relURL }}" class="footer-brand-link" aria-label="Читальная — на главную">Читальная</a>
+      </div>
+
+      <nav class="footer-nav" aria-label="Разделы сайта">
+        <div class="footer-col">
+          <h2 class="footer-heading">Навигация</h2>
+          <ul class="footer-list">
+            <li><a href="{{ "/clubs/" | relURL }}" class="footer-link">Все клубы</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h2 class="footer-heading">Сайт</h2>
+          <ul class="footer-list">
+            <li><a href="{{ "/categories/" | relURL }}" class="footer-link">Категории</a></li>
+          </ul>
+        </div>
+      </nav>
+    </div>
+
+    <div class="footer-bottom">
+      <p class="footer-copyright">© {{ now.Year }} Читальная</p>
+    </div>
+  </div>
+</footer>

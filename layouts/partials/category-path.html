@@ -1,0 +1,17 @@
+{{- /* (dict "slug" "testing") → путь от корня до узла: [корень, ..., узел] или false.
+       Дерево глубиной 2, обход без рекурсии — в Hugo 0.150 только один return на шаблон. */ -}}
+{{- $slug := .slug -}}
+{{- $path := false -}}
+{{- range site.Data.categories -}}
+  {{- $top := . -}}
+  {{- if eq $top.slug $slug -}}
+    {{- $path = slice $top -}}
+  {{- else if $top.children -}}
+    {{- range $top.children -}}
+      {{- if eq .slug $slug -}}
+        {{- $path = slice $top . -}}
+      {{- end -}}
+    {{- end -}}
+  {{- end -}}
+{{- end -}}
+{{- return $path -}}

@@ -1,0 +1,4 @@
+{{- define "main" -}}
+{{- $trail := slice (dict "label" "Клубы" "url" "/clubs/") -}}
+{{ partial "catalog.html" (dict "activeSlug" "" "trail" $trail) }}
+{{- end -}}

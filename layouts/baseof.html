@@ -1,0 +1,16 @@
+{{- $hideChrome := .Params.hideChrome -}}
+<!DOCTYPE html>
+<html lang="ru">
+  <head>
+    {{- partial "head.html" . }}
+  </head>
+  <body>
+    <div class="app-layout">
+      {{- if not $hideChrome }}{{ partial "header.html" . }}{{ end }}
+      <main>
+        {{- block "main" . }}{{ end }}
+      </main>
+      {{- if not $hideChrome }}{{ partial "footer.html" . }}{{ end }}
+    </div>
+  </body>
+</html>

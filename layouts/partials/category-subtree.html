@@ -1,0 +1,7 @@
+{{- /* (dict "slug" "it") → все slug в поддереве (сам узел + потомки). */ -}}
+{{- $node := partial "category-by-slug.html" (dict "slug" .slug) -}}
+{{- $slugs := slice -}}
+{{- if $node -}}
+  {{- $slugs = partial "subtree-slugs.html" (dict "node" $node "acc" slice) -}}
+{{- end -}}
+{{- return $slugs -}}

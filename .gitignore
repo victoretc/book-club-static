@@ -1,0 +1,12 @@
+# симлинки на соседние репозитории
+victors-blog
+book-club-web
+
+# Hugo
+public/
+resources/
+.hugo_build.lock
+
+# deps
+node_modules/
+dist/

@@ -1,0 +1,123 @@
+{{- /* Вход: dict "activeSlug" ("" | slug категории), "trail" (для breadcrumbs) */ -}}
+{{- $active := .activeSlug | default "" -}}
+{{- $clubsPage := site.GetPage "/clubs" -}}
+{{- $clubs := $clubsPage.Pages -}}
+{{- if $active -}}
+  {{- $subtree := partial "category-subtree.html" (dict "slug" $active) -}}
+  {{- $filtered := slice -}}
+  {{- range $clubs -}}
+    {{- $clubPage := . -}}
+    {{- $clubCats := .Params.categories | default slice -}}
+    {{- range $c := $clubCats -}}
+      {{- if in $subtree $c -}}
+        {{- $filtered = $filtered | append $clubPage -}}
+        {{- break -}}
+      {{- end -}}
+    {{- end -}}
+  {{- end -}}
+  {{- $clubs = $filtered -}}
+{{- end -}}
+{{- $children := partial "category-children.html" (dict "slug" $active) -}}
+
+<div class="clubs-page">
+  <div class="clubs-content">
+    {{ partial "breadcrumbs.html" (dict "trail" .trail "trailingSlash" (eq $active "")) }}
+
+    <div class="filters-section">
+      <div class="search-row">
+        <div class="search-bar">
+          <input type="text" placeholder="Найти книжный клуб" class="search-input" data-catalog-search>
+          <button type="button" class="base-btn base-btn--primary search-btn" aria-label="Найти" data-catalog-search-btn>
+            <svg class="search-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="11" cy="11" r="8"/>
+              <path d="M21 21l-4.35-4.35"/>
+            </svg>
+          </button>
+        </div>
+        <div class="view-toggle" role="group" aria-label="Вид карточек">
+          <button type="button" class="view-toggle-btn" aria-label="Блоки" data-view-mode="grid">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+              <rect x="3" y="3" width="7" height="7" rx="2"/>
+              <rect x="14" y="3" width="7" height="7" rx="2"/>
+              <rect x="3" y="14" width="7" height="7" rx="2"/>
+              <rect x="14" y="14" width="7" height="7" rx="2"/>
+            </svg>
+          </button>
+          <button type="button" class="view-toggle-btn" aria-label="Длинные карточки" data-view-mode="list">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+              <rect x="3" y="4" width="18" height="4" rx="2"/>
+              <rect x="3" y="10" width="18" height="4" rx="2"/>
+              <rect x="3" y="16" width="18" height="4" rx="2"/>
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      <div class="right-filters">
+        <div class="type-tabs" role="group" aria-label="Тип клуба">
+          <button type="button" class="type-tab active" data-type-filter="book">По книге</button>
+          <button type="button" class="type-tab" data-type-filter="author">Авторские</button>
+        </div>
+      </div>
+    </div>
+
+    <nav class="category-chips" aria-label="Категории">
+      {{- if $active }}
+      <a href="{{ "/clubs/" | relURL }}" class="chip chip--all">Все категории</a>
+      {{- end }}
+      {{- range $children }}
+      <a href="{{ printf "/categories/%s/" .slug | relURL }}" class="chip{{ if eq $.activeSlug .slug }} chip--active{{ end }}">{{ .name }}</a>
+      {{- end }}
+    </nav>
+
+    <div class="content-grid">
+      <div class="clubs-column">
+        <div class="clubs-list clubs-list--grid" data-catalog-list>
+          {{- range $clubs }}
+            {{ partial "club-card.html" (dict "page" .) }}
+          {{- end }}
+        </div>
+
+        <div class="no-results" data-catalog-empty hidden>
+          <img src="{{ "not-found.png" | relURL }}" alt="Ничего не найдено" class="not-found-img">
+        </div>
+      </div>
+
+      <aside class="sidebar category-sidebar">
+        <h2 class="sidebar-title">{{ if $active }}Подкатегории{{ else }}Категории{{ end }}</h2>
+
+        {{- if $children }}
+        <div class="cat-list">
+          {{- range $children }}
+          <a href="{{ printf "/categories/%s/" .slug | relURL }}" class="cat-item{{ if eq $active .slug }} active{{ end }}">
+            <span class="cat-name">{{ .name }}</span>
+            <svg class="cat-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M9 18l6-6-6-6"/>
+            </svg>
+          </a>
+          {{- end }}
+        </div>
+        {{- else }}
+        <div class="sidebar-empty">{{ if $active }}Подкатегорий пока нет{{ else }}Категории появятся позже{{ end }}</div>
+        {{- end }}
+
+        {{- if $active }}
+        <div class="sidebar-footer">
+          <a href="{{ "/clubs/" | relURL }}" class="sidebar-back">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M19 12H5M11 18l-6-6 6-6"/>
+            </svg>
+            Все категории
+          </a>
+        </div>
+        {{- end }}
+      </aside>
+    </div>
+
+    <button type="button" class="scroll-top" aria-label="Наверх" data-scroll-top hidden>
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M12 19V5M5 12l7-7 7 7"/>
+      </svg>
+    </button>
+  </div>
+</div>
