@@ -1,0 +1,53 @@
+name: Добавить книгу
+description: Запрос на добавление новой книги в каталог «Читальная»
+title: "Книга: "
+labels: ["book-request"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Спасибо за заявку! Заполните форму ниже — после проверки книга появится в каталоге.
+
+        Обратите внимание: нужен аккаунт GitHub. Категорию книги подберёт администратор, указывать её не нужно.
+
+  - type: input
+    id: book-title
+    attributes:
+      label: Название книги
+      placeholder: Чистый код
+    validations:
+      required: true
+
+  - type: input
+    id: book-authors
+    attributes:
+      label: Автор(ы)
+      description: Через запятую, если авторов несколько
+      placeholder: Роберт Мартин
+    validations:
+      required: true
+
+  - type: input
+    id: publication-year
+    attributes:
+      label: Год издания
+      placeholder: "2008"
+    validations:
+      required: true
+
+  - type: textarea
+    id: description
+    attributes:
+      label: Описание
+      description: Кратко о книге: о чём она, кому пригодится
+      placeholder: Настольная книга разработчика: принципы написания понятного и поддерживаемого кода.
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: preflight
+    attributes:
+      label: Перед отправкой
+      options:
+        - label: Я проверил каталог — такой книги ещё нет
+          required: true

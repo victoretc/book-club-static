@@ -1,14 +1,16 @@
 {{- define "main" -}}
-{{- /* /categories/ — все категории */ -}}
+{{- /* /categories/ — все категории с клубами */ -}}
 <div class="clubs-page">
   <div class="clubs-content">
     {{- $trail := slice (dict "label" "Клубы" "url" "/clubs/") (dict "label" "Категории") -}}
     {{ partial "breadcrumbs.html" (dict "trail" $trail) }}
     <div class="sidebar" style="max-width: 704px;">
       <h1 class="sidebar-title">Категории</h1>
+      {{- $cats := partial "categories-active.html" -}}
+      {{- if $cats }}
       <div class="cat-list">
-        {{- range sort site.Data.categories "position" }}
-        <a href="{{ printf "/categories/%s/" .slug | relURL }}" class="cat-item">
+        {{- range $cats }}
+        <a href="{{ printf "categories/%s/" .slug | relURL }}" class="cat-item">
           <span class="cat-name">{{ .name }}</span>
           <svg class="cat-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
             <path d="M9 18l6-6-6-6"/>
@@ -16,6 +18,9 @@
         </a>
         {{- end }}
       </div>
+      {{- else }}
+      <div class="sidebar-empty">Категории появятся позже</div>
+      {{- end }}
     </div>
   </div>
 </div>

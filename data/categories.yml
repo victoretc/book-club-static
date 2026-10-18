@@ -1,40 +1,33 @@
-# Дерево категорий (сид из book-club-web/backend/src/clubs/fixtures/categories.json).
-# slug используется в front matter клубов (categories: [...]) и в URL /categories/<slug>/.
-- name: IT
-  slug: it
+# Плоский список категорий. Страницу /categories/<slug>/ генерирует Hugo-таксономия
+# для каждого slug'а из front matter клубов (categories: [...]); slug обязателен
+# быть здесь — иначе билд падает (см. layouts/clubs/single.html).
+- name: Тестирование
+  slug: testing
   position: 1
-  children:
-    - name: Тестирование
-      slug: testing
-      position: 1
-    - name: Дизайн
-      slug: design
-      position: 2
-    - name: Разработка
-      slug: development
-      position: 3
-    - name: Менеджмент
-      slug: management
-      position: 4
-    - name: Рекрутинг
-      slug: recruiting
-      position: 5
-    - name: Аналитика
-      slug: analytics
-      position: 6
-    - name: ДевОпс
-      slug: devops
-      position: 7
-- name: Бизнес
-  slug: business
+- name: Дизайн
+  slug: design
   position: 2
-  children:
-    - name: Экономика
-      slug: economics
-      position: 1
-    - name: Истории успеха
-      slug: success-stories
-      position: 2
-    - name: Ведение переговоров
-      slug: negotiations
-      position: 3
+- name: Разработка
+  slug: development
+  position: 3
+- name: Менеджмент
+  slug: management
+  position: 4
+- name: Рекрутинг
+  slug: recruiting
+  position: 5
+- name: Аналитика
+  slug: analytics
+  position: 6
+- name: ДевОпс
+  slug: devops
+  position: 7
+- name: Экономика
+  slug: economics
+  position: 8
+- name: Истории успеха
+  slug: success-stories
+  position: 9
+- name: Ведение переговоров
+  slug: negotiations
+  position: 10

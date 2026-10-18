@@ -3,21 +3,15 @@
 {{- $clubsPage := site.GetPage "/clubs" -}}
 {{- $clubs := $clubsPage.Pages -}}
 {{- if $active -}}
-  {{- $subtree := partial "category-subtree.html" (dict "slug" $active) -}}
   {{- $filtered := slice -}}
   {{- range $clubs -}}
-    {{- $clubPage := . -}}
-    {{- $clubCats := .Params.categories | default slice -}}
-    {{- range $c := $clubCats -}}
-      {{- if in $subtree $c -}}
-        {{- $filtered = $filtered | append $clubPage -}}
-        {{- break -}}
-      {{- end -}}
+    {{- if in (.Params.categories | default slice) $active -}}
+      {{- $filtered = $filtered | append . -}}
     {{- end -}}
   {{- end -}}
   {{- $clubs = $filtered -}}
 {{- end -}}
-{{- $children := partial "category-children.html" (dict "slug" $active) -}}
+{{- $cats := partial "categories-active.html" -}}
 
 <div class="clubs-page">
   <div class="clubs-content">
@@ -63,11 +57,20 @@
 
     <nav class="category-chips" aria-label="Категории">
       {{- if $active }}
-      <a href="{{ "/clubs/" | relURL }}" class="chip chip--all">Все категории</a>
+      <a href="{{ relURL "clubs/" }}" class="chip chip--all">Все категории</a>
       {{- end }}
-      {{- range $children }}
-      <a href="{{ printf "/categories/%s/" .slug | relURL }}" class="chip{{ if eq $.activeSlug .slug }} chip--active{{ end }}">{{ .name }}</a>
+      {{- range $cats }}
+      <a href="{{ printf "categories/%s/" .slug | relURL }}" class="chip{{ if eq $.activeSlug .slug }} chip--active{{ end }}">{{ .name }}</a>
       {{- end }}
+      {{- /* Таблетка «Избранное» — мобильный двойник чекбокса из сайдбара:
+           на ≤768px сайдбар скрыт (см. .category-sidebar), поэтому фильтр
+           иначе был бы недоступен. */ -}}
+      <button type="button" class="chip chip--fav" data-fav-toggle aria-pressed="false">
+        <svg class="chip-fav-ico" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+        </svg>
+        Избранное
+      </button>
     </nav>
 
     <div class="content-grid">
@@ -81,15 +84,34 @@
         <div class="no-results" data-catalog-empty hidden>
           <img src="{{ "not-found.png" | relURL }}" alt="Ничего не найдено" class="not-found-img">
         </div>
+
+        {{- /* Режим избранного пуст — это не «ничего не найдено», а просьба
+             сохранить клуб; своя надпись врёт меньше, чем картинка 404. */ -}}
+        <div class="no-results fav-empty" data-fav-empty hidden>
+          <p class="fav-empty-title">В избранном пока пусто</p>
+          <p class="fav-empty-text">Нажми на сердечко в карточке клуба — он останется здесь.</p>
+        </div>
       </div>
 
       <aside class="sidebar category-sidebar">
-        <h2 class="sidebar-title">{{ if $active }}Подкатегории{{ else }}Категории{{ end }}</h2>
+        {{- /* Чекбокс как «Участвую» в book-club-web: ставится — и в каталоге
+             остаются только сохранённые клубы. */ -}}
+        <label class="fav-checkbox">
+          <input type="checkbox" class="fav-checkbox-input" data-fav-toggle>
+          <span class="fav-checkbox-box">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <polyline points="20 6 9 17 4 12"/>
+            </svg>
+          </span>
+          <span class="fav-checkbox-label">Избранное</span>
+        </label>
 
-        {{- if $children }}
+        <h2 class="sidebar-title">Категории</h2>
+
+        {{- if $cats }}
         <div class="cat-list">
-          {{- range $children }}
-          <a href="{{ printf "/categories/%s/" .slug | relURL }}" class="cat-item{{ if eq $active .slug }} active{{ end }}">
+          {{- range $cats }}
+          <a href="{{ printf "categories/%s/" .slug | relURL }}" class="cat-item{{ if eq $active .slug }} active{{ end }}">
             <span class="cat-name">{{ .name }}</span>
             <svg class="cat-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
               <path d="M9 18l6-6-6-6"/>
@@ -98,12 +120,12 @@
           {{- end }}
         </div>
         {{- else }}
-        <div class="sidebar-empty">{{ if $active }}Подкатегорий пока нет{{ else }}Категории появятся позже{{ end }}</div>
+        <div class="sidebar-empty">Категории появятся позже</div>
         {{- end }}
 
         {{- if $active }}
         <div class="sidebar-footer">
-          <a href="{{ "/clubs/" | relURL }}" class="sidebar-back">
+          <a href="{{ relURL "clubs/" }}" class="sidebar-back">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
               <path d="M19 12H5M11 18l-6-6 6-6"/>
             </svg>
@@ -119,5 +141,16 @@
         <path d="M12 19V5M5 12l7-7 7 7"/>
       </svg>
     </button>
+
+    {{- /* Всплывающая надпись о результате клика: клуб добавлен или убран.
+         role=status подхватывает смену текста — скринридер проговорит. */ -}}
+    <div class="fav-toast" role="status" aria-live="polite" data-fav-toast
+         data-text-added="Клуб добавлен в избранное"
+         data-text-removed="Клуб убран из избранного">
+      <svg class="fav-toast-ico" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M20 6L9 17l-5-5"/>
+      </svg>
+      <span class="fav-toast-text" data-toast-text></span>
+    </div>
   </div>
 </div>

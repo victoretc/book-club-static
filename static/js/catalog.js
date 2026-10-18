@@ -1,15 +1,22 @@
 // Каталог клубов: поиск (debounce 200ms), фильтр по типу, режим grid/list,
-// sticky-градиент, кнопка «Наверх». Повторяет поведение ClubCards/ClubFilters из book-club-web.
+// избранное в localStorage (как в victors-blog), sticky-градиент, «Наверх».
+// Повторяет поведение ClubCards/ClubFilters из book-club-web.
 ;(function () {
   var list = document.querySelector('[data-catalog-list]')
   if (!list) return
 
-  var cards = Array.prototype.slice.call(list.querySelectorAll('.club-card'))
+  // Фильтрация прячет обёртку: внутри неё лежит ссылка на клуб и кнопка
+  // избранного, и прятать нужно и то и другое разом.
+  var wraps = Array.prototype.slice.call(list.querySelectorAll('.club-card-wrap'))
+  var cards = wraps.map(function (wrap) {
+    return wrap.querySelector('.club-card')
+  })
   var input = document.querySelector('[data-catalog-search]')
   var searchBtn = document.querySelector('[data-catalog-search-btn]')
   var typeTabs = Array.prototype.slice.call(document.querySelectorAll('[data-type-filter]'))
   var viewBtns = Array.prototype.slice.call(document.querySelectorAll('[data-view-mode]'))
   var empty = document.querySelector('[data-catalog-empty]')
+  var favEmpty = document.querySelector('[data-fav-empty]')
   var filtersSection = document.querySelector('.filters-section')
   var scrollTopBtn = document.querySelector('[data-scroll-top]')
 
@@ -17,20 +24,135 @@
   var query = ''
   var debounceTimer = null
 
+  // === Избранное (localStorage, не сервер: избранное принадлежит браузеру) ===
+  // В хранилище лежит список RelPermalink — по ним же кнопки находят свой клуб.
+  // Обёртки try/catch: в приватном режиме запись запрещена, и фильтр должен
+  // работать в рамках сессии, просто не переживая перезагрузку.
+  var STORAGE_KEY = 'book_club_favorites'
+
+  function loadFavorites() {
+    try {
+      var parsed = JSON.parse(localStorage.getItem(STORAGE_KEY))
+      return Array.isArray(parsed)
+        ? parsed.filter(function (item) { return typeof item === 'string' })
+        : []
+    } catch (e) {
+      return []
+    }
+  }
+
+  function saveFavorites() {
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(favorites))
+    } catch (e) {
+      // Ничего: сессионное избранное всё равно работает.
+    }
+  }
+
+  var favorites = loadFavorites()
+  // Режим «только избранное» — третий, независимый от типа и запроса фильтр.
+  var favOnly = false
+  var favToggles = Array.prototype.slice.call(document.querySelectorAll('[data-fav-toggle]'))
+  var favButtons = Array.prototype.slice.call(list.querySelectorAll('[data-fav-btn]'))
+
   function applyFilters() {
     var q = query.trim().toLowerCase()
     var visible = 0
 
-    cards.forEach(function (card) {
-      var typeOk = card.getAttribute('data-type') === activeType
-      var searchOk = !q || (card.getAttribute('data-search') || '').indexOf(q) !== -1
-      var show = typeOk && searchOk
-      card.style.display = show ? '' : 'none'
+    wraps.forEach(function (wrap) {
+      var typeOk = wrap.getAttribute('data-type') === activeType
+      var searchOk = !q || (wrap.getAttribute('data-search') || '').indexOf(q) !== -1
+      var url = wrap.getAttribute('data-url')
+      var favOk = !favOnly || favorites.indexOf(url) !== -1
+      var show = typeOk && searchOk && favOk
+      wrap.style.display = show ? '' : 'none'
       if (show) visible += 1
     })
 
-    if (empty) empty.hidden = visible !== 0
+    // В режиме избранного пустая сетка — это «ещё ничего не сохранили»,
+    // а не «ничего не найдено»: картинка 404 здесь врала бы.
+    if (empty) empty.hidden = visible !== 0 || favOnly
+    if (favEmpty) favEmpty.hidden = visible !== 0 || !favOnly
   }
+
+  // === Уведомление о добавлении/удалении ===
+  var toast = document.querySelector('[data-fav-toast]')
+  var toastText = toast ? toast.querySelector('[data-toast-text]') : null
+  var toastTimer = null
+
+  function showToast(kind) {
+    if (!toast || !toastText) return
+    toastText.textContent =
+      kind === 'remove' ? toast.getAttribute('data-text-removed') : toast.getAttribute('data-text-added')
+    toast.classList.add('is-visible')
+    if (toastTimer) clearTimeout(toastTimer)
+    toastTimer = setTimeout(function () {
+      toast.classList.remove('is-visible')
+    }, 2600)
+  }
+
+  function renderFavorites() {
+    favButtons.forEach(function (button) {
+      var wrap = button.closest('.club-card-wrap')
+      var active = favorites.indexOf(wrap.getAttribute('data-url')) !== -1
+      button.setAttribute('aria-pressed', active ? 'true' : 'false')
+      button.setAttribute(
+        'aria-label',
+        active ? button.getAttribute('data-label-remove') : button.getAttribute('data-label-add')
+      )
+    })
+  }
+
+  // Кнопка избранного лежит поверх ссылки, а не внутри её, но на всякий
+  // случай клик перехватывается: переход по карточке не должен срабатывать.
+  list.addEventListener('click', function (event) {
+    var button = event.target.closest ? event.target.closest('[data-fav-btn]') : null
+    if (!button) return
+
+    event.preventDefault()
+    event.stopPropagation()
+
+    var wrap = button.closest('.club-card-wrap')
+    var url = wrap.getAttribute('data-url')
+    var wasFavorite = favorites.indexOf(url) !== -1
+
+    favorites = wasFavorite
+      ? favorites.filter(function (item) { return item !== url })
+      : favorites.concat([url])
+
+    saveFavorites()
+    renderFavorites()
+    showToast(wasFavorite ? 'remove' : 'add')
+
+    // В режиме избранного снятие сердечка сразу убирает карточку — иначе
+    // она останется в ленте до следующего фильтра.
+    if (favOnly) applyFilters()
+  })
+
+  // Чекбокс в сайдбаре и таблетка на мобильном — один фильтр, поэтому клик
+  // по любой из них синхронизирует обе.
+  function syncFavToggles() {
+    favToggles.forEach(function (toggle) {
+      if (toggle.type === 'checkbox') {
+        toggle.checked = favOnly
+      } else {
+        // Таблетка — обычный чип, поэтому живёт на тех же классах, что и
+        // категории: .chip--active даёт и заливку, и исключение из :hover.
+        toggle.classList.toggle('chip--active', favOnly)
+        toggle.setAttribute('aria-pressed', favOnly ? 'true' : 'false')
+      }
+    })
+  }
+
+  favToggles.forEach(function (toggle) {
+    toggle.addEventListener('click', function () {
+      favOnly = !favOnly
+      syncFavToggles()
+      applyFilters()
+    })
+  })
+
+  renderFavorites()
 
   function setActiveTab(tab) {
     typeTabs.forEach(function (t) {
@@ -84,7 +206,7 @@
     var isGrid = mode !== 'list'
     list.classList.toggle('clubs-list--grid', isGrid)
     cards.forEach(function (card) {
-      card.classList.toggle('club-card--grid', isGrid)
+      if (card) card.classList.toggle('club-card--grid', isGrid)
     })
     viewBtns.forEach(function (btn) {
       var on = btn.getAttribute('data-view-mode') === (isGrid ? 'grid' : 'list')

@@ -1,3 +1,30 @@
+/* ===== FONTS =====
+   "Handil Pro" — HandilPro-Medium, (c) 2023 Alifinart Studio.
+   Licence requires crediting the foundry:
+   https://behance.net/alifinart
+   Attribution живёт в meta-теге (layouts/partials/head.html), комментарий
+   здесь не годится — hugo --minify вырезает комментарии. */
+@font-face {
+  font-family: 'Handil Pro';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url('../fonts/HandilPro-Medium.woff2') format('woff2');
+}
+
+/* "Drabina" — Drabina Solid, (c) Mark Blondie / Redage Works, бесплатный
+   экспериментальный шрифт (https://fonts.redage.works/en/drabina), OFL 1.1.
+   В archive лежал OTF на 187 глифов; как и в victors-blog, он подрезан до
+   используемых символов (латиница, кириллица, цифры, пунктуация) и сжат
+   в woff2 — 6 КБ. */
+@font-face {
+  font-family: 'Drabina';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url('../fonts/Drabina-Solid.woff2') format('woff2');
+}
+
 /* ===== Tokens (book-club-web/src/assets/main.css) ===== */
 :root {
   --color-bg: #F2F2F4;
@@ -14,9 +41,8 @@
   --color-success: #42CF71;
   --color-accent: #A0EC06;
 
-  /* Оригинал: Drabina / Handil Pro — шрифты недоступны, замена на Google Fonts */
-  --font-display: 'Cormorant Garamond', 'Georgia', serif;
-  --font-heading: 'Cormorant Garamond', 'Georgia', serif;
+  --font-display: 'Drabina', 'Georgia', serif;
+  --font-heading: 'Handil Pro', 'Georgia', serif;
   --font-body: 'Inter', system-ui, sans-serif;
   --font-mono: 'JetBrains Mono', monospace;
 
@@ -511,6 +537,19 @@ main {
   border-style: solid;
 }
 
+/* Мобильный двойник чекбокса «Избранное» из сайдбара (сайдбар на ≤768px
+   скрыт, сам ряд чипсов в это время как раз виден). */
+.chip--fav {
+  gap: 6px;
+  color: var(--color-brand);
+  border-color: var(--color-brand-ring);
+  background: var(--color-brand-soft);
+}
+
+.chip-fav-ico {
+  flex-shrink: 0;
+}
+
 .content-grid {
   width: 100%;
   display: grid;
@@ -544,13 +583,29 @@ main {
     align-items: stretch;
   }
 
+  .clubs-list--grid .club-card-wrap {
+    max-width: none;
+  }
+
   .clubs-list--grid .club-card {
     max-width: none;
   }
 }
 
 /* ===== Карточка клуба ===== */
+/* Обёртка карточки: держит ссылку и кнопку избранного рядом. Кнопка не может
+   лежать внутри <a> (невалидная вложенность), поэтому она позиционируется
+   поверх карточки, а скрытие при фильтрации применяется к обёртке. */
+.club-card-wrap {
+  position: relative;
+  display: flex;
+  width: 100%;
+  max-width: 704px;
+  min-width: 0;
+}
+
 .club-card {
+  flex: 1;
   width: 100%;
   max-width: 704px;
   background: var(--color-surface);
@@ -565,7 +620,9 @@ main {
   gap: 12px;
 }
 
-.club-card:hover {
+/* Тень и подъём считаются от обёртки: курсор, наведённый на кнопку
+   избранного, тоже должен приподнимать карточку. */
+.club-card-wrap:hover .club-card {
   box-shadow: var(--shadow-lg);
   transform: translateY(-2px);
 }
@@ -757,16 +814,105 @@ main {
   color: var(--color-text-secondary);
 }
 
+/* --- Кнопка избранного на карточке ---------------------------------------
+   Сердечко лежит поверх карточки в её правом верхнем углу. Заголовку
+   оставлено поле справа, иначе длинный title уезжает под кнопку. */
+.club-card-wrap .card-header {
+  padding-right: 44px;
+}
+
+.card-fav {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  border: none;
+  border-radius: var(--radius-pill);
+  background: var(--color-bg);
+  color: var(--color-text-secondary);
+  cursor: pointer;
+  opacity: 0;
+  pointer-events: none;
+  transform: scale(0.85);
+  transition:
+    background var(--duration-fast) var(--ease-out),
+    color var(--duration-fast) var(--ease-out),
+    transform var(--duration-fast) var(--ease-out),
+    opacity var(--duration-fast) var(--ease-out);
+}
+
+/* На десктопе кнопка появляется при наведении на карточку (или при
+   фокусе с клавиатуры). Активное состояние сердечка не подсвечивается:
+   обратная связь — только уведомление, список избранного живёт в
+   localStorage и открывается фильтром «Избранное». */
+.club-card-wrap:hover .card-fav,
+.card-fav:focus-visible {
+  opacity: 1;
+  pointer-events: auto;
+  transform: none;
+}
+
+.card-fav:hover {
+  background: var(--color-brand-soft);
+  color: var(--color-brand);
+}
+
+.card-fav:active {
+  transform: scale(0.92);
+}
+
+.card-fav:focus-visible {
+  outline: 2px solid var(--color-brand);
+  outline-offset: 2px;
+}
+
 .no-results {
   display: flex;
   justify-content: center;
   width: 100%;
 }
 
+.no-results[hidden] {
+  display: none;
+}
+
 .not-found-img {
   max-width: 100%;
   height: auto;
   width: 360px;
+}
+
+/* Пустое состояние режима избранного — вместо картинки 404. */
+.fav-empty {
+  flex-direction: column;
+  gap: 4px;
+  padding: 40px 24px;
+  background: var(--color-surface);
+  border-radius: 24px;
+  text-align: center;
+}
+
+.fav-empty-title {
+  font-family: var(--font-heading);
+  font-size: 22px;
+  font-weight: 500;
+  line-height: 1.2;
+  color: var(--color-text);
+  margin: 0;
+}
+
+.fav-empty-text {
+  font-family: var(--font-body);
+  font-size: 15px;
+  line-height: 1.5;
+  color: var(--color-text-secondary);
+  margin: 0;
 }
 
 @media (max-width: 900px) {
@@ -799,7 +945,10 @@ main {
     display: none;
   }
 
-  .category-sidebar {
+  /* Селектор с двумя классами, а не .category-sidebar: лежащий ниже
+     .sidebar { display: flex } иначе перебивает правило по порядку
+     следования, и сайдбар на телефоне остаётся виден рядом с чипсами. */
+  .sidebar.category-sidebar {
     display: none;
   }
 
@@ -807,6 +956,13 @@ main {
     width: 100%;
     padding: 20px;
     gap: 10px;
+  }
+
+  .card-fav {
+    top: 12px;
+    right: 12px;
+    width: 32px;
+    height: 32px;
   }
 
   .card-header {
@@ -843,8 +999,15 @@ main {
 }
 
 @media (hover: none) {
-  .club-card:hover {
+  .club-card-wrap:hover .club-card {
     box-shadow: none;
+    transform: none;
+  }
+
+  /* На тач-устройствах наведения нет: сердечко видно всегда. */
+  .card-fav {
+    opacity: 1;
+    pointer-events: auto;
     transform: none;
   }
 }
@@ -945,6 +1108,65 @@ main {
     bottom: 16px;
     width: 48px;
     height: 48px;
+  }
+}
+
+/* ===== Уведомление избранного (favorites toast) =====
+   Надпись о результате клика («добавлено» / «убрано»). Прибита к низу экрана
+   и отцентрована, живёт 2.6 секунды и гаснет сама; поверх всего (z-index
+   выше кнопки «Наверх»), но клики сквозь неё не проходят. */
+.fav-toast {
+  position: fixed;
+  left: 50%;
+  bottom: 24px;
+  z-index: 60;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  max-width: calc(100vw - 32px);
+  box-sizing: border-box;
+  padding: 12px 20px;
+  border-radius: var(--radius-pill);
+  background: var(--color-text);
+  box-shadow: var(--shadow-lg);
+  color: #FFFFFF;
+  font-family: var(--font-body);
+  font-size: 15px;
+  font-weight: 500;
+  line-height: 1.2;
+  white-space: nowrap;
+  opacity: 0;
+  visibility: hidden;
+  transform: translate(-50%, 12px);
+  transition:
+    opacity var(--duration-normal) var(--ease-out),
+    transform var(--duration-normal) var(--ease-out),
+    visibility 0s linear var(--duration-normal);
+  pointer-events: none;
+}
+
+.fav-toast.is-visible {
+  opacity: 1;
+  visibility: visible;
+  transform: translate(-50%, 0);
+  transition:
+    opacity var(--duration-normal) var(--ease-out),
+    transform var(--duration-normal) var(--ease-out);
+}
+
+.fav-toast-ico {
+  flex-shrink: 0;
+  color: var(--color-accent);
+}
+
+.fav-toast-text {
+  min-width: 0;
+}
+
+@media (max-width: 480px) {
+  .fav-toast {
+    bottom: 16px;
+    font-size: 14px;
   }
 }
 
@@ -1205,6 +1427,57 @@ main {
   padding: 20px 16px;
   position: sticky;
   top: 96px;
+}
+
+/* Чекбокс «Избранное» — копия member-checkbox из book-club-web
+   (CategorySidebar.vue): бокс 18px, скругление 5px, заливка брендом. */
+.fav-checkbox {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  user-select: none;
+  padding: 10px 12px;
+}
+
+.fav-checkbox-input {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.fav-checkbox-box {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  border-radius: 5px;
+  border: 1.5px solid var(--color-text-secondary);
+  color: transparent;
+  background: var(--color-surface);
+  transition: background 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+}
+
+.fav-checkbox-input:checked + .fav-checkbox-box {
+  background: var(--color-brand);
+  border-color: var(--color-brand);
+  color: #FFFFFF;
+}
+
+.fav-checkbox-input:focus-visible + .fav-checkbox-box {
+  outline: 2px solid var(--color-brand);
+  outline-offset: 2px;
+}
+
+.fav-checkbox-label {
+  font-family: var(--font-body);
+  font-size: 15px;
+  font-weight: 500;
+  line-height: 1;
+  color: var(--color-text);
+  white-space: nowrap;
 }
 
 .sidebar-title {
@@ -1620,6 +1893,115 @@ main {
   .review-head {
     flex-direction: column;
     align-items: flex-start;
+  }
+}
+
+/* ===== Add book page ===== */
+.add-book {
+  display: flex;
+  justify-content: center;
+}
+
+.add-book-card {
+  width: 100%;
+  max-width: 560px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-5);
+  background: var(--color-surface);
+  border: 1px solid var(--color-stroke-subtle);
+  border-radius: 20px;
+  padding: var(--space-6);
+}
+
+.add-book-title {
+  font-family: var(--font-heading);
+  font-size: 28px;
+  font-weight: 500;
+  line-height: 1.1;
+  color: var(--color-text);
+}
+
+.add-book-lead {
+  font-size: 16px;
+  line-height: 1.5;
+  color: var(--color-text-secondary);
+}
+
+.add-book-steps {
+  margin: 0;
+  padding-left: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  font-size: 15px;
+  line-height: 1.5;
+  color: var(--color-text);
+}
+
+.add-book-fields {
+  width: 100%;
+}
+
+.add-book-subtitle {
+  font-family: var(--font-heading);
+  font-size: 18px;
+  font-weight: 500;
+  line-height: 1.2;
+  color: var(--color-text);
+  margin-bottom: var(--space-3);
+}
+
+.add-book-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+  line-height: 1.4;
+}
+
+.add-book-table td {
+  padding: 10px 12px;
+  border: 1px solid var(--color-stroke-subtle);
+  color: var(--color-text);
+}
+
+.add-book-table td:first-child {
+  color: var(--color-text-secondary);
+  white-space: nowrap;
+  width: 40%;
+}
+
+.add-book-note {
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--color-text-muted);
+}
+
+.add-book-link {
+  color: var(--color-brand);
+}
+
+.add-book-link:hover {
+  text-decoration: none;
+}
+
+@media (max-width: 768px) {
+  .add-book-card {
+    padding: var(--space-5);
+  }
+
+  .add-book-title {
+    font-size: 22px;
+  }
+
+  .add-book-lead {
+    font-size: 14px;
+  }
+
+  .add-book-table td {
+    padding: 8px 10px;
+    white-space: normal;
   }
 }
 

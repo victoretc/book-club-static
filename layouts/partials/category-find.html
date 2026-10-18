@@ -1,15 +1,9 @@
-{{- /* Поиск узла категории по slug. Возвращает узел или false. В Hugo 0.150 — только один return на шаблон. */ -}}
+{{- /* Поиск категории по slug в плоском data/categories.yml. Возвращает узел или false. */ -}}
 {{- $slug := .slug -}}
 {{- $found := false -}}
 {{- range site.Data.categories -}}
   {{- if eq .slug $slug -}}
     {{- $found = . -}}
-  {{- else if .children -}}
-    {{- range .children -}}
-      {{- if eq .slug $slug -}}
-        {{- $found = . -}}
-      {{- end -}}
-    {{- end -}}
   {{- end -}}
 {{- end -}}
 {{- return $found -}}

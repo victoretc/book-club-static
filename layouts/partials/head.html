@@ -1,12 +1,21 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>{{ if .IsHome }}{{ site.Title }} — книжные клубы{{ else }}{{ .Title }} · {{ site.Title }}{{ end }}</title>
+{{- $title := .Title -}}
+{{- if eq .Kind "taxonomy" -}}
+  {{- $title = "Категории" -}}
+{{- else if eq .Kind "term" -}}
+  {{- with partial "category-by-slug.html" (dict "slug" .Data.Term) }}{{ $title = .name }}{{ end -}}
+{{- end -}}
+<title>{{ if .IsHome }}{{ site.Title }} — книжные клубы{{ else }}{{ $title }} · {{ site.Title }}{{ end }}</title>
 {{- with or .Description .Params.description .Site.Params.description }}
 <meta name="description" content="{{ . }}">
 {{- end }}
 <link rel="icon" type="image/svg+xml" href="{{ "favicon.svg" | relURL }}">
+{{/* Атрибуция шрифта: лицензия Handil Pro требует указать студию и ссылку.
+     Комментарий в CSS вырезает --minify, meta-тег переживает сборку. */}}
+<meta name="font-credits" content="Handil Pro by Alifinart Studio — https://behance.net/alifinart">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="{{ "css/main.css" | relURL }}">
 <script src="{{ "js/catalog.js" | relURL }}" defer></script>

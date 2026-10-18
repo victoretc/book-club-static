@@ -1,0 +1,10 @@
+{{- /* Плоский список категорий в порядке position, но только те, у которых
+     есть хотя бы один клуб (т.е. у которых Hugo сгенерировал страницу). */ -}}
+{{- $terms := site.Taxonomies.categories -}}
+{{- $out := slice -}}
+{{- range sort site.Data.categories "position" -}}
+  {{- if isset $terms .slug -}}
+    {{- $out = $out | append . -}}
+  {{- end -}}
+{{- end -}}
+{{- return $out -}}

@@ -33,11 +33,11 @@
   {{- end -}}
 {{- end -}}
 
-{{- /* Крошки: Клубы / <путь категорий, ссылки> / название */ -}}
+{{- /* Крошки: Клубы / <категория> / название */ -}}
 {{- $catSlug := index $cats 0 -}}
-{{- $catPath := partial "category-path.html" (dict "slug" $catSlug) -}}
+{{- $catNode := partial "category-by-slug.html" (dict "slug" $catSlug) -}}
 {{- $trail := slice (dict "label" "Клубы" "url" "/clubs/") -}}
-{{- range $catPath }}
+{{- with $catNode }}
   {{- $trail = $trail | append (dict "label" .name "url" (printf "/categories/%s/" .slug)) -}}
 {{- end -}}
 {{- $trail = $trail | append (dict "label" .Title) -}}

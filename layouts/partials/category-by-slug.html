@@ -1,2 +1,2 @@
-{{- /* (dict "slug" "testing") → узел дерева category (или nil) */ -}}
+{{- /* (dict "slug" "testing") → категория из data/categories.yml (или nil) */ -}}
 {{- return partial "category-find.html" (dict "nodes" site.Data.categories "slug" .slug) -}}

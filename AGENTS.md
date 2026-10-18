@@ -4,7 +4,7 @@
 
 Hugo-сайт «Читальная» собран: каталог (`/`, `/clubs/`), карточки клубов (`/clubs/<slug>/`), категории (`/categories/<slug>/`), 404. Проверка: `hugo --minify --gc` (должно собраться без ошибок). Деплой — GH Pages через ветку `gh-pages` (`.github/workflows/deploy.yml`).
 
-Контент клубов — `content/clubs/*.md` (front matter валидируется `errorf` в `layouts/clubs/single.html`, ошибка роняет билд). Дерево категорий — `data/categories.yml`.
+Контент клубов — `content/clubs/*.md` (front matter валидируется `errorf` в `layouts/clubs/single.html`, ошибка роняет билд). Категории — плоские Hugo-таксономии (`category = 'categories'`): страница `/categories/<slug>/` генерируется для каждого term'а из front matter клубов; русские имена и порядок — `data/categories.yml` (без вложенности), список живых категорий — `partials/categories-active.html`.
 
 ### Ловушки Hugo 0.150
 
@@ -12,6 +12,7 @@ Hugo-сайт «Читальная» собран: каталог (`/`, `/clubs/
 - Шаблон для kind=term — `layouts/categories/term.html` (`layouts/_default/term.html` и `layouts/term.html` НЕ подхватываются, молча рендерится `taxonomy.html`).
 - `collections.Append ELEMENT COLLECTION` — коллекция последним аргументом.
 - `--minify` удаляет HTML-комментарии (не полагаться на них в диагнозе).
+- `relURL`/`absURL` с ведущим `/` отсчитывают путь от protocol+host и игнорируют подпуть `baseURL` (`/book-club-static/`) — на GH Pages ссылки будут битыми. Всегда без ведущего слэша: `relURL "clubs/"`, `printf "categories/%s/" .slug | relURL` (в `breadcrumbs.html` слэш срезается `strings.TrimPrefix`).
 
 ## Layout
 

@@ -4,7 +4,8 @@
   <div class="breadcrumbs-nav__trail">
     {{- range $i, $crumb := $trail }}
       {{- if $crumb.url }}
-        <a href="{{ $crumb.url | relURL }}" class="crumb crumb--link">{{ $crumb.label }}</a>
+        {{- /* relURL: ведущий / игнорирует подпуть baseURL (GH Pages) — срезаем */ -}}
+        <a href="{{ $crumb.url | strings.TrimPrefix "/" | relURL }}" class="crumb crumb--link">{{ $crumb.label }}</a>
       {{- else }}
         <span class="crumb crumb--current">{{ $crumb.label }}</span>
       {{- end }}
