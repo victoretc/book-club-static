@@ -1,22 +1,12 @@
 name: Добавить книгу
-description: Запрос на добавление новой книги в каталог «Читальная»
-title: "Книга: "
+description: Запрос на добавление новой книги в Читальную
+title: "Название книги: "
 labels: ["book-request"]
 body:
   - type: markdown
     attributes:
       value: |
-        Спасибо за заявку! Заполните форму ниже — после проверки книга появится в каталоге.
-
-        Обратите внимание: нужен аккаунт GitHub. Категорию книги подберёт администратор, указывать её не нужно.
-
-  - type: input
-    id: book-title
-    attributes:
-      label: Название книги
-      placeholder: Чистый код
-    validations:
-      required: true
+        Обратите внимание. Категорию книги подберёт модератор, указывать её не нужно.
 
   - type: input
     id: book-authors
@@ -49,5 +39,5 @@ body:
     attributes:
       label: Перед отправкой
       options:
-        - label: Я проверил каталог — такой книги ещё нет
+        - label: Я проверил — такой книги ещё нет
           required: true
