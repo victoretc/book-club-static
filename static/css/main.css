@@ -302,6 +302,136 @@ main {
   opacity: 0.8;
 }
 
+/* --- Бургер-меню (как site-nav в victors-blog) ---------------------------
+   На десктопе скрыто: ссылки несёт .header-nav. Показывается на ≤768px,
+   где навигация уезжает в панель под двумя полосками. */
+.header-menu {
+  display: none;
+  position: relative;
+}
+
+.header-burger {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-end;
+  gap: 7px;
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: pointer;
+}
+
+.header-burger span {
+  display: block;
+  width: 24px;
+  height: 2px;
+  border-radius: 2px;
+  background: var(--color-text);
+  opacity: 0.65;
+  transition: opacity 180ms ease, transform 180ms ease;
+}
+
+.header-burger:hover span {
+  opacity: 1;
+}
+
+.header-burger[aria-expanded='true'] span:first-child {
+  opacity: 1;
+  transform: translateY(4.5px) rotate(45deg);
+}
+
+.header-burger[aria-expanded='true'] span:last-child {
+  opacity: 1;
+  transform: translateY(-4.5px) rotate(-45deg);
+}
+
+.header-panel {
+  position: absolute;
+  top: calc(100% + 12px);
+  right: 0;
+  min-width: 232px;
+  padding: 8px;
+  background: var(--color-surface);
+  border: 1px solid var(--color-stroke-subtle);
+  border-radius: 14px;
+  box-shadow: var(--shadow-lg);
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-6px);
+  transition:
+    opacity 160ms ease,
+    transform 160ms ease,
+    visibility 160ms;
+}
+
+.header-panel.is-open {
+  opacity: 1;
+  visibility: visible;
+  transform: none;
+}
+
+.header-panel a {
+  display: block;
+  padding: 10px 14px;
+  border-radius: 8px;
+  font-family: var(--font-body);
+  font-size: 15px;
+  font-weight: 500;
+  line-height: 1.4;
+  color: var(--color-text);
+  text-decoration: none;
+  white-space: nowrap;
+  transition: background 140ms ease, color 140ms ease;
+}
+
+.header-panel a:hover {
+  background: var(--color-stroke-subtle);
+}
+
+.header-panel a.active {
+  background: var(--color-brand-soft);
+  color: var(--color-brand);
+}
+
+@media (max-width: 768px) {
+  /* Липкая белая полоса с логотипом по центру (сетка 1fr auto 1fr, как
+     site-nav в victors-blog): слева пустая колонка, справа бургер. */
+  .header {
+    position: sticky;
+    top: 0;
+    background: var(--color-surface);
+    border-bottom: 1px solid var(--color-stroke-subtle);
+  }
+
+  .header-inner {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    align-items: center;
+    gap: 16px;
+    height: 56px;
+    padding: 0 16px;
+  }
+
+  .header-brand {
+    grid-column: 2;
+    justify-self: center;
+    font-size: 26px;
+  }
+
+  .header-nav {
+    display: none;
+  }
+
+  .header-menu {
+    display: block;
+    grid-column: 3;
+    justify-self: end;
+  }
+}
+
 /* ===== Footer ===== */
 .footer {
   border-top: 1px solid var(--color-stroke-subtle);
@@ -493,57 +623,64 @@ main {
   display: block;
 }
 
+/* Таблетки — копия мобильных .cat-item из victors-blog: пилюля без рамки
+   на фоне surface, активная — бренд. Ряд виден только на ≤768px. */
 .chip {
   flex-shrink: 0;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding: 10px 20px;
+  gap: 6px;
+  padding: 10px 18px;
   background: var(--color-surface);
-  border: 1px solid var(--color-stroke-subtle);
+  border: none;
   border-radius: 9999px;
   font-family: var(--font-body);
-  font-size: 15px;
+  font-size: 14px;
   font-weight: 500;
   line-height: 1.21;
   color: var(--color-text);
   cursor: pointer;
   white-space: nowrap;
   text-decoration: none;
-  transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+  transition: background 0.2s ease, color 0.2s ease;
 }
 
 .chip:not(.chip--active):hover {
   background: var(--color-brand-soft);
   color: var(--color-brand);
-  border-color: var(--color-brand-ring);
 }
 
 .chip--active {
   background: var(--color-brand);
-  border-color: rgba(59, 62, 255, 0.4);
   color: #FFFFFF;
-  box-shadow: 0 2px 8px rgba(59, 62, 255, 0.25);
 }
 
 .chip--all {
-  border-style: dashed;
-  border-color: var(--color-brand-ring);
   color: var(--color-brand);
   background: var(--color-brand-soft);
 }
 
 .chip--all.chip--active {
-  border-style: solid;
+  background: var(--color-brand);
+  color: #FFFFFF;
 }
 
-/* Мобильный двойник чекбокса «Избранное» из сайдбара (сайдбар на ≤768px
-   скрыт, сам ряд чипсов в это время как раз виден). */
+/* Таблетка «Избранное» — мобильный двойник чекбокса из сайдбара: тот же
+   pill, что и категории, плюс сердечко слева. Активность приходит классом
+   .chip--active из catalog.js, сердечко заливается. */
 .chip--fav {
-  gap: 6px;
-  color: var(--color-brand);
-  border-color: var(--color-brand-ring);
-  background: var(--color-brand-soft);
+  color: var(--color-text);
+  background: var(--color-surface);
+}
+
+.chip--fav.chip--active {
+  background: var(--color-brand);
+  color: #FFFFFF;
+}
+
+.chip--fav.chip--active .chip-fav-ico path {
+  fill: currentColor;
 }
 
 .chip-fav-ico {
@@ -947,14 +1084,32 @@ main {
     gap: 0;
   }
 
+  /* Расстояния как в victors-blog: поиск → таблетки 12px, таблетки →
+     лента 24px. Равный gap колонки (16px) размывал связь «поиск +
+     фильтры» как одного блока управления. */
+  .clubs-content {
+    gap: 0;
+  }
+
+  .clubs-content .breadcrumbs-nav {
+    margin-bottom: 16px;
+  }
+
+  .filters-section {
+    margin-bottom: 12px;
+  }
+
+  /* Категории под поиском: без панели-плашки — только строка фишек,
+     листается пальцем по горизонтали. */
   .category-chips {
     display: flex;
     align-items: center;
     gap: 8px;
     width: 100%;
+    margin-bottom: 24px;
     overflow-x: auto;
     scrollbar-width: none;
-    padding: 2px 2px 6px;
+    padding-bottom: 2px;
     -webkit-overflow-scrolling: touch;
   }
 
@@ -1129,61 +1284,114 @@ main {
 }
 
 /* ===== Уведомление избранного (favorites toast) =====
-   Надпись о результате клика («добавлено» / «убрано»). Прибита к низу экрана
-   и отцентрована, живёт 2.6 секунды и гаснет сама; поверх всего (z-index
-   выше кнопки «Наверх»), но клики сквозь неё не проходят. */
+   Дизайн — ToastNotification из book-club-web: белая плашка, зелёная
+   иконка-кружок, текст, крестик закрытия. Отличие: закреплено вверху
+   экрана (как в book-club-web), на телефоне — ниже липкого хэдера (56px),
+   иначе плашка уезжает под него. Живёт 5 секунд, закрывается крестиком
+   или кликом по плашке. */
 .fav-toast {
   position: fixed;
+  top: 24px;
   left: 50%;
-  bottom: 24px;
-  z-index: 60;
+  z-index: 1000;
   display: flex;
   align-items: center;
-  gap: 10px;
-  max-width: calc(100vw - 32px);
+  gap: 14px;
+  max-width: 420px;
+  width: max-content;
   box-sizing: border-box;
-  padding: 12px 20px;
-  border-radius: var(--radius-pill);
-  background: var(--color-text);
+  padding: 18px 20px;
+  border-radius: var(--radius-xl);
+  background: var(--color-surface);
+  color: var(--color-text);
   box-shadow: var(--shadow-lg);
-  color: #FFFFFF;
   font-family: var(--font-body);
   font-size: 15px;
   font-weight: 500;
-  line-height: 1.2;
-  white-space: nowrap;
+  line-height: 1.4;
+  cursor: pointer;
   opacity: 0;
   visibility: hidden;
-  transform: translate(-50%, 12px);
+  transform: translateX(-50%) translateY(-12px) scale(0.95);
   transition:
-    opacity var(--duration-normal) var(--ease-out),
-    transform var(--duration-normal) var(--ease-out),
-    visibility 0s linear var(--duration-normal);
+    opacity 0.2s ease-in,
+    transform 0.2s ease-in,
+    visibility 0s linear 0.2s;
   pointer-events: none;
 }
 
 .fav-toast.is-visible {
   opacity: 1;
   visibility: visible;
-  transform: translate(-50%, 0);
+  transform: translateX(-50%) scale(1);
   transition:
-    opacity var(--duration-normal) var(--ease-out),
-    transform var(--duration-normal) var(--ease-out);
+    opacity 0.25s var(--ease-out),
+    transform 0.25s var(--ease-out);
+  pointer-events: auto;
+}
+
+.fav-toast-icon-wrap {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: var(--radius-md);
+  flex-shrink: 0;
+  background: rgba(66, 207, 113, 0.1);
+  color: var(--color-success);
 }
 
 .fav-toast-ico {
-  flex-shrink: 0;
-  color: var(--color-accent);
+  display: block;
 }
 
 .fav-toast-text {
+  flex: 1;
   min-width: 0;
+  color: var(--color-text);
+}
+
+.fav-toast-close {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  margin: -4px -6px -4px 0;
+  padding: 0;
+  border: none;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--color-text-muted);
+  cursor: pointer;
+  transition: color var(--duration-fast) ease, background var(--duration-fast) ease;
+}
+
+.fav-toast-close:hover {
+  color: var(--color-text);
+  background: var(--color-brand-soft);
+}
+
+@media (max-width: 768px) {
+  /* Ниже липкого хэдера (56px) + 12px зазора. */
+  .fav-toast {
+    top: 68px;
+  }
 }
 
 @media (max-width: 480px) {
   .fav-toast {
-    bottom: 16px;
-    font-size: 14px;
+    left: 16px;
+    right: 16px;
+    width: auto;
+    max-width: none;
+    transform: translateY(-12px) scale(0.95);
+  }
+
+  .fav-toast.is-visible {
+    transform: scale(1);
   }
 }
 
@@ -1204,15 +1412,17 @@ main {
   min-width: 0;
 }
 
+/* Табы высотой 56px — вровень с плашкой поиска (44px кнопка + 12px
+   паддинг), иначе правая плашка висела на 8px ниже левой. */
 .type-tabs {
   display: flex;
   align-items: center;
-  gap: 10px;
-  padding: 8px 10px;
+  gap: 8px;
+  padding: 6px 8px;
   background: var(--color-surface);
   border-radius: 30px;
   width: 100%;
-  height: 64px;
+  height: 56px;
   box-sizing: border-box;
 }
 
@@ -1222,12 +1432,12 @@ main {
   align-items: center;
   justify-content: center;
   height: 100%;
-  padding: 10px 20px;
+  padding: 8px 16px;
   background: transparent;
   border: none;
   border-radius: 30px;
   font-family: var(--font-body);
-  font-size: 20px;
+  font-size: 18px;
   font-weight: 500;
   line-height: 1.21;
   color: var(--color-text);
@@ -1282,6 +1492,8 @@ main {
   min-width: 0;
 }
 
+/* Поиск — копия design из victors-blog (там, в свою очередь, из
+   ClubFilters.vue): плашка 56px, кнопка 44px, поле 20px. */
 .search-bar {
   display: flex;
   align-items: center;
@@ -1289,7 +1501,7 @@ main {
   min-width: 0;
   background: var(--color-surface);
   border-radius: 30px;
-  padding: 8px 10px 8px 24px;
+  padding: 6px 8px 6px 22px;
   gap: 8px;
 }
 
@@ -1311,8 +1523,8 @@ main {
 }
 
 .search-btn {
-  width: 48px;
-  height: 48px;
+  width: 44px;
+  height: 44px;
   padding: 0;
   border-radius: 30px;
   flex-shrink: 0;
@@ -1322,12 +1534,15 @@ main {
   display: block;
 }
 
+/* Переключатель вида скрывается на телефоне вместе с табами типа:
+   карточки в одну колонку одинаковы в обоих режимах. padding 4px, чтобы
+   плашка была 56px — вровень с поиском. */
 .view-toggle {
   flex-shrink: 0;
   display: flex;
   align-items: center;
   gap: 4px;
-  padding: 8px;
+  padding: 4px;
   background: var(--color-surface);
   border-radius: 30px;
 }
@@ -1369,30 +1584,33 @@ main {
 }
 
 @media (max-width: 768px) {
-  .search-bar {
-    width: 100%;
-    padding: 6px 6px 6px 16px;
-    gap: 6px;
-  }
-
-  .search-input {
-    font-size: 16px;
-  }
-
-  .search-btn {
-    width: 40px;
-    height: 40px;
-    border-radius: 30px;
+  /* Табы «По книге / Авторские» и переключатель вида на телефоне не
+     нужны: секция авторских не реализована, а карточки в одну колонку
+     одинаковы в обоих режимах. */
+  .right-filters {
+    display: none;
   }
 
   .view-toggle {
-    gap: 2px;
-    padding: 6px;
+    display: none;
   }
 
-  .view-toggle-btn {
-    width: 40px;
-    height: 40px;
+  /* Поиск на телефоне — главный контроль, поэтому не мельчает: поле
+     60px (44px кнопка + 12px паддинг), шрифт 17px. Значения из
+     victors-blog. */
+  .search-bar {
+    width: 100%;
+    padding: 8px 8px 8px 18px;
+    gap: 8px;
+  }
+
+  .search-input {
+    font-size: 17px;
+  }
+
+  .search-btn {
+    width: 44px;
+    height: 44px;
     border-radius: 30px;
   }
 }
@@ -1402,35 +1620,25 @@ main {
     gap: 8px;
   }
 
+  /* Высота пола — 56px (44px кнопка + 12px паддинг). */
   .search-bar {
-    padding: 4px 4px 4px 12px;
-    gap: 4px;
+    padding: 6px 6px 6px 16px;
+    gap: 8px;
   }
 
   .search-input {
-    font-size: 16px;
+    font-size: 17px;
   }
 
   .search-btn {
-    width: 34px;
-    height: 34px;
+    width: 44px;
+    height: 44px;
     border-radius: 30px;
   }
 
   .search-icon {
-    width: 18px;
-    height: 18px;
-  }
-
-  .view-toggle-btn {
-    width: 34px;
-    height: 34px;
-    border-radius: 30px;
-  }
-
-  .view-toggle-btn svg {
-    width: 18px;
-    height: 18px;
+    width: 20px;
+    height: 20px;
   }
 }
 
@@ -1914,7 +2122,7 @@ main {
 }
 
 /* ===== Add book page ===== */
-/* Крошки на всю ширину (как .detail-page), карточка — по центру. */
+/* Карточка формы — на всю ширину контента, как каталог на первом экране. */
 .add-book-page {
   width: 100%;
   flex: 1;
@@ -1924,13 +2132,11 @@ main {
 }
 
 .add-book {
-  display: flex;
-  justify-content: center;
+  width: 100%;
 }
 
 .add-book-card {
   width: 100%;
-  max-width: 560px;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
@@ -1953,55 +2159,7 @@ main {
   font-size: 16px;
   line-height: 1.5;
   color: var(--color-text-secondary);
-}
-
-.add-book-steps {
-  margin: 0;
-  padding-left: 20px;
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-2);
-  font-size: 15px;
-  line-height: 1.5;
-  color: var(--color-text);
-}
-
-.add-book-fields {
-  width: 100%;
-}
-
-.add-book-subtitle {
-  font-family: var(--font-heading);
-  font-size: 18px;
-  font-weight: 500;
-  line-height: 1.2;
-  color: var(--color-text);
-  margin-bottom: var(--space-3);
-}
-
-.add-book-table {
-  width: 100%;
-  border-collapse: collapse;
-  font-size: 14px;
-  line-height: 1.4;
-}
-
-.add-book-table td {
-  padding: 10px 12px;
-  border: 1px solid var(--color-stroke-subtle);
-  color: var(--color-text);
-}
-
-.add-book-table td:first-child {
-  color: var(--color-text-secondary);
-  white-space: nowrap;
-  width: 40%;
-}
-
-.add-book-note {
-  font-size: 13px;
-  line-height: 1.5;
-  color: var(--color-text-muted);
+  max-width: 720px;
 }
 
 .add-book-link {
@@ -2023,11 +2181,6 @@ main {
 
   .add-book-lead {
     font-size: 14px;
-  }
-
-  .add-book-table td {
-    padding: 8px 10px;
-    white-space: normal;
   }
 }
 

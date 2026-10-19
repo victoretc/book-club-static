@@ -58,13 +58,17 @@
 
   function applyFilters() {
     var q = query.trim().toLowerCase()
+    // Табы типа на мобильном скрыты (CSS), и без переключателя фильтр
+    // «только по книге» просто прятал бы авторские клубы без возможности
+    // их увидеть. Если табов нет — тип не фильтруется.
+    var tabsVisible = typeTabs.length > 0 && typeTabs[0].offsetParent !== null
     // Таб «Авторские» — заглушка: клубы не фильтруются, вместо сетки
     // показывается блок «Раздел пока не реализован».
-    var authorMode = activeType === 'author'
+    var authorMode = tabsVisible && activeType === 'author'
     var visible = 0
 
     wraps.forEach(function (wrap) {
-      var typeOk = !authorMode && wrap.getAttribute('data-type') === activeType
+      var typeOk = !tabsVisible || (!authorMode && wrap.getAttribute('data-type') === activeType)
       var searchOk = !q || (wrap.getAttribute('data-search') || '').indexOf(q) !== -1
       var url = wrap.getAttribute('data-url')
       var favOk = !favOnly || favorites.indexOf(url) !== -1
@@ -83,10 +87,23 @@
     if (list) list.hidden = visible === 0
   }
 
+  // Видимость табов типа зависит от ширины окна: при ресайзе между
+  // мобильным и десктопным правило фильтра меняется, надо пересчитать.
+  window.addEventListener('resize', applyFilters)
+
   // === Уведомление о добавлении/удалении ===
+  // Повторяет showToast/hideToast из book-club-web: живёт 5 секунд,
+  // закрывается кликом по плашке или крестиком.
   var toast = document.querySelector('[data-fav-toast]')
   var toastText = toast ? toast.querySelector('[data-toast-text]') : null
+  var toastClose = toast ? toast.querySelector('[data-toast-close]') : null
   var toastTimer = null
+
+  function hideToast() {
+    if (!toast) return
+    if (toastTimer) clearTimeout(toastTimer)
+    toast.classList.remove('is-visible')
+  }
 
   function showToast(kind) {
     if (!toast || !toastText) return
@@ -94,10 +111,14 @@
       kind === 'remove' ? toast.getAttribute('data-text-removed') : toast.getAttribute('data-text-added')
     toast.classList.add('is-visible')
     if (toastTimer) clearTimeout(toastTimer)
-    toastTimer = setTimeout(function () {
-      toast.classList.remove('is-visible')
-    }, 2600)
+    toastTimer = setTimeout(hideToast, 5000)
   }
+
+  if (toast) toast.addEventListener('click', hideToast)
+  if (toastClose) toastClose.addEventListener('click', function (event) {
+    event.stopPropagation()
+    hideToast()
+  })
 
   function renderFavorites() {
     favButtons.forEach(function (button) {

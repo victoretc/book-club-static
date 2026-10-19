@@ -149,15 +149,26 @@
       </svg>
     </button>
 
-    {{- /* Всплывающая надпись о результате клика: клуб добавлен или убран.
-         role=status подхватывает смену текста — скринридер проговорит. */ -}}
+    {{- /* Уведомление о результате клика: клуб добавлен или убран.
+         Дизайн — ToastNotification из book-club-web (белая плашка, зелёная
+         иконка-кружок, кнопка закрытия), но закреплено вверху экрана:
+         на телефоне ниже липкого хэдера, иначе плашка уезжает под него. */ -}}
     <div class="fav-toast" role="status" aria-live="polite" data-fav-toast
          data-text-added="Клуб добавлен в избранное"
          data-text-removed="Клуб убран из избранного">
-      <svg class="fav-toast-ico" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-        <path d="M20 6L9 17l-5-5"/>
-      </svg>
+      <div class="fav-toast-icon-wrap">
+        <svg class="fav-toast-ico" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <circle cx="12" cy="12" r="10"/>
+          <polyline points="8 12 11 15 16 9"/>
+        </svg>
+      </div>
       <span class="fav-toast-text" data-toast-text></span>
+      <button type="button" class="fav-toast-close" aria-label="Закрыть уведомление" data-toast-close>
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <line x1="5" y1="5" x2="19" y2="19"/>
+          <line x1="19" y1="5" x2="5" y2="19"/>
+        </svg>
+      </button>
     </div>
   </div>
 </div>

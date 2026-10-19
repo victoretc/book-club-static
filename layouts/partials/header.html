@@ -17,5 +17,20 @@
         Добавить книгу
       </a>
     </nav>
+
+    {{- /* Мобильное меню: две полоски как бургер в site-nav victors-blog.
+         На десктопе скрыто (CSS .header-menu), ссылки несут .header-nav. */ -}}
+    <div class="header-menu" data-header-menu>
+      <button type="button" class="header-burger" data-burger
+              aria-expanded="false" aria-controls="header-menu-panel"
+              aria-label="Меню">
+        <span></span>
+        <span></span>
+      </button>
+      <nav class="header-panel" id="header-menu-panel" data-burger-panel>
+        <a href="{{ relURL "clubs/" }}"{{ if .IsSection }} class="active"{{ end }}>Клубы</a>
+        <a href="{{ relURL "add-book/" }}"{{ if eq .Section "add-book" }} class="active"{{ end }}>Добавить книгу</a>
+      </nav>
+    </div>
   </div>
 </header>

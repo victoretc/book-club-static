@@ -1,44 +1,22 @@
 {{- define "main" -}}
 <div class="add-book-page">
-  {{- $trail := slice (dict "label" "Главная" "url" "/") (dict "label" "Добавить книгу") -}}
+  {{- $trail := slice (dict "label" "Клубы" "url" "/clubs/") (dict "label" "Добавить книгу") -}}
   {{ partial "breadcrumbs.html" (dict "trail" $trail) }}
 
   <div class="add-book">
     <div class="add-book-card">
       <h1 class="add-book-title">Добавить книгу</h1>
       <p class="add-book-lead">
-        Каталог «Читальная» — статический сайт: книги в него добавляются вручную.
-        Если хотите предложить книгу — создайте заявку на GitHub. После проверки она появится в каталоге.
+        «Читальная» — статический сайт, реализованный при помощи
+        <a href="https://gohugo.io/" class="add-book-link" target="_blank" rel="noopener">Hugo</a>,
+        хостится при помощи
+        <a href="https://docs.github.com/en/pages/getting-started-with-github-pages/what-is-github-pages" class="add-book-link" target="_blank" rel="noopener">GitHub&nbsp;Pages</a>.
+        Книги добавляются вручную. Если хотите предложить книгу — создайте Issue на GitHub
+        в соответствии с шаблоном. После проверки она появится в каталоге.
       </p>
-
-      <ol class="add-book-steps">
-        <li>Нажмите кнопку «Создать запрос» — откроется форма на GitHub.</li>
-        <li>Заполните четыре поля: название, авторы, год издания и описание.</li>
-        <li>Отправьте заявку. Категорию подберёт администратор.</li>
-        <li>Когда книга пройдёт проверку, она появится на сайте.</li>
-      </ol>
-
-      <div class="add-book-fields">
-        <h2 class="add-book-subtitle">Что указать</h2>
-        <table class="add-book-table">
-          <tr>
-            <td>Название</td>
-            <td>Чистый код</td>
-          </tr>
-          <tr>
-            <td>Автор(ы)</td>
-            <td>Роберт Мартин</td>
-          </tr>
-          <tr>
-            <td>Год издания</td>
-            <td>2008</td>
-          </tr>
-          <tr>
-            <td>Описание</td>
-            <td>Кратко о книге: о чём она и кому пригодится</td>
-          </tr>
-        </table>
-      </div>
+      <p class="add-book-lead">
+        Чтобы добавить книгу, необходимо указать Название, Автор(ы), Год издания, Описание.
+      </p>
 
       <a
         href="https://github.com/victoretc/book-club-static/issues/new?template=book_request.yml"
@@ -48,13 +26,8 @@
           <path d="M5 12h14"/>
           <path d="M12 5v14"/>
         </svg>
-        Создать запрос
+        Создать Issue
       </a>
-
-      <p class="add-book-note">
-        Для отправки заявки нужен аккаунт GitHub — он бесплатный и создаётся за минуту на
-        <a href="https://github.com/signup" class="add-book-link">github.com/signup</a>.
-      </p>
     </div>
   </div>
 </div>
