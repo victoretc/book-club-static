@@ -1,0 +1,267 @@
+- generic [ref=e2]:
+  - banner [ref=e3]:
+    - generic [ref=e4]:
+      - link "Читальная" [ref=e5] [cursor=pointer]:
+        - /url: /book-club-static/
+      - navigation [ref=e6]:
+        - link "Клубы" [ref=e7] [cursor=pointer]:
+          - /url: /book-club-static/clubs/
+        - link "Добавить книгу" [ref=e10] [cursor=pointer]:
+          - /url: /book-club-static/add-book/
+      - generic [ref=e12]:
+        - button "Меню" [ref=e13]
+        - navigation [ref=e14]:
+          - link "Клубы" [ref=e15] [cursor=pointer]:
+            - /url: /book-club-static/clubs/
+          - link "Добавить книгу" [ref=e16] [cursor=pointer]:
+            - /url: /book-club-static/add-book/
+  - main [ref=e17]:
+    - generic [ref=e19]:
+      - navigation "Хлебные крошки" [ref=e20]:
+        - generic [ref=e21]:
+          - link "Клубы" [ref=e22] [cursor=pointer]:
+            - /url: /book-club-static/clubs/
+          - text: /
+      - generic [ref=e23]:
+        - generic [ref=e24]:
+          - generic [ref=e25]:
+            - textbox "Найти книжный клуб" [ref=e26]
+            - button "Найти" [ref=e27]
+          - group "Вид карточек" [ref=e31]:
+            - button "Блоки" [ref=e32]
+            - button "Длинные карточки" [ref=e38]
+        - group "Тип клуба" [ref=e44]:
+          - button "По книге" [ref=e45]
+          - button "Авторские" [ref=e46]
+      - navigation "Категории" [ref=e47]:
+        - link "Тестирование" [ref=e48] [cursor=pointer]:
+          - /url: /book-club-static/categories/testing/
+        - link "Дизайн" [ref=e49] [cursor=pointer]:
+          - /url: /book-club-static/categories/design/
+        - link "Разработка" [ref=e50] [cursor=pointer]:
+          - /url: /book-club-static/categories/development/
+        - link "Менеджмент" [ref=e51] [cursor=pointer]:
+          - /url: /book-club-static/categories/management/
+        - link "Рекрутинг" [ref=e52] [cursor=pointer]:
+          - /url: /book-club-static/categories/recruiting/
+        - link "Аналитика" [ref=e53] [cursor=pointer]:
+          - /url: /book-club-static/categories/analytics/
+        - link "ДевОпс" [ref=e54] [cursor=pointer]:
+          - /url: /book-club-static/categories/devops/
+        - link "Экономика" [ref=e55] [cursor=pointer]:
+          - /url: /book-club-static/categories/economics/
+        - link "Истории успеха" [ref=e56] [cursor=pointer]:
+          - /url: /book-club-static/categories/success-stories/
+        - link "Ведение переговоров" [ref=e57] [cursor=pointer]:
+          - /url: /book-club-static/categories/negotiations/
+        - button "Избранное" [ref=e58]
+      - generic [ref=e61]:
+        - generic [ref=e63]:
+          - generic [ref=e64]:
+            - 'link "Python для анализа данных <2012> Практическое руководство по работе с данными на Python: библиотеки pandas и NumPy, очистка, агрегация и визуализация данных. C 1 участник уже читает" [ref=e65] [cursor=pointer]':
+              - /url: /book-club-static/clubs/python-analiz-dannyh/
+              - heading "Python для анализа данных <2012>" [level=3] [ref=e67]
+              - paragraph [ref=e68]: "Практическое руководство по работе с данными на Python: библиотеки pandas и NumPy, очистка, агрегация и визуализация данных."
+              - generic [ref=e70]:
+                - generic [ref=e71]: C
+                - text: 1 участник уже читает
+            - button "Добавить клуб в избранное" [ref=e75]
+          - generic [ref=e78]:
+            - 'link "Как пасти котов <2002> Руководство по управлению командами разработчиков: как мотивировать инженеров, налаживать коммуникацию и избегать типичных ошибок менеджера. A B C 3 участника уже читают" [ref=e79] [cursor=pointer]':
+              - /url: /book-club-static/clubs/kak-pasti-kotov/
+              - heading "Как пасти котов <2002>" [level=3] [ref=e81]
+              - paragraph [ref=e82]: "Руководство по управлению командами разработчиков: как мотивировать инженеров, налаживать коммуникацию и избегать типичных ошибок менеджера."
+              - generic [ref=e84]:
+                - generic [ref=e85]: A B C
+                - text: 3 участника уже читают
+            - button "Добавить клуб в избранное" [ref=e89]
+          - generic [ref=e92]:
+            - 'link "Капитал в XXI веке <2013> Масштабное исследование неравенства: как распределяется богатство в мире, почему оно растёт и что это значит для экономики будущего. B C 2 участника уже читают" [ref=e93] [cursor=pointer]':
+              - /url: /book-club-static/clubs/kapital-xxi-veke/
+              - heading "Капитал в XXI веке <2013>" [level=3] [ref=e95]
+              - paragraph [ref=e96]: "Масштабное исследование неравенства: как распределяется богатство в мире, почему оно растёт и что это значит для экономики будущего."
+              - generic [ref=e98]:
+                - generic [ref=e99]: B C
+                - text: 2 участника уже читают
+            - button "Добавить клуб в избранное" [ref=e103]
+          - generic [ref=e106]:
+            - 'link "Кто. Решите ваш кадровый вопрос <2008> Системный подход к найму: как правильно оценивать кандидатов, проводить интервью и собирать сильные команды, которые двигают бизнес вперёд. B 1 участник уже читает" [ref=e107] [cursor=pointer]':
+              - /url: /book-club-static/clubs/kto-kadrovyj-vopros/
+              - heading "Кто. Решите ваш кадровый вопрос <2008>" [level=3] [ref=e109]
+              - paragraph [ref=e110]: "Системный подход к найму: как правильно оценивать кандидатов, проводить интервью и собирать сильные команды, которые двигают бизнес вперёд."
+              - generic [ref=e112]:
+                - generic [ref=e113]: B
+                - text: 1 участник уже читает
+            - button "Добавить клуб в избранное" [ref=e117]
+          - generic [ref=e120]:
+            - 'link "Лу Адлер Эксперт по найму, консультант компаний из Fortune 500, автор системных методик подбора персонала и ведущий специалист по performance-based hiring. Читают сейчас: «Hire With Your Head» (2007) B 1 участник уже читает" [ref=e121] [cursor=pointer]':
+              - /url: /book-club-static/clubs/adler/
+              - heading "Лу Адлер" [level=3] [ref=e123]
+              - paragraph [ref=e124]: Эксперт по найму, консультант компаний из Fortune 500, автор системных методик подбора персонала и ведущий специалист по performance-based hiring.
+              - generic [ref=e125]: "Читают сейчас: «Hire With Your Head» (2007)"
+              - generic [ref=e127]:
+                - generic [ref=e128]: B
+                - text: 1 участник уже читает
+            - button "Добавить клуб в избранное" [ref=e132]
+          - generic [ref=e135]:
+            - 'link "Мартин Фаулер Главный научный сотрудник Thoughtworks, автор эталонных книг по рефакторингу, архитектуре и шаблонам проектирования, влиятельный голос в разработке ПО. Читают сейчас: «Рефакторинг. Улучшение существующего кода» (2018) A C 2 участника уже читают" [ref=e136] [cursor=pointer]':
+              - /url: /book-club-static/clubs/fowler/
+              - heading "Мартин Фаулер" [level=3] [ref=e138]
+              - paragraph [ref=e139]: Главный научный сотрудник Thoughtworks, автор эталонных книг по рефакторингу, архитектуре и шаблонам проектирования, влиятельный голос в разработке ПО.
+              - generic [ref=e140]: "Читают сейчас: «Рефакторинг. Улучшение существующего кода» (2018)"
+              - generic [ref=e142]:
+                - generic [ref=e143]: A C
+                - text: 2 участника уже читают
+            - button "Добавить клуб в избранное" [ref=e147]
+          - generic [ref=e150]:
+            - 'link "Не заставляйте меня думать <2000> Классика юзабилити: как сделать интерфейсы интуитивно понятными и удобными для пользователя без лишних усилий. B C 2 участника уже читают" [ref=e151] [cursor=pointer]':
+              - /url: /book-club-static/clubs/ne-zastavlyayte-menya-dumat/
+              - heading "Не заставляйте меня думать <2000>" [level=3] [ref=e153]
+              - paragraph [ref=e154]: "Классика юзабилити: как сделать интерфейсы интуитивно понятными и удобными для пользователя без лишних усилий."
+              - generic [ref=e156]:
+                - generic [ref=e157]: B C
+                - text: 2 участника уже читают
+            - button "Добавить клуб в избранное" [ref=e161]
+          - generic [ref=e164]:
+            - 'link "Нейт Сильвер Статистик и аналитик данных, основатель FiveThirtyEight, автор книг о прогнозировании и роли данных в принятии решений. Читают сейчас: «Сигнал и шум» (2012) C 1 участник уже читает" [ref=e165] [cursor=pointer]':
+              - /url: /book-club-static/clubs/silver/
+              - heading "Нейт Сильвер" [level=3] [ref=e167]
+              - paragraph [ref=e168]: Статистик и аналитик данных, основатель FiveThirtyEight, автор книг о прогнозировании и роли данных в принятии решений.
+              - generic [ref=e169]: "Читают сейчас: «Сигнал и шум» (2012)"
+              - generic [ref=e171]:
+                - generic [ref=e172]: C
+                - text: 1 участник уже читает
+            - button "Добавить клуб в избранное" [ref=e176]
+          - generic [ref=e179]:
+            - 'link "Патрик Ленсиони Специалист по командообразованию и организационной культуре, автор мировых бестселлеров «Пять пороков команды» и «Пять искушений руководителя». Читают сейчас: «Пять пороков команды» (2002) A B 2 участника уже читают" [ref=e180] [cursor=pointer]':
+              - /url: /book-club-static/clubs/lencioni/
+              - heading "Патрик Ленсиони" [level=3] [ref=e182]
+              - paragraph [ref=e183]: Специалист по командообразованию и организационной культуре, автор мировых бестселлеров «Пять пороков команды» и «Пять искушений руководителя».
+              - generic [ref=e184]: "Читают сейчас: «Пять пороков команды» (2002)"
+              - generic [ref=e186]:
+                - generic [ref=e187]: A B
+                - text: 2 участника уже читают
+            - button "Добавить клуб в избранное" [ref=e191]
+          - generic [ref=e194]:
+            - 'link "Переговоры без поражения <1981> Гарвардский метод ведения переговоров: как добиваться выгодных условий, не идя на конфликт, и приходить к соглашению, устраивающему обе стороны. A B C 3 участника уже читают" [ref=e195] [cursor=pointer]':
+              - /url: /book-club-static/clubs/peregovory-bez-porazheniya/
+              - heading "Переговоры без поражения <1981>" [level=3] [ref=e197]
+              - paragraph [ref=e198]: "Гарвардский метод ведения переговоров: как добиваться выгодных условий, не идя на конфликт, и приходить к соглашению, устраивающему обе стороны."
+              - generic [ref=e200]:
+                - generic [ref=e201]: A B C
+                - text: 3 участника уже читают
+            - button "Добавить клуб в избранное" [ref=e205]
+          - generic [ref=e208]:
+            - 'link "Проект «Феникс» <2013> Роман о том, как DevOps-практики спасают IT-компанию от хаоса: непрерывная интеграция, автоматизация развёртывания и культура совместной ответственности. A C 2 участника уже читают" [ref=e209] [cursor=pointer]':
+              - /url: /book-club-static/clubs/proekt-feniks/
+              - heading "Проект «Феникс» <2013>" [level=3] [ref=e211]
+              - paragraph [ref=e212]: "Роман о том, как DevOps-практики спасают IT-компанию от хаоса: непрерывная интеграция, автоматизация развёртывания и культура совместной ответственности."
+              - generic [ref=e214]:
+                - generic [ref=e215]: A C
+                - text: 2 участника уже читают
+            - button "Добавить клуб в избранное" [ref=e219]
+          - generic [ref=e222]:
+            - 'link "Роберт Мартин (Дядя Боб) Легендарный инженер-программист, автор книг «Чистый код», «Чистая архитектура» и «Идеальный программист», один из авторов манифеста Agile. Читают сейчас: «Чистая архитектура» (2017) B C 2 участника уже читают" [ref=e223] [cursor=pointer]':
+              - /url: /book-club-static/clubs/dyadya-bob/
+              - heading "Роберт Мартин (Дядя Боб)" [level=3] [ref=e225]
+              - paragraph [ref=e226]: Легендарный инженер-программист, автор книг «Чистый код», «Чистая архитектура» и «Идеальный программист», один из авторов манифеста Agile.
+              - generic [ref=e227]: "Читают сейчас: «Чистая архитектура» (2017)"
+              - generic [ref=e229]:
+                - generic [ref=e230]: B C
+                - text: 2 участника уже читают
+            - button "Добавить клуб в избранное" [ref=e234]
+          - generic [ref=e237]:
+            - 'link "Святослав Куликов Ведущий эксперт по тестированию ПО в рунете, автор учебного курса «Тестирование программного обеспечения» и преподаватель-практик, консультирующий команды по всему СНГ. Читают сейчас: «Тестирование программного обеспечения. Базовый курс» (2015) A C 2 участника уже читают" [ref=e238] [cursor=pointer]':
+              - /url: /book-club-static/clubs/kulikov/
+              - heading "Святослав Куликов" [level=3] [ref=e240]
+              - paragraph [ref=e241]: Ведущий эксперт по тестированию ПО в рунете, автор учебного курса «Тестирование программного обеспечения» и преподаватель-практик, консультирующий команды по всему СНГ.
+              - generic [ref=e242]: "Читают сейчас: «Тестирование программного обеспечения. Базовый курс» (2015)"
+              - generic [ref=e244]:
+                - generic [ref=e245]: A C
+                - text: 2 участника уже читают
+            - button "Добавить клуб в избранное" [ref=e249]
+          - generic [ref=e252]:
+            - 'link "Стив Джобс <2011> Авторизованная биография основателя Apple: история взлётов и падений гения, изменившего целые индустрии. A B C 3 участника уже читают" [ref=e253] [cursor=pointer]':
+              - /url: /book-club-static/clubs/stiv-dzhobs/
+              - heading "Стив Джобс <2011>" [level=3] [ref=e255]
+              - paragraph [ref=e256]: "Авторизованная биография основателя Apple: история взлётов и падений гения, изменившего целые индустрии."
+              - generic [ref=e258]:
+                - generic [ref=e259]: A B C
+                - text: 3 участника уже читают
+            - button "Добавить клуб в избранное" [ref=e263]
+          - generic [ref=e266]:
+            - 'link "Тестирование программного обеспечения. Базовый курс <2015> Базовый курс по тестированию программного обеспечения: от основ терминологии до написания тест-кейсов, чек-листов и работы с баг-трекером. A B 2 участника уже читают" [ref=e267] [cursor=pointer]':
+              - /url: /book-club-static/clubs/testirovanie-po-bazovy-kurs/
+              - heading "Тестирование программного обеспечения. Базовый курс <2015>" [level=3] [ref=e269]
+              - paragraph [ref=e270]: "Базовый курс по тестированию программного обеспечения: от основ терминологии до написания тест-кейсов, чек-листов и работы с баг-трекером."
+              - generic [ref=e272]:
+                - generic [ref=e273]: A B
+                - text: 2 участника уже читают
+            - button "Добавить клуб в избранное" [ref=e277]
+          - generic [ref=e280]:
+            - 'link "Уильям Юри Соавтор Гарвардского метода переговоров, международный консультант по разрешению конфликтов, автор книг о сотрудничестве и ведении сложных диалогов. Читают сейчас: «Переговоры без поражения» (1981) A B C 3 участника уже читают" [ref=e281] [cursor=pointer]':
+              - /url: /book-club-static/clubs/ury/
+              - heading "Уильям Юри" [level=3] [ref=e283]
+              - paragraph [ref=e284]: Соавтор Гарвардского метода переговоров, международный консультант по разрешению конфликтов, автор книг о сотрудничестве и ведении сложных диалогов.
+              - generic [ref=e285]: "Читают сейчас: «Переговоры без поражения» (1981)"
+              - generic [ref=e287]:
+                - generic [ref=e288]: A B C
+                - text: 3 участника уже читают
+            - button "Добавить клуб в избранное" [ref=e292]
+          - generic [ref=e295]:
+            - 'link "Чистый код <2008> Настольная книга каждого разработчика: принципы написания понятного, поддерживаемого и качественного кода, а также рефакторинга. A C 2 участника уже читают" [ref=e296] [cursor=pointer]':
+              - /url: /book-club-static/clubs/chistyj-kod/
+              - heading "Чистый код <2008>" [level=3] [ref=e298]
+              - paragraph [ref=e299]: "Настольная книга каждого разработчика: принципы написания понятного, поддерживаемого и качественного кода, а также рефакторинга."
+              - generic [ref=e301]:
+                - generic [ref=e302]: A C
+                - text: 2 участника уже читают
+            - button "Добавить клуб в избранное" [ref=e306]
+        - complementary [ref=e309]:
+          - generic [ref=e310]:
+            - checkbox "Избранное" [ref=e311]
+            - text: Избранное
+          - heading "Категории" [level=2] [ref=e315]
+          - generic [ref=e316]:
+            - link "Тестирование" [ref=e317] [cursor=pointer]:
+              - /url: /book-club-static/categories/testing/
+            - link "Дизайн" [ref=e320] [cursor=pointer]:
+              - /url: /book-club-static/categories/design/
+            - link "Разработка" [ref=e323] [cursor=pointer]:
+              - /url: /book-club-static/categories/development/
+            - link "Менеджмент" [ref=e326] [cursor=pointer]:
+              - /url: /book-club-static/categories/management/
+            - link "Рекрутинг" [ref=e329] [cursor=pointer]:
+              - /url: /book-club-static/categories/recruiting/
+            - link "Аналитика" [ref=e332] [cursor=pointer]:
+              - /url: /book-club-static/categories/analytics/
+            - link "ДевОпс" [ref=e335] [cursor=pointer]:
+              - /url: /book-club-static/categories/devops/
+            - link "Экономика" [ref=e338] [cursor=pointer]:
+              - /url: /book-club-static/categories/economics/
+            - link "Истории успеха" [ref=e341] [cursor=pointer]:
+              - /url: /book-club-static/categories/success-stories/
+            - link "Ведение переговоров" [ref=e344] [cursor=pointer]:
+              - /url: /book-club-static/categories/negotiations/
+      - status [ref=e347]:
+        - button "Закрыть уведомление" [ref=e352]
+  - contentinfo [ref=e356]:
+    - generic [ref=e357]:
+      - generic [ref=e358]:
+        - link "Читальная — на главную" [ref=e360] [cursor=pointer]:
+          - /url: /book-club-static/
+          - text: Читальная
+        - navigation "Разделы сайта" [ref=e361]:
+          - generic [ref=e362]:
+            - heading "Навигация" [level=2] [ref=e363]
+            - list [ref=e364]:
+              - listitem [ref=e365]:
+                - link "Все клубы" [ref=e366] [cursor=pointer]:
+                  - /url: /book-club-static/clubs/
+          - generic [ref=e367]:
+            - heading "Сайт" [level=2] [ref=e368]
+            - list [ref=e369]:
+              - listitem [ref=e370]:
+                - link "Категории" [ref=e371] [cursor=pointer]:
+                  - /url: /book-club-static/categories/
+      - paragraph [ref=e373]: © 2026 Читальная

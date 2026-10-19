@@ -1,0 +1,5 @@
+[     343ms] [ERROR] Failed to load resource: the server responded with a status of 404 (File not found) @ http://localhost:8899/book-club-static/not-found.png:0
+[     350ms] [ERROR] Failed to load resource: the server responded with a status of 404 (File not found) @ http://localhost:8899/book-club-static/css/main.css:0
+[     359ms] [ERROR] Failed to load resource: the server responded with a status of 404 (File not found) @ http://localhost:8899/book-club-static/js/header.js:0
+[     359ms] [ERROR] Failed to load resource: the server responded with a status of 404 (File not found) @ http://localhost:8899/book-club-static/js/catalog.js:0
+[     504ms] [ERROR] Failed to load resource: the server responded with a status of 404 (File not found) @ http://localhost:8899/book-club-static/favicon.svg:0
