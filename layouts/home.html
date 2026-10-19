@@ -1,4 +1,6 @@
 {{- define "main" -}}
-{{- $trail := slice (dict "label" "Клубы" "url" "/clubs/") -}}
+{{- /* Главная рендерит тот же каталог, что и /clubs/, поэтому «Клубы» —
+     текущая страница (crumb без url). */ -}}
+{{- $trail := slice (dict "label" "Клубы") -}}
 {{ partial "catalog.html" (dict "activeSlug" "" "trail" $trail) }}
 {{- end -}}

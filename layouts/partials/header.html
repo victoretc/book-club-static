@@ -11,20 +11,23 @@
     {{ end }}
     <a href="{{ relURL "" }}" class="header-brand">Читальная</a>
 
+    {{- /* Меню — site.Menus.main из hugo.toml (pageRef): .URL = RelPermalink
+         страницы, поэтому подпуть baseURL сохраняется без relURL.
+         Активность: IsMenuCurrent — сам пункт, HasMenuCurrent — раздел
+         (страницы клубов внутри /clubs/). Иконки — по имени пункта. */ -}}
+    {{- $icons := dict
+      "Клубы" `<svg class="header-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"/></svg>`
+      "Добавить книгу" `<svg class="header-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M12 5v14"/></svg>`
+    -}}
+
     <nav class="header-nav">
-      <a href="{{ relURL "clubs/" }}" class="header-nav-link{{ if .IsSection }} active{{ end }}">
-        <svg class="header-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"/>
-        </svg>
-        Клубы
+      {{- range site.Menus.main }}
+      {{- $active := or ($.IsMenuCurrent .Menu .) ($.HasMenuCurrent .Menu .) }}
+      <a href="{{ .URL }}" class="header-nav-link{{ if $active }} active{{ end }}">
+        {{ index $icons .Name | default "" | safeHTML }}
+        {{ .Name }}
       </a>
-      <a href="{{ relURL "add-book/" }}" class="header-nav-link{{ if eq .Section "add-book" }} active{{ end }}">
-        <svg class="header-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M5 12h14"/>
-          <path d="M12 5v14"/>
-        </svg>
-        Добавить книгу
-      </a>
+      {{- end }}
     </nav>
 
     {{- /* Мобильное меню: две полоски как бургер в site-nav victors-blog.
@@ -37,8 +40,10 @@
         <span></span>
       </button>
       <nav class="header-panel" id="header-menu-panel" data-burger-panel>
-        <a href="{{ relURL "clubs/" }}"{{ if .IsSection }} class="active"{{ end }}>Клубы</a>
-        <a href="{{ relURL "add-book/" }}"{{ if eq .Section "add-book" }} class="active"{{ end }}>Добавить книгу</a>
+        {{- range site.Menus.main }}
+        {{- $active := or ($.IsMenuCurrent .Menu .) ($.HasMenuCurrent .Menu .) }}
+        <a href="{{ .URL }}"{{ if $active }} class="active"{{ end }}>{{ .Name }}</a>
+        {{- end }}
       </nav>
     </div>
   </div>

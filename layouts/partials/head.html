@@ -5,11 +5,11 @@
   {{- $title = "Категории" -}}
 {{- else if eq .Kind "term" -}}
   {{- with partial "category-by-slug.html" (dict "slug" .Data.Term) }}{{ $title = .name }}{{ end -}}
+{{- else if and .IsSection (eq .Section "clubs") -}}
+  {{- $title = "Клубы" -}}
 {{- end -}}
 <title>{{ if .IsHome }}{{ site.Title }} — книжные клубы{{ else }}{{ $title }} · {{ site.Title }}{{ end }}</title>
-{{- with or .Description .Params.description .Site.Params.description }}
-<meta name="description" content="{{ . }}">
-{{- end }}
+{{- partial "head/seo.html" . }}
 <link rel="icon" type="image/svg+xml" href="{{ "favicon.svg" | relURL }}">
 {{/* Атрибуция шрифта: лицензия Handil Pro требует указать студию и ссылку.
      Комментарий в CSS вырезает --minify, meta-тег переживает сборку. */}}
@@ -20,3 +20,4 @@
 <link rel="stylesheet" href="{{ "css/main.css" | relURL }}">
 <script src="{{ "js/catalog.js" | relURL }}" defer></script>
 <script src="{{ "js/header.js" | relURL }}" defer></script>
+<script src="{{ "js/share.js" | relURL }}" defer></script>

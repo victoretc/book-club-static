@@ -1,3 +1,7 @@
+{{- /* Три колонки из данных, без хардкода:
+     Навигация — menu.main (hugo.toml), Категории — живые категории
+     (data/categories.yml ∩ таксономия), Проект — params.github. */ -}}
+{{- $cats := partial "categories-active.html" -}}
 <footer class="footer">
   <div class="footer-inner">
     <div class="footer-main">
@@ -9,15 +13,32 @@
         <div class="footer-col">
           <h2 class="footer-heading">Навигация</h2>
           <ul class="footer-list">
-            <li><a href="{{ relURL "clubs/" }}" class="footer-link">Все клубы</a></li>
+            {{- range site.Menus.main }}
+            <li><a href="{{ .URL }}" class="footer-link">{{ .Name }}</a></li>
+            {{- end }}
           </ul>
         </div>
+
+        {{- if $cats }}
         <div class="footer-col">
-          <h2 class="footer-heading">Сайт</h2>
+          <h2 class="footer-heading">Категории</h2>
           <ul class="footer-list">
-            <li><a href="{{ relURL "categories/" }}" class="footer-link">Категории</a></li>
+            {{- range $cats }}
+            <li><a href="{{ printf "categories/%s/" .slug | relURL }}" class="footer-link">{{ .name }}</a></li>
+            {{- end }}
           </ul>
         </div>
+        {{- end }}
+
+        {{- with site.Params.github }}
+        <div class="footer-col">
+          <h2 class="footer-heading">Проект</h2>
+          <ul class="footer-list">
+            <li><a href="{{ . }}" class="footer-link" target="_blank" rel="noopener">GitHub</a></li>
+            <li><a href="{{ "sitemap.xml" | relURL }}" class="footer-link">Карта сайта</a></li>
+          </ul>
+        </div>
+        {{- end }}
       </nav>
     </div>
 

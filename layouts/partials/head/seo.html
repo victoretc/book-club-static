@@ -1,0 +1,94 @@
+{{- /* SEO и соцсети: description, canonical, Open Graph, Twitter Card,
+   JSON-LD. Сайт одноязычный — hreflang не нужен. */ -}}
+
+{{- /* Заголовок страницы — та же логика, что в <title> (head.html):
+     секция клубов живёт под /clubs/, у неё .Title = "Clubs" из filename. */ -}}
+{{- $title := .Title -}}
+{{- if eq .Kind "taxonomy" -}}
+  {{- $title = "Категории" -}}
+{{- else if eq .Kind "term" -}}
+  {{- with partial "category-by-slug.html" (dict "slug" .Data.Term) }}{{ $title = .name }}{{ end -}}
+{{- else if and .IsSection (eq .Section "clubs") -}}
+  {{- $title = "Клубы" -}}
+{{- end -}}
+{{- if .IsHome }}{{ $title = site.Title }}{{ end -}}
+
+{{- /* Описание: front matter → site.Params.description → название. */ -}}
+{{- $desc := or .Description .Params.description site.Params.description -}}
+{{- $desc = $desc | replaceRE `\s+` " " | strings.TrimSpace | truncate 160 "" -}}
+{{- if not $desc -}}
+  {{- $desc = printf "%s — каталог книжных клубов" site.Title -}}
+{{- end -}}
+
+{{- /* og:locale из languageCode: ru-ru → ru_RU */ -}}
+{{- $ogLocale := "ru_RU" -}}
+{{- $parts := split site.Language.LanguageCode "-" -}}
+{{- if ge (len $parts) 2 -}}
+  {{- $ogLocale = printf "%s_%s" (index $parts 0) (upper (index $parts 1)) -}}
+{{- end -}}
+
+{{- /* Обложка: cover из front matter (путь в static/) → og-default.png.
+     og:image требует абсолютный URL. */ -}}
+{{- $imgPath := .Params.cover | default "og-default.png" -}}
+{{- $ogImage := printf "%s" ($imgPath | absURL) -}}
+
+<meta name="description" content="{{ $desc }}">
+<link rel="canonical" href="{{ .Permalink }}">
+
+<meta property="og:type" content="{{ if .IsPage }}article{{ else }}website{{ end }}">
+<meta property="og:site_name" content="{{ site.Title }}">
+<meta property="og:title" content="{{ $title }}">
+<meta property="og:description" content="{{ $desc }}">
+<meta property="og:url" content="{{ .Permalink }}">
+<meta property="og:locale" content="{{ $ogLocale }}">
+<meta property="og:image" content="{{ $ogImage }}">
+<meta property="og:image:alt" content="{{ $title }}">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="{{ $title }}">
+<meta name="twitter:description" content="{{ $desc }}">
+<meta name="twitter:image" content="{{ $ogImage }}">
+
+{{- /* JSON-LD: WebSite на главной, BreadcrumbList на всех вложенных
+     страницах. Объекты отдаём как dict/slice, а не jsonify: внутри <script>
+     Go html/template экранировал бы JSON-строку повторно (\"...\"),
+     а объект он сериализует сам — с санитизацией </script>. */ -}}
+{{- if .IsHome }}
+{{- $search := dict
+  "@type" "SearchAction"
+  "target" (printf "%sclubs/?q={search_term_string}" site.BaseURL)
+  "query-input" "required name=search_term_string" -}}
+{{- $ld := dict
+  "@context" "https://schema.org"
+  "@type" "WebSite"
+  "name" site.Title
+  "url" site.BaseURL
+  "description" $desc
+  "potentialAction" $search -}}
+<script type="application/ld+json">{{ $ld }}</script>
+{{- else if and (eq .Section "clubs") .IsPage }}
+{{- $trail := slice (dict "@type" "ListItem" "position" 1 "name" "Клубы" "item" (printf "clubs/" | absURL)) -}}
+{{- $cats := .Params.categories | default slice -}}
+{{- if $cats -}}
+  {{- with partial "category-by-slug.html" (dict "slug" (index $cats 0)) -}}
+    {{- $trail = $trail | append (dict "@type" "ListItem" "position" 2 "name" .name "item" (printf "categories/%s/" .slug | absURL)) -}}
+  {{- end -}}
+{{- end -}}
+{{- $name := .Params.book_title | default .Params.author_name | default .Title -}}
+{{- $trail = $trail | append (dict "@type" "ListItem" "position" (add (len $trail) 1) "name" $name) -}}
+{{- $ld := dict "@context" "https://schema.org" "@type" "BreadcrumbList" "itemListElement" $trail -}}
+<script type="application/ld+json">{{ $ld }}</script>
+{{- else if .IsPage }}
+{{- /* Не-клубные страницы (add-book): крошки шаблона — Клубы / название */ -}}
+{{- $trail := slice
+  (dict "@type" "ListItem" "position" 1 "name" "Клубы" "item" (printf "clubs/" | absURL))
+  (dict "@type" "ListItem" "position" 2 "name" $title) -}}
+{{- $ld := dict "@context" "https://schema.org" "@type" "BreadcrumbList" "itemListElement" $trail -}}
+<script type="application/ld+json">{{ $ld }}</script>
+{{- else if or .IsSection (eq .Kind "taxonomy") (eq .Kind "term") }}
+{{- $trail := slice
+  (dict "@type" "ListItem" "position" 1 "name" "Клубы" "item" (printf "clubs/" | absURL))
+  (dict "@type" "ListItem" "position" 2 "name" $title) -}}
+{{- $ld := dict "@context" "https://schema.org" "@type" "BreadcrumbList" "itemListElement" $trail -}}
+<script type="application/ld+json">{{ $ld }}</script>
+{{- end -}}

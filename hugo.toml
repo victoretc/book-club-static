@@ -20,8 +20,16 @@ summaryLength = 30
     style = 'dracula'
     noClasses = true
 
+[params]
+  description = 'Читальная — каталог книжных клубов: клубы по книгам и авторские клубы, категории, отзывы участников.'
+  github = 'https://github.com/victoretc/book-club-static'
+
 [menu]
   [[menu.main]]
     name = 'Клубы'
-    url = '/clubs/'
+    pageRef = '/clubs'
     weight = 10
+  [[menu.main]]
+    name = 'Добавить книгу'
+    pageRef = '/add-book'
+    weight = 20

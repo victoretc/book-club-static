@@ -15,7 +15,7 @@
 
 <div class="clubs-page">
   <div class="clubs-content">
-    {{ partial "breadcrumbs.html" (dict "trail" .trail "trailingSlash" (eq $active "")) }}
+    {{ partial "breadcrumbs.html" (dict "trail" .trail) }}
 
     <div class="filters-section">
       <div class="search-row">
@@ -55,22 +55,21 @@
       </div>
     </div>
 
+    {{- /* Ряд фишек — мобильный двойник сайдбара (как cat-list в
+         victors-blog): избранное первым, чтобы не прятаться в конце
+         прокрутки, затем «Все категории» — всегда, это и есть выбор
+         всего каталога. На десктопе ряд скрыт (см. .category-chips). */ -}}
     <nav class="category-chips" aria-label="Категории">
-      {{- if $active }}
-      <a href="{{ relURL "clubs/" }}" class="chip chip--all">Все категории</a>
-      {{- end }}
-      {{- range $cats }}
-      <a href="{{ printf "categories/%s/" .slug | relURL }}" class="chip{{ if eq $.activeSlug .slug }} chip--active{{ end }}">{{ .name }}</a>
-      {{- end }}
-      {{- /* Таблетка «Избранное» — мобильный двойник чекбокса из сайдбара:
-           на ≤768px сайдбар скрыт (см. .category-sidebar), поэтому фильтр
-           иначе был бы недоступен. */ -}}
       <button type="button" class="chip chip--fav" data-fav-toggle aria-pressed="false">
         <svg class="chip-fav-ico" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
           <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
         </svg>
         Избранное
       </button>
+      <a href="{{ relURL "clubs/" }}" class="chip chip--all{{ if not $active }} chip--active{{ end }}">Все категории</a>
+      {{- range $cats }}
+      <a href="{{ printf "categories/%s/" .slug | relURL }}" class="chip{{ if eq $.activeSlug .slug }} chip--active{{ end }}">{{ .name }}</a>
+      {{- end }}
     </nav>
 
     <div class="content-grid">
@@ -115,30 +114,23 @@
 
         <h2 class="sidebar-title">Категории</h2>
 
+        {{- /* «Все категории» — пункт списка, а не кнопка внизу: так же
+             устроено в victors-blog, где «Все» — первая строка фильтра.
+             Стрелки у пунктов нет — они читаются как «откроется», а это
+             фильтр. */ -}}
         {{- if $cats }}
         <div class="cat-list">
+          <a href="{{ relURL "clubs/" }}" class="cat-item{{ if not $active }} active{{ end }}">
+            <span class="cat-name">Все категории</span>
+          </a>
           {{- range $cats }}
           <a href="{{ printf "categories/%s/" .slug | relURL }}" class="cat-item{{ if eq $active .slug }} active{{ end }}">
             <span class="cat-name">{{ .name }}</span>
-            <svg class="cat-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M9 18l6-6-6-6"/>
-            </svg>
           </a>
           {{- end }}
         </div>
         {{- else }}
         <div class="sidebar-empty">Категории появятся позже</div>
-        {{- end }}
-
-        {{- if $active }}
-        <div class="sidebar-footer">
-          <a href="{{ relURL "clubs/" }}" class="sidebar-back">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M19 12H5M11 18l-6-6 6-6"/>
-            </svg>
-            Все категории
-          </a>
-        </div>
         {{- end }}
       </aside>
     </div>
@@ -151,8 +143,7 @@
 
     {{- /* Уведомление о результате клика: клуб добавлен или убран.
          Дизайн — ToastNotification из book-club-web (белая плашка, зелёная
-         иконка-кружок, кнопка закрытия), но закреплено вверху экрана:
-         на телефоне ниже липкого хэдера, иначе плашка уезжает под него. */ -}}
+         иконка-кружок, кнопка закрытия), закреплено вверху экрана. */ -}}
     <div class="fav-toast" role="status" aria-live="polite" data-fav-toast
          data-text-added="Клуб добавлен в избранное"
          data-text-removed="Клуб убран из избранного">

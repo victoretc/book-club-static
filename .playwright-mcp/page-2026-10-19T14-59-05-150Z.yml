@@ -1,0 +1,125 @@
+- generic [ref=f3e2]:
+  - banner [ref=f3e3]:
+    - generic [ref=f3e4]:
+      - link "Читальная" [ref=f3e5] [cursor=pointer]:
+        - /url: /
+      - button "Меню" [ref=f3e7] [cursor=pointer]
+  - main [ref=f3e10]:
+    - generic [ref=f3e12]:
+      - navigation "Хлебные крошки" [ref=f3e13]:
+        - generic [ref=f3e14]:
+          - link "Клубы" [ref=f3e15] [cursor=pointer]:
+            - /url: /clubs/
+          - generic [ref=f3e16]: /
+          - generic [ref=f3e17]: Разработка
+      - generic [ref=f3e20]:
+        - textbox "Найти книжный клуб" [ref=f3e21]
+        - button "Найти" [ref=f3e22] [cursor=pointer]
+      - navigation "Категории" [ref=f3e26]:
+        - link "Все категории" [ref=f3e27] [cursor=pointer]:
+          - /url: /clubs/
+        - link "Тестирование" [ref=f3e28] [cursor=pointer]:
+          - /url: /categories/testing/
+        - link "Дизайн" [ref=f3e29] [cursor=pointer]:
+          - /url: /categories/design/
+        - link "Разработка" [ref=f3e30] [cursor=pointer]:
+          - /url: /categories/development/
+        - link "Менеджмент" [ref=f3e31] [cursor=pointer]:
+          - /url: /categories/management/
+        - link "Рекрутинг" [ref=f3e32] [cursor=pointer]:
+          - /url: /categories/recruiting/
+        - link "Аналитика" [ref=f3e33] [cursor=pointer]:
+          - /url: /categories/analytics/
+        - link "ДевОпс" [ref=f3e34] [cursor=pointer]:
+          - /url: /categories/devops/
+        - link "Экономика" [ref=f3e35] [cursor=pointer]:
+          - /url: /categories/economics/
+        - link "Истории успеха" [ref=f3e36] [cursor=pointer]:
+          - /url: /categories/success-stories/
+        - link "Ведение переговоров" [ref=f3e37] [cursor=pointer]:
+          - /url: /categories/negotiations/
+        - button "Избранное" [ref=f3e38] [cursor=pointer]
+      - generic [ref=f3e43]:
+        - generic [ref=f3e44]:
+          - 'link "Мартин Фаулер Главный научный сотрудник Thoughtworks, автор эталонных книг по рефакторингу, архитектуре и шаблонам проектирования, влиятельный голос в разработке ПО. Читают сейчас: «Рефакторинг. Улучшение существующего кода» (2018) A C 2 участника уже читают" [ref=f3e45] [cursor=pointer]':
+            - /url: /clubs/fowler/
+            - heading "Мартин Фаулер" [level=3] [ref=f3e47]
+            - paragraph [ref=f3e48]: Главный научный сотрудник Thoughtworks, автор эталонных книг по рефакторингу, архитектуре и шаблонам проектирования, влиятельный голос в разработке ПО.
+            - generic [ref=f3e49]: "Читают сейчас: «Рефакторинг. Улучшение существующего кода» (2018)"
+            - generic [ref=f3e51]:
+              - generic [ref=f3e52]:
+                - generic [ref=f3e53]: A
+                - generic [ref=f3e54]: C
+              - generic [ref=f3e55]: 2 участника уже читают
+          - button "Добавить клуб в избранное"
+        - generic [ref=f3e59]:
+          - 'link "Роберт Мартин (Дядя Боб) Легендарный инженер-программист, автор книг «Чистый код», «Чистая архитектура» и «Идеальный программист», один из авторов манифеста Agile. Читают сейчас: «Чистая архитектура» (2017) B C 2 участника уже читают" [ref=f3e60] [cursor=pointer]':
+            - /url: /clubs/dyadya-bob/
+            - heading "Роберт Мартин (Дядя Боб)" [level=3] [ref=f3e62]
+            - paragraph [ref=f3e63]: Легендарный инженер-программист, автор книг «Чистый код», «Чистая архитектура» и «Идеальный программист», один из авторов манифеста Agile.
+            - generic [ref=f3e64]: "Читают сейчас: «Чистая архитектура» (2017)"
+            - generic [ref=f3e66]:
+              - generic [ref=f3e67]:
+                - generic [ref=f3e68]: B
+                - generic [ref=f3e69]: C
+              - generic [ref=f3e70]: 2 участника уже читают
+          - button "Добавить клуб в избранное"
+        - generic [ref=f3e74]:
+          - 'link "Чистый код <2008> Настольная книга каждого разработчика: принципы написания понятного, поддерживаемого и качественного кода, а также рефакторинга. A C 2 участника уже читают" [ref=f3e75] [cursor=pointer]':
+            - /url: /clubs/chistyj-kod/
+            - heading "Чистый код <2008>" [level=3] [ref=f3e77]
+            - paragraph [ref=f3e78]: "Настольная книга каждого разработчика: принципы написания понятного, поддерживаемого и качественного кода, а также рефакторинга."
+            - generic [ref=f3e80]:
+              - generic [ref=f3e81]:
+                - generic [ref=f3e82]: A
+                - generic [ref=f3e83]: C
+              - generic [ref=f3e84]: 2 участника уже читают
+          - button "Добавить клуб в избранное"
+      - button "Наверх" [ref=f3e88] [cursor=pointer]
+  - contentinfo [ref=f3e91]:
+    - generic [ref=f3e92]:
+      - generic [ref=f3e93]:
+        - link "Читальная — на главную" [ref=f3e95] [cursor=pointer]:
+          - /url: /
+          - text: Читальная
+        - navigation "Разделы сайта" [ref=f3e96]:
+          - generic [ref=f3e97]:
+            - heading "Навигация" [level=2] [ref=f3e98]
+            - list [ref=f3e99]:
+              - listitem [ref=f3e100]:
+                - link "Клубы" [ref=f3e101] [cursor=pointer]:
+                  - /url: /clubs/
+          - generic [ref=f3e102]:
+            - heading "Категории" [level=2] [ref=f3e103]
+            - list [ref=f3e104]:
+              - listitem [ref=f3e105]:
+                - link "Тестирование" [ref=f3e106] [cursor=pointer]:
+                  - /url: /categories/testing/
+              - listitem [ref=f3e107]:
+                - link "Дизайн" [ref=f3e108] [cursor=pointer]:
+                  - /url: /categories/design/
+              - listitem [ref=f3e109]:
+                - link "Разработка" [ref=f3e110] [cursor=pointer]:
+                  - /url: /categories/development/
+              - listitem [ref=f3e111]:
+                - link "Менеджмент" [ref=f3e112] [cursor=pointer]:
+                  - /url: /categories/management/
+              - listitem [ref=f3e113]:
+                - link "Рекрутинг" [ref=f3e114] [cursor=pointer]:
+                  - /url: /categories/recruiting/
+              - listitem [ref=f3e115]:
+                - link "Аналитика" [ref=f3e116] [cursor=pointer]:
+                  - /url: /categories/analytics/
+              - listitem [ref=f3e117]:
+                - link "ДевОпс" [ref=f3e118] [cursor=pointer]:
+                  - /url: /categories/devops/
+              - listitem [ref=f3e119]:
+                - link "Экономика" [ref=f3e120] [cursor=pointer]:
+                  - /url: /categories/economics/
+              - listitem [ref=f3e121]:
+                - link "Истории успеха" [ref=f3e122] [cursor=pointer]:
+                  - /url: /categories/success-stories/
+              - listitem [ref=f3e123]:
+                - link "Ведение переговоров" [ref=f3e124] [cursor=pointer]:
+                  - /url: /categories/negotiations/
+      - paragraph [ref=f3e126]: © 2026 Читальная
