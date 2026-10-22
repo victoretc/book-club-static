@@ -1,0 +1,2455 @@
+/* ===== FONTS =====
+   "Handil Pro" — HandilPro-Medium, (c) 2023 Alifinart Studio.
+   Licence requires crediting the foundry:
+   https://behance.net/alifinart
+   Attribution живёт в meta-теге (layouts/partials/head.html), комментарий
+   здесь не годится — hugo --minify вырезает комментарии. */
+@font-face {
+  font-family: 'Handil Pro';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url('../fonts/HandilPro-Medium.woff2') format('woff2');
+}
+
+/* "Drabina" — Drabina Solid, (c) Mark Blondie / Redage Works, бесплатный
+   экспериментальный шрифт (https://fonts.redage.works/en/drabina), OFL 1.1.
+   В archive лежал OTF на 187 глифов; как и в victors-blog, он подрезан до
+   используемых символов (латиница, кириллица, цифры, пунктуация) и сжат
+   в woff2 — 6 КБ. */
+@font-face {
+  font-family: 'Drabina';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url('../fonts/Drabina-Solid.woff2') format('woff2');
+}
+
+/* ===== Tokens (book-club-web/src/assets/main.css) ===== */
+:root {
+  --color-bg: #F2F2F4;
+  --color-surface: #FFFFFF;
+  --color-brand: #3B3EFF;
+  --color-brand-soft: rgba(59, 62, 255, 0.08);
+  --color-brand-ring: rgba(59, 62, 255, 0.2);
+  --color-error-soft: rgba(224, 83, 83, 0.08);
+  --color-text: #1A1C2B;
+  --color-text-secondary: #575757;
+  --color-text-muted: #9A9A9A;
+  --color-stroke-subtle: rgba(26, 28, 43, 0.06);
+  --color-error: #E05353;
+  --color-success: #42CF71;
+  --color-accent: #A0EC06;
+
+  --font-display: 'Drabina', 'Georgia', serif;
+  --font-heading: 'Handil Pro', 'Georgia', serif;
+  --font-body: 'Inter', system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+
+  --text-xs: 0.75rem;
+  --text-sm: 0.875rem;
+  --text-base: 1rem;
+  --text-lg: 1.125rem;
+  --text-xl: 1.25rem;
+  --text-2xl: 1.5rem;
+  --text-3xl: 2rem;
+
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.25rem;
+  --space-6: 1.5rem;
+  --space-8: 2rem;
+  --space-10: 2.5rem;
+
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-xl: 24px;
+  --radius-2xl: 32px;
+  --radius-pill: 9999px;
+
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.04);
+  --shadow-hover: 0 4px 16px rgba(0, 0, 0, 0.1);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.07);
+  --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.08);
+
+  --ease-out: cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  --duration-fast: 0.15s;
+  --duration-normal: 0.25s;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  margin: 0;
+  font-family: var(--font-body);
+  font-size: var(--text-base);
+  line-height: 1.5;
+  color: var(--color-text);
+  background-color: var(--color-bg);
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-brand);
+  outline-offset: 2px;
+}
+
+h1, h2, h3, h4, p {
+  margin: 0;
+}
+
+img {
+  display: block;
+}
+
+a {
+  color: inherit;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* ===== App layout (App.vue) ===== */
+.app-layout {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 24px 24px 60px;
+}
+
+@media (max-width: 768px) {
+  main {
+    padding: 16px 16px 40px;
+  }
+}
+
+@media (max-width: 480px) {
+  main {
+    padding: 12px 12px 32px;
+  }
+}
+
+/* ===== BaseButton ===== */
+.base-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  height: 48px;
+  padding: 0 24px;
+  border-radius: 40px;
+  font-family: var(--font-body);
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 1.2;
+  cursor: pointer;
+  white-space: nowrap;
+  text-decoration: none;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+  border: 1px solid transparent;
+  transition:
+    background 0.2s ease,
+    border-color 0.2s ease,
+    color 0.2s ease,
+    box-shadow 0.2s ease,
+    filter 0.2s ease;
+}
+
+.base-btn:focus-visible {
+  outline: 2px solid var(--color-brand);
+  outline-offset: 2px;
+}
+
+.base-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+.base-btn--full {
+  width: 100%;
+}
+
+.base-btn--primary {
+  background: var(--color-brand);
+  color: #FFFFFF;
+  border-color: rgba(59, 62, 255, 0.4);
+  box-shadow: 0 2px 8px rgba(59, 62, 255, 0.25);
+}
+
+.base-btn--primary:hover:not(:disabled) {
+  filter: brightness(1.08);
+  box-shadow: 0 4px 16px rgba(59, 62, 255, 0.25);
+}
+
+.base-btn--primary:active:not(:disabled) {
+  filter: brightness(0.92);
+}
+
+.base-btn--outline {
+  background: transparent;
+  color: var(--color-text);
+  border-color: var(--color-stroke-subtle);
+}
+
+.base-btn--outline:hover:not(:disabled) {
+  background: var(--color-brand-soft);
+  border-color: var(--color-brand);
+  color: var(--color-brand);
+}
+
+.base-btn--brand-outline {
+  background: transparent;
+  color: var(--color-brand);
+  border-color: var(--color-brand);
+}
+
+.base-btn--brand-outline:hover:not(:disabled) {
+  background: var(--color-brand-soft);
+}
+
+/* ===== Header ===== */
+.header {
+  position: relative;
+  z-index: 100;
+  width: 100%;
+}
+
+/* Флекс, а не сетка 1fr auto 1fr: логотип прижат слева на всех экранах,
+   навигация уходит вправо через margin-left: auto. Стрелка «назад» (только
+   страница клуба) стоит перед логотипом. */
+.header-inner {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 36px 24px 10px;
+}
+
+.header-brand {
+  font-family: var(--font-display);
+  font-size: 22px;
+  font-weight: 400;
+  line-height: 1;
+  color: var(--color-text);
+  text-decoration: none;
+  flex-shrink: 0;
+}
+
+/* Стрелка «назад» на странице клуба — в одной строке с хлебными крошками,
+   слева от цепочки. Без hover-эффекта. */
+.detail-top {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.detail-top .breadcrumbs-nav {
+  flex: 1;
+  min-width: 0;
+}
+
+.detail-back {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 40px;
+  height: 40px;
+  margin-left: -9px;
+  border-radius: 9999px;
+  color: var(--color-text);
+}
+
+.header-nav {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.header-nav-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 14px;
+  border-radius: var(--radius-pill);
+  font-family: var(--font-body);
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--color-text-secondary);
+  text-decoration: none;
+  transition: color 0.2s ease, background 0.2s ease;
+}
+
+.header-nav-link:hover,
+.header-nav-link.active {
+  color: var(--color-text);
+  background: var(--color-stroke-subtle);
+}
+
+.header-icon {
+  flex-shrink: 0;
+  opacity: 0.5;
+}
+
+.header-nav-link:hover .header-icon,
+.header-nav-link.active .header-icon {
+  opacity: 0.8;
+}
+
+/* --- Бургер-меню (как site-nav в victors-blog) ---------------------------
+   На десктопе скрыто: ссылки несёт .header-nav. Показывается на ≤768px,
+   где навигация уезжает в панель под двумя полосками. */
+.header-menu {
+  display: none;
+  position: relative;
+}
+
+.header-burger {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-end;
+  gap: 7px;
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: pointer;
+}
+
+.header-burger span {
+  display: block;
+  width: 24px;
+  height: 2px;
+  border-radius: 2px;
+  background: var(--color-text);
+  opacity: 0.65;
+  transition: opacity 180ms ease, transform 180ms ease;
+}
+
+.header-burger:hover span {
+  opacity: 1;
+}
+
+.header-burger[aria-expanded='true'] span:first-child {
+  opacity: 1;
+  transform: translateY(4.5px) rotate(45deg);
+}
+
+.header-burger[aria-expanded='true'] span:last-child {
+  opacity: 1;
+  transform: translateY(-4.5px) rotate(-45deg);
+}
+
+.header-panel {
+  position: absolute;
+  top: calc(100% + 12px);
+  right: 0;
+  min-width: 232px;
+  padding: 8px;
+  background: var(--color-surface);
+  border: 1px solid var(--color-stroke-subtle);
+  border-radius: 14px;
+  box-shadow: var(--shadow-lg);
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-6px);
+  transition:
+    opacity 160ms ease,
+    transform 160ms ease,
+    visibility 160ms;
+}
+
+.header-panel.is-open {
+  opacity: 1;
+  visibility: visible;
+  transform: none;
+}
+
+.header-panel a {
+  display: block;
+  padding: 10px 14px;
+  border-radius: 8px;
+  font-family: var(--font-body);
+  font-size: 15px;
+  font-weight: 500;
+  line-height: 1.4;
+  color: var(--color-text);
+  text-decoration: none;
+  white-space: nowrap;
+  transition: background 140ms ease, color 140ms ease;
+}
+
+.header-panel a:hover {
+  background: var(--color-stroke-subtle);
+}
+
+.header-panel a.active {
+  background: var(--color-brand-soft);
+  color: var(--color-brand);
+}
+
+@media (max-width: 768px) {
+  /* Шапка не липкая — уезжает со страницей при скролле. Логотип слева,
+     бургер справа (margin-left: auto), как и на десктопе. */
+  .header-inner {
+    min-height: 56px;
+    gap: 16px;
+    padding: calc(14px + env(safe-area-inset-top, 0px)) 16px 10px;
+  }
+
+  .header-brand {
+    font-size: 21px;
+    letter-spacing: 0.02em;
+  }
+
+  .detail-back {
+    margin-left: -8px;
+  }
+
+  .header-nav {
+    display: none;
+  }
+
+  .header-menu {
+    display: block;
+    margin-left: auto;
+  }
+}
+
+/* ===== Footer =====
+   Логотип слева, колонки «Разделы» и «Категории» с заголовками,
+   GitHub и Карта сайта — простые ссылки без заголовка. Копирайт
+   над линией, линия внизу футера. */
+.footer {
+  background: var(--color-surface);
+}
+
+.footer-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 24px 24px 0;
+}
+
+.footer-main {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 24px 48px;
+}
+
+.footer-brand-link {
+  font-family: var(--font-display);
+  font-size: 22px;
+  font-weight: 400;
+  line-height: 1.138;
+  color: var(--color-text);
+  text-decoration: none;
+}
+
+.footer-cols {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 24px 56px;
+}
+
+.footer-col {
+  min-width: 140px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.footer-col--plain {
+  justify-content: flex-start;
+  gap: 8px;
+}
+
+.footer-heading {
+  font-family: var(--font-body);
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1.2;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+  margin: 0;
+}
+
+.footer-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.footer-link {
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 1.4;
+  color: var(--color-text-secondary);
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.footer-link:hover {
+  color: var(--color-brand);
+}
+
+.footer-bottom {
+  margin-top: 24px;
+}
+
+.footer-copyright {
+  font-size: 13px;
+  color: var(--color-text-muted);
+  margin-bottom: 12px;
+}
+
+.footer-rule {
+  height: 1px;
+  background: var(--color-stroke-subtle);
+}
+
+@media (max-width: 768px) {
+  .footer-inner {
+    padding: 20px 16px 0;
+  }
+
+  .footer-main {
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .footer-cols {
+    gap: 20px 32px;
+  }
+}
+
+/* ===== Breadcrumbs (BreadcrumbsNav) ===== */
+.breadcrumbs-nav {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 8px 16px;
+  font-family: var(--font-body);
+  font-size: 15px;
+  line-height: 1.3;
+}
+
+.breadcrumbs-nav__trail {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+.crumb {
+  color: var(--color-text-secondary);
+  text-decoration: none;
+  border-radius: 8px;
+  transition: color 0.2s ease, background 0.2s ease;
+}
+
+.crumb--link:hover {
+  color: var(--color-text);
+  background: var(--color-bg);
+}
+
+.crumb--current {
+  /* Текущая страница заметно темнее ссылок — иначе в длинной цепочке
+     «Клубы / категория / клуб» непонятно, где ты находишься. */
+  color: var(--color-text);
+  font-weight: 500;
+}
+
+.crumb-sep {
+  color: var(--color-text-muted);
+}
+
+/* ===== Каталог: страница (ClubCards) ===== */
+.clubs-page {
+  width: 100%;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0;
+}
+
+.clubs-content {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 16px;
+}
+
+.category-chips {
+  display: none;
+}
+
+.category-sidebar {
+  display: block;
+}
+
+/* Таблетки — копия мобильных .cat-item из victors-blog: пилюля без рамки
+   на фоне surface, активная — бренд. Ряд виден только на ≤768px. */
+.chip {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 10px 18px;
+  background: var(--color-surface);
+  border: none;
+  border-radius: 9999px;
+  font-family: var(--font-body);
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1.21;
+  color: var(--color-text);
+  cursor: pointer;
+  white-space: nowrap;
+  text-decoration: none;
+  transition: background 0.2s ease, color 0.2s ease;
+}
+
+/* Hover у таблеток не нужен: подсветка остаётся только за активной. */
+
+.chip--active {
+  background: var(--color-brand);
+  color: #FFFFFF;
+}
+
+.chip--all {
+  color: var(--color-brand);
+  background: var(--color-brand-soft);
+}
+
+.chip--all.chip--active {
+  background: var(--color-brand);
+  color: #FFFFFF;
+}
+
+/* Таблетка «Избранное» — мобильный двойник чекбокса из сайдбара: тот же
+   pill, что и категории, плюс сердечко слева. Активность приходит классом
+   .chip--active из catalog.js, сердечко заливается. */
+.chip--fav {
+  color: var(--color-text);
+  background: var(--color-surface);
+}
+
+.chip--fav.chip--active {
+  background: var(--color-brand);
+  color: #FFFFFF;
+}
+
+.chip--fav.chip--active .chip-fav-ico path {
+  fill: currentColor;
+}
+
+.chip-fav-ico {
+  flex-shrink: 0;
+}
+
+.content-grid {
+  width: 100%;
+  display: grid;
+  grid-template-columns: minmax(0, 704px) 300px;
+  justify-content: center;
+  gap: 24px 16px;
+  align-items: start;
+}
+
+.clubs-column {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 24px;
+  min-width: 0;
+}
+
+.clubs-list {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+}
+
+/* display:flex/grid выше по специфичности перебивает атрибут hidden —
+   подтверждаем, что скрытый список действительно исчезает из потока. */
+.clubs-list[hidden] {
+  display: none;
+}
+
+@media (min-width: 768px) {
+  .clubs-list--grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    align-items: stretch;
+  }
+
+  .clubs-list--grid .club-card-wrap {
+    max-width: none;
+  }
+
+  .clubs-list--grid .club-card {
+    max-width: none;
+  }
+}
+
+/* ===== Карточка клуба ===== */
+/* Обёртка карточки: держит ссылку и кнопку избранного рядом. Кнопка не может
+   лежать внутри <a> (невалидная вложенность), поэтому она позиционируется
+   поверх карточки, а скрытие при фильтрации применяется к обёртке. */
+.club-card-wrap {
+  position: relative;
+  display: flex;
+  width: 100%;
+  max-width: 704px;
+  min-width: 0;
+}
+
+.club-card {
+  flex: 1;
+  width: 100%;
+  max-width: 704px;
+  background: var(--color-surface);
+  border-radius: 32px;
+  padding: 28px;
+  cursor: pointer;
+  text-decoration: none;
+  color: inherit;
+  transition: box-shadow var(--duration-normal) var(--ease-out), transform var(--duration-normal) var(--ease-out);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* Тень и подъём считаются от обёртки: курсор, наведённый на кнопку
+   избранного, тоже должен приподнимать карточку. */
+.club-card-wrap:hover .club-card {
+  box-shadow: var(--shadow-lg);
+  transform: translateY(-2px);
+}
+
+@media (min-width: 768px) {
+  .club-card--grid {
+    height: 100%;
+    border-radius: 24px;
+    padding: 20px;
+    gap: 0;
+    overflow: hidden;
+  }
+
+  .club-card--grid .card-header {
+    margin-bottom: 8px;
+  }
+
+  .club-card--grid .card-author-club {
+    margin-bottom: 8px;
+  }
+
+  .club-card--grid .now-reading {
+    margin-bottom: 8px;
+  }
+
+  .club-card--grid .card-title {
+    font-size: 18px;
+  }
+
+  .club-card--grid .author-avatar {
+    width: 44px;
+    height: 44px;
+  }
+
+  .club-card--grid .now-reading {
+    font-size: 12px;
+  }
+
+  .club-card--grid .card-desc {
+    margin-top: auto;
+    font-size: 14px;
+    line-height: 1.55;
+    -webkit-line-clamp: 2;
+  }
+
+  .club-card--grid .card-footer {
+    margin-top: 12px;
+    padding-top: 12px;
+    gap: 8px;
+  }
+
+  .club-card--grid .title-year {
+    font-size: 12px;
+  }
+
+  .club-card--grid .member-avatar {
+    width: 28px;
+    height: 28px;
+    font-size: 10px;
+  }
+
+  .club-card--grid .member-count {
+    font-size: 13px;
+  }
+}
+
+.card-header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.card-title {
+  font-family: var(--font-heading);
+  font-size: 24px;
+  font-weight: 500;
+  line-height: 1.1;
+  color: var(--color-text);
+  overflow-wrap: break-word;
+}
+
+.title-year {
+  font-family: var(--font-heading);
+  font-weight: 500;
+  color: var(--color-text-secondary);
+}
+
+.card-author {
+  font-family: var(--font-body);
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 1.21;
+  color: var(--color-text-secondary);
+}
+
+.card-author-club {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.author-avatar {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  object-fit: cover;
+  flex-shrink: 0;
+  background: var(--color-brand-soft);
+}
+
+.now-reading {
+  font-family: var(--font-body);
+  font-size: 15px;
+  font-weight: 400;
+  line-height: 1.6;
+  color: var(--color-text-secondary);
+  margin-top: 8px;
+}
+
+.card-desc {
+  font-family: var(--font-body);
+  font-size: 15px;
+  font-weight: 400;
+  line-height: 1.6;
+  color: var(--color-text-secondary);
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.card-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  padding-top: 16px;
+  border-top: 1px solid var(--color-stroke-subtle);
+}
+
+.card-members {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+}
+
+.member-avatars {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.member-avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-body);
+  font-size: 11px;
+  font-weight: 700;
+  color: #FFFFFF;
+  border: 2px solid var(--color-surface);
+  margin-left: -8px;
+  flex-shrink: 0;
+}
+
+.member-avatar:first-child {
+  margin-left: 0;
+}
+
+.member-count {
+  font-family: var(--font-body);
+  font-size: 15px;
+  font-weight: 400;
+  color: var(--color-text-secondary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.card-arrow {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-text-secondary);
+}
+
+/* --- Кнопка избранного на карточке ---------------------------------------
+   Сердечко лежит поверх карточки в её правом верхнем углу. Заголовку
+   оставлено поле справа, иначе длинный title уезжает под кнопку. */
+.club-card-wrap .card-header {
+  padding-right: 44px;
+}
+
+.card-fav {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  border: none;
+  border-radius: var(--radius-pill);
+  background: var(--color-bg);
+  color: var(--color-text-secondary);
+  cursor: pointer;
+  opacity: 0;
+  pointer-events: none;
+  transform: scale(0.85);
+  transition:
+    background var(--duration-fast) var(--ease-out),
+    color var(--duration-fast) var(--ease-out),
+    transform var(--duration-fast) var(--ease-out),
+    opacity var(--duration-fast) var(--ease-out);
+}
+
+/* На десктопе кнопка появляется при наведении на карточку (или при
+   фокусе с клавиатуры). На тач-устройствах наведения нет, кнопка видна
+   всегда (@media (hover: none) ниже). */
+.club-card-wrap:hover .card-fav,
+.card-fav:focus-visible {
+  opacity: 1;
+  pointer-events: auto;
+  transform: none;
+}
+
+.card-fav:hover {
+  background: var(--color-brand-soft);
+  color: var(--color-brand);
+}
+
+/* Клуб в избранном: сердечко синее и залитое. На мобильном кнопка
+   видна всегда, и это единственный постоянный признак сохранённого
+   клуба (уведомление исчезает). aria-pressed переключает JS в
+   renderFavorites() при загрузке и по клику. */
+.card-fav[aria-pressed='true'] {
+  color: var(--color-brand);
+  background: var(--color-brand-soft);
+}
+
+.card-fav[aria-pressed='true'] svg {
+  fill: currentColor;
+}
+
+.card-fav:active {
+  transform: scale(0.92);
+}
+
+.card-fav:focus-visible {
+  outline: 2px solid var(--color-brand);
+  outline-offset: 2px;
+}
+
+.no-results {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}
+
+.no-results[hidden] {
+  display: none;
+}
+
+.not-found-img {
+  max-width: 100%;
+  height: auto;
+  width: 360px;
+}
+
+/* Пустое состояние режима избранного — вместо картинки 404. */
+.fav-empty {
+  flex-direction: column;
+  gap: 4px;
+  padding: 40px 24px;
+  background: var(--color-surface);
+  border-radius: 24px;
+  text-align: center;
+}
+
+.fav-empty-title {
+  font-family: var(--font-heading);
+  font-size: 22px;
+  font-weight: 500;
+  line-height: 1.2;
+  color: var(--color-text);
+  margin: 0;
+}
+
+.fav-empty-text {
+  font-family: var(--font-body);
+  font-size: 15px;
+  line-height: 1.5;
+  color: var(--color-text-secondary);
+  margin: 0;
+}
+
+.fav-empty-link {
+  color: var(--color-brand);
+  font-weight: 500;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.fav-empty-link:hover {
+  text-decoration: none;
+}
+
+@media (max-width: 900px) {
+  .content-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .clubs-column {
+    order: 1;
+  }
+}
+
+@media (max-width: 768px) {
+  .clubs-page {
+    gap: 0;
+  }
+
+  /* Расстояния как в victors-blog: поиск → таблетки 12px, таблетки →
+     лента 24px. Равный gap колонки (16px) размывал связь «поиск +
+     фильтры» как одного блока управления. */
+  .clubs-content {
+    gap: 0;
+  }
+
+  /* Крошки на телефоне: воздух сверху (шапка больше не липкая) и снизу —
+     под контентом. При длинной цепочке (Клубы / категория / клуб) звенья
+     переносятся целиком, row-gap разводит перенесённые строки. */
+  .breadcrumbs-nav {
+    margin: 4px 0 0;
+    font-size: 14px;
+    line-height: 1.4;
+  }
+
+  .breadcrumbs-nav__trail {
+    row-gap: 8px;
+  }
+
+  .clubs-content .breadcrumbs-nav {
+    margin-bottom: 20px;
+  }
+
+  .filters-section {
+    margin-bottom: 12px;
+  }
+
+  /* Категории под поиском: без панели-плашки — только строка фишек,
+     листается пальцем по горизонтали. */
+  .category-chips {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    width: 100%;
+    margin-bottom: 24px;
+    overflow-x: auto;
+    scrollbar-width: none;
+    padding-bottom: 2px;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .category-chips::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* Селектор с двумя классами, а не .category-sidebar: лежащий ниже
+     .sidebar { display: flex } иначе перебивает правило по порядку
+     следования, и сайдбар на телефоне остаётся виден рядом с чипсами. */
+  .sidebar.category-sidebar {
+    display: none;
+  }
+
+  .club-card {
+    width: 100%;
+    padding: 20px;
+    gap: 10px;
+  }
+
+  .card-fav {
+    top: 12px;
+    right: 12px;
+    width: 32px;
+    height: 32px;
+  }
+
+  .card-header {
+    gap: 10px;
+  }
+
+  .card-title {
+    font-size: 24px;
+    flex: 1;
+  }
+
+  .card-desc {
+    font-size: 14px;
+  }
+
+  .card-footer {
+    gap: 12px;
+    padding-top: 12px;
+  }
+
+  .member-count {
+    font-size: 13px;
+  }
+
+  .not-found-img {
+    max-width: 100%;
+    width: 240px;
+    height: auto;
+  }
+
+  .no-results {
+    width: 100%;
+  }
+}
+
+@media (hover: none) {
+  .club-card-wrap:hover .club-card {
+    box-shadow: none;
+    transform: none;
+  }
+
+  /* На тач-устройствах наведения нет: сердечко видно всегда. */
+  .card-fav {
+    opacity: 1;
+    pointer-events: auto;
+    transform: none;
+  }
+}
+
+@media (max-width: 480px) {
+  .clubs-page {
+    gap: 12px;
+  }
+
+  .clubs-list {
+    gap: 10px;
+  }
+
+  .clubs-column {
+    gap: 16px;
+  }
+
+  .club-card {
+    padding: 16px;
+    gap: 8px;
+  }
+
+  .card-header {
+    gap: 8px;
+  }
+
+  .card-title {
+    font-size: 20px;
+    flex: 1;
+  }
+
+  .card-desc {
+    font-size: 13px;
+    line-height: 1.5;
+    -webkit-line-clamp: 2;
+  }
+
+  .card-footer {
+    gap: 8px;
+    padding-top: 10px;
+  }
+
+  .card-members {
+    gap: 8px;
+  }
+
+  .member-avatar {
+    width: 28px;
+    height: 28px;
+    font-size: 10px;
+    border-width: 1.5px;
+    margin-left: -6px;
+  }
+
+  .member-count {
+    font-size: 12px;
+  }
+
+  .card-arrow svg {
+    width: 16px;
+    height: 16px;
+  }
+}
+
+/* ===== Кнопка «Наверх» ===== */
+.scroll-top {
+  position: fixed;
+  right: 24px;
+  bottom: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 52px;
+  height: 52px;
+  border: none;
+  border-radius: 50%;
+  background: var(--color-brand);
+  color: #FFFFFF;
+  cursor: pointer;
+  box-shadow: 0 8px 24px rgba(59, 62, 255, 0.35);
+  z-index: 40;
+  transition: background 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease, opacity 0.25s ease;
+}
+
+.scroll-top:hover {
+  filter: brightness(1.08);
+  transform: translateY(-2px);
+  box-shadow: 0 12px 28px rgba(59, 62, 255, 0.4);
+}
+
+.scroll-top:active {
+  transform: translateY(0);
+}
+
+@media (max-width: 480px) {
+  .scroll-top {
+    right: 16px;
+    bottom: 16px;
+    width: 48px;
+    height: 48px;
+  }
+}
+
+/* ===== Уведомление избранного (favorites toast) =====
+   Дизайн — ToastNotification из book-club-web: белая плашка, зелёная
+   иконка-кружок, текст, крестик закрытия. Отличие: закреплено вверху
+   экрана (как в book-club-web). Шапка на телефоне не липкая, поэтому
+   плашка просто висит поверх контента. Живёт 5 секунд, закрывается
+   крестиком или кликом по плашке. */
+.fav-toast {
+  position: fixed;
+  top: 24px;
+  left: 50%;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  max-width: 420px;
+  width: max-content;
+  box-sizing: border-box;
+  padding: 18px 20px;
+  border-radius: var(--radius-xl);
+  background: var(--color-surface);
+  color: var(--color-text);
+  box-shadow: var(--shadow-lg);
+  font-family: var(--font-body);
+  font-size: 15px;
+  font-weight: 500;
+  line-height: 1.4;
+  cursor: pointer;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateX(-50%) translateY(-12px) scale(0.95);
+  transition:
+    opacity 0.2s ease-in,
+    transform 0.2s ease-in,
+    visibility 0s linear 0.2s;
+  pointer-events: none;
+}
+
+.fav-toast.is-visible {
+  opacity: 1;
+  visibility: visible;
+  transform: translateX(-50%) scale(1);
+  transition:
+    opacity 0.25s var(--ease-out),
+    transform 0.25s var(--ease-out);
+  pointer-events: auto;
+}
+
+.fav-toast-icon-wrap {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: var(--radius-md);
+  flex-shrink: 0;
+  background: rgba(66, 207, 113, 0.1);
+  color: var(--color-success);
+}
+
+.fav-toast-ico {
+  display: block;
+}
+
+.fav-toast-text {
+  flex: 1;
+  min-width: 0;
+  color: var(--color-text);
+}
+
+.fav-toast-close {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  margin: -4px -6px -4px 0;
+  padding: 0;
+  border: none;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--color-text-muted);
+  cursor: pointer;
+  transition: color var(--duration-fast) ease, background var(--duration-fast) ease;
+}
+
+.fav-toast-close:hover {
+  color: var(--color-text);
+  background: var(--color-brand-soft);
+}
+
+@media (max-width: 768px) {
+  /* Ниже липкого хэдера (56px) + 12px зазора. */
+  .fav-toast {
+    top: 68px;
+  }
+}
+
+@media (max-width: 480px) {
+  .fav-toast {
+    left: 16px;
+    right: 16px;
+    width: auto;
+    max-width: none;
+    transform: translateY(-12px) scale(0.95);
+  }
+
+  .fav-toast.is-visible {
+    transform: scale(1);
+  }
+}
+
+/* ===== Фильтры (ClubFilters) ===== */
+.filters-section {
+  width: 100%;
+  display: grid;
+  grid-template-columns: minmax(0, 704px) 300px;
+  justify-content: center;
+  align-items: start;
+  gap: 16px;
+}
+
+.right-filters {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  min-width: 0;
+}
+
+/* Табы высотой 56px — вровень с плашкой поиска (44px кнопка + 12px
+   паддинг), иначе правая плашка висела на 8px ниже левой. */
+.type-tabs {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 8px;
+  background: var(--color-surface);
+  border-radius: 30px;
+  width: 100%;
+  height: 56px;
+  box-sizing: border-box;
+}
+
+.type-tab {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  padding: 8px 16px;
+  background: transparent;
+  border: none;
+  border-radius: 30px;
+  font-family: var(--font-body);
+  font-size: 18px;
+  font-weight: 500;
+  line-height: 1.21;
+  color: var(--color-text);
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background 0.25s ease, color 0.25s ease;
+}
+
+.type-tab.active {
+  background: var(--color-brand);
+  color: #FFFFFF;
+  box-shadow: 0 2px 8px rgba(59, 62, 255, 0.25);
+}
+
+.type-tab:not(.active):hover {
+  background: var(--color-brand-soft);
+}
+
+@media (min-width: 769px) {
+  .filters-section {
+    position: sticky;
+    top: 0;
+    z-index: 30;
+    padding-top: 12px;
+    margin-top: -12px;
+    background: var(--color-bg);
+  }
+
+  .filters-section::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: -40px;
+    height: 40px;
+    background: linear-gradient(to bottom, var(--color-bg), transparent);
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+  }
+
+  .filters-section.is-sticky::after {
+    opacity: 1;
+  }
+}
+
+.search-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  min-width: 0;
+}
+
+/* Поиск — копия design из victors-blog (там, в свою очередь, из
+   ClubFilters.vue): плашка 56px, кнопка 44px, поле 20px. */
+.search-bar {
+  display: flex;
+  align-items: center;
+  flex: 1;
+  min-width: 0;
+  background: var(--color-surface);
+  border-radius: 30px;
+  padding: 6px 8px 6px 22px;
+  gap: 8px;
+}
+
+.search-input {
+  flex: 1;
+  background: none;
+  border: none;
+  font-family: var(--font-body);
+  font-size: 20px;
+  font-weight: 400;
+  line-height: 1.21;
+  color: var(--color-text);
+  outline: none;
+  min-width: 0;
+}
+
+.search-input::placeholder {
+  color: var(--color-text-secondary);
+}
+
+.search-btn {
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  border-radius: 30px;
+  flex-shrink: 0;
+}
+
+.search-icon {
+  display: block;
+}
+
+/* Переключатель вида скрывается на телефоне вместе с табами типа:
+   карточки в одну колонку одинаковы в обоих режимах. padding 4px, чтобы
+   плашка была 56px — вровень с поиском. */
+.view-toggle {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px;
+  background: var(--color-surface);
+  border-radius: 30px;
+}
+
+.view-toggle-btn {
+  width: 48px;
+  height: 48px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  border-radius: 30px;
+  background: transparent;
+  color: var(--color-text-secondary);
+  cursor: pointer;
+  transition: background 0.2s ease, color 0.2s ease;
+}
+
+.view-toggle-btn:hover {
+  background: var(--color-brand-soft);
+  color: var(--color-brand);
+}
+
+.view-toggle-btn.active {
+  background: var(--color-brand);
+  color: #FFFFFF;
+  box-shadow: 0 2px 8px rgba(59, 62, 255, 0.25);
+}
+
+@media (max-width: 900px) {
+  .filters-section {
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+
+  .search-bar {
+    width: 100%;
+  }
+}
+
+@media (max-width: 768px) {
+  /* Табы «По книге / Авторские» и переключатель вида на телефоне не
+     нужны: секция авторских не реализована, а карточки в одну колонку
+     одинаковы в обоих режимах. */
+  .right-filters {
+    display: none;
+  }
+
+  .view-toggle {
+    display: none;
+  }
+
+  /* Поиск на телефоне — главный контроль, поэтому не мельчает: поле
+     60px (44px кнопка + 12px паддинг), шрифт 17px. Значения из
+     victors-blog. */
+  .search-bar {
+    width: 100%;
+    padding: 8px 8px 8px 18px;
+    gap: 8px;
+  }
+
+  .search-input {
+    font-size: 17px;
+  }
+
+  .search-btn {
+    width: 44px;
+    height: 44px;
+    border-radius: 30px;
+  }
+}
+
+@media (max-width: 480px) {
+  .filters-section {
+    gap: 8px;
+  }
+
+  /* Высота пола — 56px (44px кнопка + 12px паддинг). */
+  .search-bar {
+    padding: 6px 6px 6px 16px;
+    gap: 8px;
+  }
+
+  .search-input {
+    font-size: 17px;
+  }
+
+  .search-btn {
+    width: 44px;
+    height: 44px;
+    border-radius: 30px;
+  }
+
+  .search-icon {
+    width: 20px;
+    height: 20px;
+  }
+}
+
+/* ===== Сайдбар категорий (CategorySidebar) ===== */
+.sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  background: var(--color-surface);
+  border-radius: var(--radius-2xl);
+  padding: 20px 16px;
+  position: sticky;
+  top: 96px;
+}
+
+/* Чекбокс «Избранное» — копия member-checkbox из book-club-web
+   (CategorySidebar.vue): бокс 18px, скругление 5px, заливка брендом. */
+.fav-checkbox {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  user-select: none;
+  padding: 10px 12px;
+}
+
+.fav-checkbox-input {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.fav-checkbox-box {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  border-radius: 5px;
+  border: 1.5px solid var(--color-text-secondary);
+  color: transparent;
+  background: var(--color-surface);
+  transition: background 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+}
+
+.fav-checkbox-input:checked + .fav-checkbox-box {
+  background: var(--color-brand);
+  border-color: var(--color-brand);
+  color: #FFFFFF;
+}
+
+.fav-checkbox-input:focus-visible + .fav-checkbox-box {
+  outline: 2px solid var(--color-brand);
+  outline-offset: 2px;
+}
+
+.fav-checkbox-label {
+  font-family: var(--font-body);
+  font-size: 15px;
+  font-weight: 500;
+  line-height: 1;
+  color: var(--color-text);
+  white-space: nowrap;
+}
+
+.sidebar-title {
+  font-family: var(--font-heading);
+  font-size: 22px;
+  font-weight: 500;
+  line-height: 1.2;
+  color: var(--color-text);
+  padding: 12px 12px 8px;
+}
+
+.cat-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+
+.cat-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  width: 100%;
+  padding: 10px 12px;
+  border: none;
+  border-radius: var(--radius-md);
+  background: transparent;
+  font-family: var(--font-body);
+  font-size: 15px;
+  font-weight: 500;
+  line-height: 1.2;
+  color: var(--color-text);
+  cursor: pointer;
+  text-align: left;
+  text-decoration: none;
+  transition: background var(--duration-fast) ease, color var(--duration-fast) ease;
+}
+
+.cat-item.active {
+  background: var(--color-brand);
+  color: #FFFFFF;
+}
+
+.sidebar-empty {
+  font-family: var(--font-body);
+  font-size: 15px;
+  line-height: 1.5;
+  color: var(--color-text-secondary);
+  padding: 8px 12px;
+}
+
+@media (max-width: 768px) {
+  .sidebar {
+    position: static;
+    border-radius: var(--radius-xl);
+    padding: 16px 12px;
+  }
+}
+
+/* ===== Карточка клуба — детали (ClubDetails) ===== */
+.detail-page {
+  width: 100%;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.detail-card-wrap {
+  width: 100%;
+  max-width: 704px;
+  margin: 0 auto;
+}
+
+.detail-card {
+  background: var(--color-surface);
+  border-radius: 32px;
+  padding: 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.card-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 16px;
+}
+
+.detail-card .card-title {
+  font-family: var(--font-heading);
+  font-size: 30px;
+  font-weight: 500;
+  line-height: 1.1;
+  color: var(--color-text);
+  margin: 0;
+}
+
+.year-badge {
+  padding: 4px 10px;
+  background: var(--color-bg);
+  border: 1px solid var(--color-stroke-subtle);
+  border-radius: 30px;
+  font-family: var(--font-body);
+  font-size: 15px;
+  font-weight: 500;
+  line-height: 1.21;
+  color: var(--color-text-secondary);
+  flex-shrink: 0;
+  margin-top: 4px;
+}
+
+.detail-card .card-author {
+  margin: 0;
+}
+
+.author-head {
+  align-items: center;
+}
+
+.author-photo {
+  width: 88px;
+  height: 88px;
+  border-radius: 50%;
+  object-fit: cover;
+  flex-shrink: 0;
+  background: var(--color-brand-soft);
+}
+
+.author-photo--placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-heading);
+  font-size: 36px;
+  font-weight: 600;
+  color: var(--color-brand);
+}
+
+.author-head-info {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 0;
+}
+
+.club-type-badge {
+  align-self: flex-start;
+  padding: 3px 10px;
+  background: var(--color-brand-soft);
+  border-radius: 30px;
+  font-family: var(--font-body);
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1.2;
+  color: var(--color-brand);
+  white-space: nowrap;
+}
+
+.detail-card .now-reading {
+  font-weight: 500;
+  line-height: 1.5;
+  padding: 12px 16px;
+  background: var(--color-brand-soft);
+  border-radius: 16px;
+  margin-top: 0;
+}
+
+.card-divider {
+  height: 1px;
+  background: var(--color-stroke-subtle);
+}
+
+.detail-card .card-desc {
+  white-space: pre-line;
+  margin: 0;
+}
+
+.card-stats {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-body);
+  font-size: 15px;
+  color: var(--color-text-secondary);
+}
+
+.stat-num {
+  font-weight: 600;
+  color: var(--color-text);
+}
+
+.stat-sep {
+  color: var(--color-text-muted);
+}
+
+.card-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+/* ===== Share (кнопка «Поделиться» на странице клуба) ===== */
+.share {
+  position: relative;
+  display: inline-flex;
+}
+
+.share-panel {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 0;
+  z-index: 50;
+  min-width: 220px;
+  padding: 6px;
+  border-radius: var(--radius-md);
+  background: var(--color-surface);
+  border: 1px solid var(--color-stroke-subtle);
+  box-shadow: var(--shadow-lg);
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-6px) scale(0.98);
+  transform-origin: top left;
+  transition:
+    opacity 0.15s ease-in,
+    transform 0.15s ease-in,
+    visibility 0s linear 0.15s;
+  pointer-events: none;
+}
+
+.share-panel.is-open {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0) scale(1);
+  transition:
+    opacity 0.2s var(--ease-out),
+    transform 0.2s var(--ease-out);
+  pointer-events: auto;
+}
+
+.share-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 10px 12px;
+  border: none;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--color-text);
+  font-family: var(--font-body);
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1.3;
+  text-align: left;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background var(--duration-fast) ease, color var(--duration-fast) ease;
+}
+
+.share-item:hover {
+  background: var(--color-brand-soft);
+  color: var(--color-brand);
+}
+
+.share-item svg {
+  flex-shrink: 0;
+}
+
+@media (max-width: 768px) {
+  .detail-card {
+    padding: 24px;
+    gap: 16px;
+  }
+
+  .detail-card .card-title {
+    font-size: 24px;
+  }
+
+  .card-head {
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .author-head {
+    flex-direction: row;
+    align-items: center;
+  }
+
+  .author-photo {
+    width: 64px;
+    height: 64px;
+  }
+
+  .card-actions {
+    flex-direction: column;
+  }
+
+  .detail-card .card-desc {
+    font-size: 14px;
+  }
+
+  .share {
+    width: 100%;
+  }
+
+  .share-btn {
+    width: 100%;
+  }
+
+  .share-panel {
+    left: 0;
+    right: 0;
+    min-width: 0;
+  }
+}
+
+/* ===== Отзывы (ClubReviews) ===== */
+.reviews {
+  margin-top: 32px;
+  padding-top: 32px;
+  border-top: 1px solid var(--color-stroke-subtle);
+}
+
+.reviews-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.reviews-title {
+  font-family: var(--font-heading);
+  font-size: 24px;
+  font-weight: 500;
+  color: var(--color-text);
+}
+
+.reviews-list {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.review-card {
+  background: var(--color-surface);
+  border-radius: 24px;
+  padding: 24px;
+}
+
+.review-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 16px;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.reviewer {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.reviewer-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: var(--color-brand);
+  color: #FFFFFF;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 15px;
+  font-weight: 600;
+  text-transform: uppercase;
+  flex-shrink: 0;
+}
+
+.reviewer-name {
+  font-size: 16px;
+  font-weight: 500;
+  font-family: var(--font-body);
+}
+
+.review-meta {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-shrink: 0;
+}
+
+.stars {
+  color: var(--color-brand);
+  font-size: 18px;
+  letter-spacing: 2px;
+}
+
+.pages-badge {
+  padding: 6px 14px;
+  background: var(--color-bg);
+  border-radius: 30px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--color-text-secondary);
+}
+
+.review-text {
+  font-size: 15px;
+  line-height: 1.7;
+  color: var(--color-text);
+  white-space: pre-line;
+  margin-bottom: 16px;
+}
+
+.review-foot {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  padding-top: 16px;
+  border-top: 1px solid var(--color-stroke-subtle);
+}
+
+.review-date {
+  font-size: 13px;
+  color: var(--color-text-secondary);
+}
+
+.empty {
+  text-align: center;
+  color: var(--color-text-secondary);
+  font-size: 15px;
+  padding: 40px 24px;
+  background: var(--color-surface);
+  border-radius: 24px;
+}
+
+@media (max-width: 600px) {
+  .review-head {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
+
+/* ===== Modal: «Добавить книгу» =====
+   Минимальная модалка с одной задачей — открыть GitHub-шаблон.
+   Заголовок слева, крестик справа, пояснение, во всю ширину кнопка и
+   тихая ссылка внизу. Открытие/закрытие — modal.js (крестик, подложка,
+   Esc); подложка размыта, вход — короткий fade+lift. */
+body.modal-open {
+  overflow: hidden;
+}
+
+.modal {
+  position: fixed;
+  inset: 0;
+  z-index: 1100;
+  display: grid;
+  place-items: center;
+  padding: 20px;
+}
+
+.modal[hidden] {
+  display: none;
+}
+
+.modal-backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(26, 28, 43, 0.5);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  animation: modal-fade var(--duration-fast) var(--ease-out);
+}
+
+.modal-panel {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: 420px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 24px;
+  background: var(--color-surface);
+  border-radius: var(--radius-2xl);
+  box-shadow: var(--shadow-lg);
+  animation: modal-in 0.2s var(--ease-out);
+}
+
+.modal-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.modal-title {
+  font-family: var(--font-heading);
+  font-size: 24px;
+  font-weight: 500;
+  line-height: 1.15;
+  color: var(--color-text);
+}
+
+.modal-close {
+  flex-shrink: 0;
+  width: 36px;
+  height: 36px;
+  display: grid;
+  place-items: center;
+  margin: -6px -6px 0 0;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  color: var(--color-text-muted);
+  cursor: pointer;
+  transition:
+    background var(--duration-fast) var(--ease-out),
+    color var(--duration-fast) var(--ease-out);
+}
+
+.modal-close:hover {
+  background: var(--color-bg);
+  color: var(--color-text);
+}
+
+.modal-close:focus-visible {
+  outline: 2px solid var(--color-brand);
+  outline-offset: 2px;
+}
+
+.modal-note {
+  font-size: 15px;
+  line-height: 1.5;
+  color: var(--color-text-secondary);
+  margin: -6px 0 0;
+}
+
+.modal-btn {
+  min-height: 52px;
+  font-size: 16px;
+}
+
+@keyframes modal-fade {
+  from {
+    opacity: 0;
+  }
+}
+
+@keyframes modal-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px) scale(0.97);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .modal-backdrop,
+  .modal-panel {
+    animation: none;
+  }
+}
+
+@media (max-width: 480px) {
+  .modal-panel {
+    padding: 20px;
+  }
+
+  .modal-title {
+    font-size: 21px;
+  }
+}
+
+/* ===== 404 (NotFound) ===== */
+.not-found {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.not-found-title {
+  font-family: var(--font-heading);
+  font-size: 28px;
+  font-weight: 500;
+  line-height: 1.1;
+  color: var(--color-text);
+  margin-bottom: 4px;
+}
+
+.not-found-text {
+  font-size: 16px;
+  line-height: 1.5;
+  color: var(--color-text-secondary);
+  max-width: 420px;
+  margin-bottom: 32px;
+}
+
+.not-found .not-found-img {
+  max-width: 100%;
+  width: 320px;
+  height: auto;
+  margin-bottom: 32px;
+}
+
+@media (max-width: 768px) {
+  .not-found .not-found-img {
+    width: 220px;
+  }
+
+  .not-found-title {
+    font-size: 22px;
+  }
+
+  .not-found-text {
+    font-size: 14px;
+  }
+}
+
+/* ===== Карта сайта (Sitemap) ===== */
+.sitemap-wrap {
+  width: 100%;
+  max-width: 704px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.sitemap-card {
+  background: var(--color-surface);
+  border-radius: var(--radius-2xl);
+  padding: 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.sitemap-title {
+  font-family: var(--font-heading);
+  font-size: 30px;
+  font-weight: 500;
+  line-height: 1.1;
+  color: var(--color-text);
+}
+
+.sitemap-section {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.sitemap-heading {
+  font-family: var(--font-body);
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1.2;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+}
+
+.sitemap-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.sitemap-link {
+  font-size: 15px;
+  font-weight: 500;
+  line-height: 1.4;
+  color: var(--color-text);
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.sitemap-link:hover {
+  color: var(--color-brand);
+}
+
+.sitemap-xml {
+  font-size: 13px;
+  line-height: 1.4;
+  color: var(--color-text-muted);
+  text-align: center;
+}
+
+.sitemap-xml-link {
+  color: var(--color-text-secondary);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  transition: color 0.2s ease;
+}
+
+.sitemap-xml-link:hover {
+  color: var(--color-brand);
+}
+
+@media (max-width: 768px) {
+  .sitemap-card {
+    padding: 20px;
+    gap: 20px;
+  }
+
+  .sitemap-title {
+    font-size: 24px;
+  }
+}
