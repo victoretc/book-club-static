@@ -10,3 +10,4 @@ resources/
 # deps
 node_modules/
 dist/
+.playwright-mcp

@@ -27,9 +27,9 @@ summaryLength = 30
 [menu]
   [[menu.main]]
     name = 'Клубы'
-    pageRef = '/clubs'
+    pageRef = '/'
     weight = 10
   [[menu.main]]
     name = 'Добавить книгу'
-    pageRef = '/add-book'
+    url = 'https://github.com/victoretc/book-club-static/issues/new?template=book_request.yml'
     weight = 20

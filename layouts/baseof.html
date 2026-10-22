@@ -12,5 +12,6 @@
       </main>
       {{- if not $hideChrome }}{{ partial "footer.html" . }}{{ end }}
     </div>
+    {{- if not $hideChrome }}{{ partial "add-book-modal.html" . }}{{ end }}
   </body>
 </html>

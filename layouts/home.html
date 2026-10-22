@@ -1,6 +1,6 @@
 {{- define "main" -}}
-{{- /* Главная рендерит тот же каталог, что и /clubs/, поэтому «Клубы» —
-     текущая страница (crumb без url). */ -}}
-{{- $trail := slice (dict "label" "Клубы") -}}
-{{ partial "catalog.html" (dict "activeSlug" "" "trail" $trail) }}
+{{- /* На главной крошка «Клубы /» — обычная ссылка (не current, без
+     жирного) со слэшем-хвостом; ведёт на главную (/), никуда не уводит. */ -}}
+{{- $trail := slice (dict "label" "Клубы" "url" "/") -}}
+{{ partial "catalog.html" (dict "activeSlug" "" "trail" $trail "trailingSlash" true) }}
 {{- end -}}

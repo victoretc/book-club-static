@@ -262,28 +262,32 @@ main {
   color: var(--color-text);
   text-decoration: none;
   flex-shrink: 0;
-  transition: color 0.2s ease;
 }
 
-.header-brand:hover {
-  color: var(--color-brand);
+/* Стрелка «назад» на странице клуба — в одной строке с хлебными крошками,
+   слева от цепочки. Без hover-эффекта. */
+.detail-top {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 4px;
 }
 
-.header-back {
+.detail-top .breadcrumbs-nav {
+  flex: 1;
+  min-width: 0;
+}
+
+.detail-back {
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  flex-shrink: 0;
   width: 40px;
   height: 40px;
   margin-left: -9px;
   border-radius: 9999px;
   color: var(--color-text);
-  transition: background 140ms ease, color 140ms ease;
-}
-
-.header-back:hover {
-  background: var(--color-stroke-subtle);
-  color: var(--color-brand);
 }
 
 .header-nav {
@@ -431,7 +435,7 @@ main {
     letter-spacing: 0.02em;
   }
 
-  .header-back {
+  .detail-back {
     margin-left: -8px;
   }
 
@@ -445,50 +449,52 @@ main {
   }
 }
 
-/* ===== Footer ===== */
+/* ===== Footer =====
+   Логотип слева, колонки «Разделы» и «Категории» с заголовками,
+   GitHub и Карта сайта — простые ссылки без заголовка. Копирайт
+   над линией, линия внизу футера. */
 .footer {
-  border-top: 1px solid var(--color-stroke-subtle);
   background: var(--color-surface);
 }
 
 .footer-inner {
   max-width: 1200px;
   margin: 0 auto;
-  padding: 24px 24px 16px;
+  padding: 24px 24px 0;
 }
 
 .footer-main {
   display: flex;
+  flex-wrap: wrap;
   justify-content: space-between;
-  gap: 48px;
-  align-items: flex-start;
-}
-
-.footer-brand {
-  max-width: 340px;
+  gap: 24px 48px;
 }
 
 .footer-brand-link {
   font-family: var(--font-display);
-  font-size: 25px;
+  font-size: 22px;
   font-weight: 400;
   line-height: 1.138;
   color: var(--color-text);
   text-decoration: none;
-  transition: color 0.2s ease;
 }
 
-.footer-brand-link:hover {
-  color: var(--color-brand);
-}
-
-.footer-nav {
+.footer-cols {
   display: flex;
-  gap: 64px;
+  flex-wrap: wrap;
+  gap: 24px 56px;
 }
 
 .footer-col {
-  min-width: 160px;
+  min-width: 140px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.footer-col--plain {
+  justify-content: flex-start;
+  gap: 8px;
 }
 
 .footer-heading {
@@ -499,7 +505,7 @@ main {
   letter-spacing: 0.06em;
   text-transform: uppercase;
   color: var(--color-text-muted);
-  margin-bottom: 12px;
+  margin: 0;
 }
 
 .footer-list {
@@ -512,11 +518,10 @@ main {
 }
 
 .footer-link {
-  display: inline-block;
   font-size: 13px;
   font-weight: 500;
   line-height: 1.4;
-  color: var(--color-text);
+  color: var(--color-text-secondary);
   text-decoration: none;
   transition: color 0.2s ease;
 }
@@ -526,23 +531,23 @@ main {
 }
 
 .footer-bottom {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 16px;
   margin-top: 24px;
-  padding-top: 12px;
-  border-top: 1px solid var(--color-stroke-subtle);
 }
 
 .footer-copyright {
   font-size: 13px;
   color: var(--color-text-muted);
+  margin-bottom: 12px;
+}
+
+.footer-rule {
+  height: 1px;
+  background: var(--color-stroke-subtle);
 }
 
 @media (max-width: 768px) {
   .footer-inner {
-    padding: 20px 16px 16px;
+    padding: 20px 16px 0;
   }
 
   .footer-main {
@@ -550,22 +555,8 @@ main {
     gap: 20px;
   }
 
-  .footer-nav {
-    flex-direction: column;
-    gap: 20px;
-  }
-
-  .footer-col {
-    min-width: 0;
-  }
-}
-
-@media (max-width: 480px) {
-  .footer-bottom {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 8px;
-    margin-top: 20px;
+  .footer-cols {
+    gap: 20px 32px;
   }
 }
 
@@ -661,10 +652,7 @@ main {
   transition: background 0.2s ease, color 0.2s ease;
 }
 
-.chip:not(.chip--active):hover {
-  background: var(--color-brand-soft);
-  color: var(--color-brand);
-}
+/* Hover у таблеток не нужен: подсветка остаётся только за активной. */
 
 .chip--active {
   background: var(--color-brand);
@@ -1006,9 +994,8 @@ main {
 }
 
 /* На десктопе кнопка появляется при наведении на карточку (или при
-   фокусе с клавиатуры). Активное состояние сердечка не подсвечивается:
-   обратная связь — только уведомление, список избранного живёт в
-   localStorage и открывается фильтром «Избранное». */
+   фокусе с клавиатуры). На тач-устройствах наведения нет, кнопка видна
+   всегда (@media (hover: none) ниже). */
 .club-card-wrap:hover .card-fav,
 .card-fav:focus-visible {
   opacity: 1;
@@ -1019,6 +1006,19 @@ main {
 .card-fav:hover {
   background: var(--color-brand-soft);
   color: var(--color-brand);
+}
+
+/* Клуб в избранном: сердечко синее и залитое. На мобильном кнопка
+   видна всегда, и это единственный постоянный признак сохранённого
+   клуба (уведомление исчезает). aria-pressed переключает JS в
+   renderFavorites() при загрузке и по клику. */
+.card-fav[aria-pressed='true'] {
+  color: var(--color-brand);
+  background: var(--color-brand-soft);
+}
+
+.card-fav[aria-pressed='true'] svg {
+  fill: currentColor;
 }
 
 .card-fav:active {
@@ -1769,11 +1769,6 @@ main {
   transition: background var(--duration-fast) ease, color var(--duration-fast) ease;
 }
 
-.cat-item:hover {
-  background: var(--color-brand-soft);
-  color: var(--color-brand);
-}
-
 .cat-item.active {
   background: var(--color-brand);
   color: #FFFFFF;
@@ -2189,229 +2184,133 @@ main {
   }
 }
 
-/* ===== Add book page ===== */
-/* Блок той же ширины, что контент на главной: сетка .content-grid
-   (704 + 16 + 300 = 1020px) по центру контейнера. Отступ вправо от крошек
-   совпадает с каталогом на всех ширинах: и там, и здесь контейнер один,
-   а блок либо 1020px по центру, либо во всю его ширину. */
-.add-book-page {
+/* ===== Modal: «Добавить книгу» =====
+   Минимальная модалка с одной задачей — открыть GitHub-шаблон.
+   Заголовок слева, крестик справа, пояснение, во всю ширину кнопка и
+   тихая ссылка внизу. Открытие/закрытие — modal.js (крестик, подложка,
+   Esc); подложка размыта, вход — короткий fade+lift. */
+body.modal-open {
+  overflow: hidden;
+}
+
+.modal {
+  position: fixed;
+  inset: 0;
+  z-index: 1100;
+  display: grid;
+  place-items: center;
+  padding: 20px;
+}
+
+.modal[hidden] {
+  display: none;
+}
+
+.modal-backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(26, 28, 43, 0.5);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  animation: modal-fade var(--duration-fast) var(--ease-out);
+}
+
+.modal-panel {
+  position: relative;
+  z-index: 1;
   width: 100%;
-  flex: 1;
+  max-width: 420px;
   display: flex;
   flex-direction: column;
   gap: 16px;
-}
-
-.add-book {
-  width: 100%;
-  max-width: 1020px;
-  margin: 0 auto;
-}
-
-.add-book-card {
-  width: 100%;
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) 300px;
-  gap: 32px;
-  align-items: start;
+  padding: 24px;
   background: var(--color-surface);
-  border: 1px solid var(--color-stroke-subtle);
   border-radius: var(--radius-2xl);
-  padding: 32px;
+  box-shadow: var(--shadow-lg);
+  animation: modal-in 0.2s var(--ease-out);
 }
 
-/* Как .content-grid: ниже 900px правая колонка уезжает под текст. */
-@media (max-width: 900px) {
-  .add-book-card {
-    grid-template-columns: minmax(0, 1fr);
-    gap: 24px;
-  }
-}
-
-.add-book-main {
+.modal-head {
   display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: var(--space-5);
-  min-width: 0;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
 }
 
-.add-book-title {
+.modal-title {
   font-family: var(--font-heading);
-  font-size: 28px;
+  font-size: 24px;
   font-weight: 500;
-  line-height: 1.1;
+  line-height: 1.15;
   color: var(--color-text);
 }
 
-.add-book-lead {
-  font-size: 16px;
-  line-height: 1.5;
-  color: var(--color-text-secondary);
-  max-width: 60ch;
-}
-
-.add-book-link {
-  color: var(--color-brand);
-}
-
-.add-book-link:hover {
-  text-decoration: none;
-}
-
-.add-book-reqs {
-  width: 100%;
-}
-
-.add-book-reqs-title {
-  font-family: var(--font-body);
-  font-size: 15px;
-  font-weight: 600;
-  line-height: 1.3;
-  color: var(--color-text);
-  margin-bottom: 12px;
-}
-
-.add-book-fields {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 10px;
-}
-
-.add-book-field {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  min-width: 0;
-  padding: 12px 14px;
-  background: var(--color-bg);
-  border-radius: var(--radius-md);
-  font-family: var(--font-body);
-  font-size: 15px;
-  font-weight: 500;
-  line-height: 1.2;
-  color: var(--color-text);
-}
-
-.add-book-field-check {
-  display: grid;
-  place-items: center;
-  flex-shrink: 0;
-  width: 20px;
-  height: 20px;
-  border-radius: 50%;
-  background: var(--color-brand-soft);
-  color: var(--color-brand);
-}
-
-.add-book-hint {
-  font-size: 14px;
-  line-height: 1.45;
-  color: var(--color-text-muted);
-  margin-top: 12px;
-}
-
-/* Полоса действия: врезка цвета фона внутри белой карточки — тот же
-   приём, что у сайдбара каталога, только внутри контента. */
-.add-book-cta {
-  display: flex;
-  flex-direction: column;
-  gap: 14px;
-  padding: 20px;
-  background: var(--color-bg);
-  border-radius: var(--radius-xl);
-}
-
-.add-book-cta-head {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.add-book-cta-mark {
-  display: grid;
-  place-items: center;
+.modal-close {
   flex-shrink: 0;
   width: 36px;
   height: 36px;
+  display: grid;
+  place-items: center;
+  margin: -6px -6px 0 0;
+  border: 0;
   border-radius: 50%;
-  background: var(--color-surface);
-  color: var(--color-text);
-  box-shadow: var(--shadow-sm);
+  background: transparent;
+  color: var(--color-text-muted);
+  cursor: pointer;
+  transition:
+    background var(--duration-fast) var(--ease-out),
+    color var(--duration-fast) var(--ease-out);
 }
 
-.add-book-cta-title {
-  font-family: var(--font-heading);
-  font-size: 18px;
-  font-weight: 500;
-  line-height: 1.2;
+.modal-close:hover {
+  background: var(--color-bg);
   color: var(--color-text);
 }
 
-/* Компактный первичный: 44px, как у кнопки поиска в каталоге. */
-.add-book-cta-btn {
-  height: 44px;
-  padding: 0 16px;
+.modal-close:focus-visible {
+  outline: 2px solid var(--color-brand);
+  outline-offset: 2px;
+}
+
+.modal-note {
   font-size: 15px;
-  font-weight: 600;
-}
-
-.add-book-cta-note {
-  font-size: 14px;
-  line-height: 1.45;
+  line-height: 1.5;
   color: var(--color-text-secondary);
+  margin: -6px 0 0;
 }
 
-.add-book-cta-more {
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-  align-self: flex-start;
-  font-family: var(--font-body);
-  font-size: 14px;
-  font-weight: 500;
-  line-height: 1.3;
-  color: var(--color-brand);
-  text-decoration: none;
+.modal-btn {
+  min-height: 52px;
+  font-size: 16px;
 }
 
-.add-book-cta-more svg {
-  transition: transform var(--duration-fast) var(--ease-out);
-}
-
-.add-book-cta-more:hover {
-  text-decoration: underline;
-  text-underline-offset: 2px;
-}
-
-.add-book-cta-more:hover svg {
-  transform: translateX(2px);
-}
-
-@media (max-width: 768px) {
-  .add-book-card {
-    padding: 24px;
+@keyframes modal-fade {
+  from {
+    opacity: 0;
   }
+}
 
-  .add-book-title {
-    font-size: 22px;
+@keyframes modal-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px) scale(0.97);
   }
+}
 
-  .add-book-lead {
-    font-size: 14px;
+@media (prefers-reduced-motion: reduce) {
+  .modal-backdrop,
+  .modal-panel {
+    animation: none;
   }
 }
 
 @media (max-width: 480px) {
-  .add-book-card {
+  .modal-panel {
     padding: 20px;
   }
 
-  .add-book-fields {
-    grid-template-columns: minmax(0, 1fr);
+  .modal-title {
+    font-size: 21px;
   }
 }
 
@@ -2458,5 +2357,99 @@ main {
 
   .not-found-text {
     font-size: 14px;
+  }
+}
+
+/* ===== Карта сайта (Sitemap) ===== */
+.sitemap-wrap {
+  width: 100%;
+  max-width: 704px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.sitemap-card {
+  background: var(--color-surface);
+  border-radius: var(--radius-2xl);
+  padding: 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.sitemap-title {
+  font-family: var(--font-heading);
+  font-size: 30px;
+  font-weight: 500;
+  line-height: 1.1;
+  color: var(--color-text);
+}
+
+.sitemap-section {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.sitemap-heading {
+  font-family: var(--font-body);
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1.2;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+}
+
+.sitemap-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.sitemap-link {
+  font-size: 15px;
+  font-weight: 500;
+  line-height: 1.4;
+  color: var(--color-text);
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.sitemap-link:hover {
+  color: var(--color-brand);
+}
+
+.sitemap-xml {
+  font-size: 13px;
+  line-height: 1.4;
+  color: var(--color-text-muted);
+  text-align: center;
+}
+
+.sitemap-xml-link {
+  color: var(--color-text-secondary);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  transition: color 0.2s ease;
+}
+
+.sitemap-xml-link:hover {
+  color: var(--color-brand);
+}
+
+@media (max-width: 768px) {
+  .sitemap-card {
+    padding: 20px;
+    gap: 20px;
+  }
+
+  .sitemap-title {
+    font-size: 24px;
   }
 }

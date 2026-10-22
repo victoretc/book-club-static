@@ -1,0 +1,53 @@
+{{- define "main" -}}
+{{- /* /sitemap/ — карта сайта для людей (sitemap.xml — для роботов,
+     ссылка внизу страницы). Списки строятся из данных сайта, без
+     хардкода: меню, живые категории, страницы клубов. */ -}}
+{{- $trail := slice (dict "label" "Клубы" "url" "/") (dict "label" "Карта сайта") -}}
+{{- $cats := partial "categories-active.html" -}}
+{{- $clubs := where site.RegularPages "Section" "clubs" -}}
+<div class="detail-page">
+  {{ partial "breadcrumbs.html" (dict "trail" $trail) }}
+
+  <div class="sitemap-wrap">
+    <div class="sitemap-card">
+      <h1 class="sitemap-title">Карта сайта</h1>
+
+      <section class="sitemap-section">
+        <h2 class="sitemap-heading">Навигация</h2>
+        <ul class="sitemap-list">
+          {{- range site.Menus.main }}
+          <li><a class="sitemap-link" href="{{ .URL }}">{{ .Name }}</a></li>
+          {{- end }}
+        </ul>
+      </section>
+
+      {{- if $cats }}
+      <section class="sitemap-section">
+        <h2 class="sitemap-heading">Категории</h2>
+        <ul class="sitemap-list">
+          {{- range $cats }}
+          <li><a class="sitemap-link" href="{{ printf "categories/%s/" .slug | relURL }}">{{ .name }}</a></li>
+          {{- end }}
+        </ul>
+      </section>
+      {{- end }}
+
+      {{- with $clubs }}
+      <section class="sitemap-section">
+        <h2 class="sitemap-heading">Клубы</h2>
+        <ul class="sitemap-list">
+          {{- range sort . "Title" }}
+          {{- $name := .Params.book_title | default .Params.author_name | default .Title }}
+          <li><a class="sitemap-link" href="{{ .RelPermalink }}">{{ $name }}</a></li>
+          {{- end }}
+        </ul>
+      </section>
+      {{- end }}
+    </div>
+
+    <p class="sitemap-xml">
+      Для поисковых роботов — <a class="sitemap-xml-link" href="{{ "sitemap.xml" | relURL }}">sitemap.xml</a>
+    </p>
+  </div>
+</div>
+{{- end -}}

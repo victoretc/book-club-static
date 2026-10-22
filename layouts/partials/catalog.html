@@ -1,4 +1,5 @@
-{{- /* Вход: dict "activeSlug" ("" | slug категории), "trail" (для breadcrumbs) */ -}}
+{{- /* Вход: dict "activeSlug" ("" | slug категории), "trail" (для breadcrumbs,
+     пустой — крошки не рендерятся, как на /clubs/) */ -}}
 {{- $active := .activeSlug | default "" -}}
 {{- $clubsPage := site.GetPage "/clubs" -}}
 {{- $clubs := $clubsPage.Pages -}}
@@ -15,7 +16,7 @@
 
 <div class="clubs-page">
   <div class="clubs-content">
-    {{ partial "breadcrumbs.html" (dict "trail" .trail) }}
+    {{- if .trail }}{{ partial "breadcrumbs.html" . }}{{- end }}
 
     <div class="filters-section">
       <div class="search-row">
@@ -66,7 +67,7 @@
         </svg>
         Избранное
       </button>
-      <a href="{{ relURL "clubs/" }}" class="chip chip--all{{ if not $active }} chip--active{{ end }}">Все категории</a>
+      <a href="{{ relURL "" }}" class="chip chip--all{{ if not $active }} chip--active{{ end }}">Все категории</a>
       {{- range $cats }}
       <a href="{{ printf "categories/%s/" .slug | relURL }}" class="chip{{ if eq $.activeSlug .slug }} chip--active{{ end }}">{{ .name }}</a>
       {{- end }}
@@ -120,7 +121,7 @@
              фильтр. */ -}}
         {{- if $cats }}
         <div class="cat-list">
-          <a href="{{ relURL "clubs/" }}" class="cat-item{{ if not $active }} active{{ end }}">
+          <a href="{{ relURL "" }}" class="cat-item{{ if not $active }} active{{ end }}">
             <span class="cat-name">Все категории</span>
           </a>
           {{- range $cats }}

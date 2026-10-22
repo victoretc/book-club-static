@@ -1,5 +1,6 @@
-{{- /* Аргументы: dict "trail" (список dict: label + optional url).
-     Crumb без url — текущая страница, подсвечивается классом
+{{- /* Аргументы: dict "trail" (список dict: label + optional url),
+     "trailingSlash" (bool — рисует «/» хвостом, например «Клубы /» на
+     главной). Crumb без url — текущая страница, подсвечивается классом
      crumb--current. */ -}}
 {{- $trail := .trail -}}
 <nav class="breadcrumbs-nav" aria-label="Хлебные крошки">
@@ -13,5 +14,6 @@
       {{- end }}
       {{- if lt (add $i 1) (len $trail) }}<span class="crumb-sep">/</span>{{ end }}
     {{- end }}
+    {{- if .trailingSlash }}<span class="crumb-sep">/</span>{{ end }}
   </div>
 </nav>

@@ -2,7 +2,7 @@
 {{- /* /categories/ — все категории с клубами */ -}}
 <div class="clubs-page">
   <div class="clubs-content">
-    {{- $trail := slice (dict "label" "Клубы" "url" "/clubs/") (dict "label" "Категории") -}}
+    {{- $trail := slice (dict "label" "Клубы" "url" "/") (dict "label" "Категории") -}}
     {{ partial "breadcrumbs.html" (dict "trail" $trail) }}
     <div class="sidebar" style="max-width: 704px;">
       <h1 class="sidebar-title">Категории</h1>

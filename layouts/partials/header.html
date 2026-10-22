@@ -1,20 +1,11 @@
 <header class="header">
   <div class="header-inner">
-    {{- /* Стрелка «назад» — только на странице клуба (/clubs/<slug>/). */ -}}
-    {{ if and (eq .Section "clubs") .IsPage }}
-    <a href="{{ relURL "clubs/" }}" class="header-back" aria-label="Назад к клубам">
-      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-        <path d="m12 19-7-7 7-7"/>
-        <path d="M19 12H5"/>
-      </svg>
-    </a>
-    {{ end }}
     <a href="{{ relURL "" }}" class="header-brand">Читальная</a>
 
     {{- /* Меню — site.Menus.main из hugo.toml (pageRef): .URL = RelPermalink
          страницы, поэтому подпуть baseURL сохраняется без relURL.
-         Активность: IsMenuCurrent — сам пункт, HasMenuCurrent — раздел
-         (страницы клубов внутри /clubs/). Иконки — по имени пункта. */ -}}
+         «Клубы» ведёт на главную; активность — IsMenuCurrent/HasMenuCurrent
+         плюс главная, таксономии и страницы клубов. Иконки — по имени пункта. */ -}}
     {{- $icons := dict
       "Клубы" `<svg class="header-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"/></svg>`
       "Добавить книгу" `<svg class="header-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M12 5v14"/></svg>`
@@ -23,7 +14,14 @@
     <nav class="header-nav">
       {{- range site.Menus.main }}
       {{- $active := or ($.IsMenuCurrent .Menu .) ($.HasMenuCurrent .Menu .) }}
-      <a href="{{ .URL }}" class="header-nav-link{{ if $active }} active{{ end }}">
+      {{- /* «Клубы» ведёт на главную (каталог); подсвечиваем пункт ещё на
+             страницах клубов, /categories/ и страницах категорий. */ -}}
+      {{- if and .Page .Page.IsHome }}
+        {{- $active = or $active $.IsHome (eq $.Section "clubs") (eq $.Kind "taxonomy") (eq $.Kind "term") }}
+      {{- end }}
+      {{- /* «Добавить книгу» без JS уходит на GitHub-шаблон; с JS
+             перехватывается и открывает модалку ([data-modal-open]). */ -}}
+      <a href="{{ .URL }}" class="header-nav-link{{ if $active }} active{{ end }}"{{ if eq .Name "Добавить книгу" }} data-modal-open{{ end }}>
         {{ index $icons .Name | default "" | safeHTML }}
         {{ .Name }}
       </a>
@@ -42,7 +40,10 @@
       <nav class="header-panel" id="header-menu-panel" data-burger-panel>
         {{- range site.Menus.main }}
         {{- $active := or ($.IsMenuCurrent .Menu .) ($.HasMenuCurrent .Menu .) }}
-        <a href="{{ .URL }}"{{ if $active }} class="active"{{ end }}>{{ .Name }}</a>
+        {{- if and .Page .Page.IsHome }}
+          {{- $active = or $active $.IsHome (eq $.Section "clubs") (eq $.Kind "taxonomy") (eq $.Kind "term") }}
+        {{- end }}
+        <a href="{{ .URL }}"{{ if $active }} class="active"{{ end }}{{ if eq .Name "Добавить книгу" }} data-modal-open{{ end }}>{{ .Name }}</a>
         {{- end }}
       </nav>
     </div>

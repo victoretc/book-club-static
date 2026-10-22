@@ -4,6 +4,6 @@
 {{- $node := partial "category-by-slug.html" (dict "slug" $slug) -}}
 {{- $name := $slug -}}
 {{- with $node }}{{ $name = .name }}{{ end -}}
-{{- $trail := slice (dict "label" "Клубы" "url" "/clubs/") (dict "label" $name) -}}
+{{- $trail := slice (dict "label" "Клубы" "url" "/") (dict "label" $name) -}}
 {{ partial "catalog.html" (dict "activeSlug" $slug "trail" $trail) }}
 {{- end -}}

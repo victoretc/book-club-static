@@ -1,49 +1,46 @@
-{{- /* Три колонки из данных, без хардкода:
-     Навигация — menu.main (hugo.toml), Категории — живые категории
-     (data/categories.yml ∩ таксономия), Проект — params.github. */ -}}
+{{- /* Футер: логотип слева, колонки «Разделы» и «Категории» с
+     заголовками, справа отдельные ссылки GitHub и Карта сайта —
+     без заголовка, как простые ссылки. Копирайт над линией,
+     линия внизу. */ -}}
 {{- $cats := partial "categories-active.html" -}}
 <footer class="footer">
   <div class="footer-inner">
     <div class="footer-main">
-      <div class="footer-brand">
-        <a href="{{ relURL "" }}" class="footer-brand-link" aria-label="Читальная — на главную">Читальная</a>
-      </div>
+      <a href="{{ relURL "" }}" class="footer-brand-link" aria-label="Читальная — на главную">Читальная</a>
 
-      <nav class="footer-nav" aria-label="Разделы сайта">
-        <div class="footer-col">
-          <h2 class="footer-heading">Навигация</h2>
+      <div class="footer-cols">
+        <nav class="footer-col" aria-label="Разделы сайта">
+          <h2 class="footer-heading">Разделы</h2>
           <ul class="footer-list">
             {{- range site.Menus.main }}
             <li><a href="{{ .URL }}" class="footer-link">{{ .Name }}</a></li>
             {{- end }}
           </ul>
-        </div>
+        </nav>
 
         {{- if $cats }}
-        <div class="footer-col">
+        <nav class="footer-col" aria-label="Категории">
           <h2 class="footer-heading">Категории</h2>
           <ul class="footer-list">
             {{- range $cats }}
             <li><a href="{{ printf "categories/%s/" .slug | relURL }}" class="footer-link">{{ .name }}</a></li>
             {{- end }}
           </ul>
-        </div>
+        </nav>
         {{- end }}
 
-        {{- with site.Params.github }}
-        <div class="footer-col">
-          <h2 class="footer-heading">Проект</h2>
-          <ul class="footer-list">
-            <li><a href="{{ . }}" class="footer-link" target="_blank" rel="noopener">GitHub</a></li>
-            <li><a href="{{ "sitemap.xml" | relURL }}" class="footer-link">Карта сайта</a></li>
-          </ul>
+        <div class="footer-col footer-col--plain">
+          {{- with site.Params.github }}
+          <a href="{{ . }}" class="footer-link" target="_blank" rel="noopener">GitHub</a>
+          {{- end }}
+          <a href="{{ "sitemap/" | relURL }}" class="footer-link">Карта сайта</a>
         </div>
-        {{- end }}
-      </nav>
+      </div>
     </div>
 
     <div class="footer-bottom">
       <p class="footer-copyright">© {{ now.Year }} Читальная</p>
+      <div class="footer-rule" aria-hidden="true"></div>
     </div>
   </div>
 </footer>

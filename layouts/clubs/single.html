@@ -36,7 +36,7 @@
 {{- /* Крошки: Клубы / <категория> / название */ -}}
 {{- $catSlug := index $cats 0 -}}
 {{- $catNode := partial "category-by-slug.html" (dict "slug" $catSlug) -}}
-{{- $trail := slice (dict "label" "Клубы" "url" "/clubs/") -}}
+{{- $trail := slice (dict "label" "Клубы" "url" "/") -}}
 {{- with $catNode }}
   {{- $trail = $trail | append (dict "label" .name "url" (printf "/categories/%s/" .slug)) -}}
 {{- end -}}
@@ -48,7 +48,18 @@
 {{- $one := partial "plural.html" (dict "n" $n "one" "участник" "few" "участника" "many" "участников") -}}
 
 <div class="detail-page">
-  {{ partial "breadcrumbs.html" (dict "trail" $trail) }}
+  <div class="detail-top">
+    {{- /* Стрелка «назад» — в той же строке, что и крошки, слева от них;
+         ведёт на главную (каталог). */ -}}
+    <a href="{{ relURL "" }}" class="detail-back" aria-label="На главную">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="m12 19-7-7 7-7"/>
+        <path d="M19 12H5"/>
+      </svg>
+    </a>
+
+    {{ partial "breadcrumbs.html" (dict "trail" $trail) }}
+  </div>
 
   <div class="detail-card-wrap">
     <div class="detail-card">

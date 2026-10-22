@@ -4,3 +4,6 @@
 - name: Тестирование
   slug: testing
   position: 1
+- name: Дизайн
+  slug: design
+  position: 2
