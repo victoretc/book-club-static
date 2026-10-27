@@ -43,8 +43,9 @@
 {{- $trail = $trail | append (dict "label" .Title) -}}
 
 {{- $isAuthor := eq $type "author" -}}
+{{- /* Нужен закомментированной ниже секции отзывов — раскомментируя
+       её, не забыть про переменную. */ -}}
 {{- $reviews := .Params.reviews | default slice -}}
-{{- $rvOne := partial "plural.html" (dict "n" (len $reviews) "one" "отзыв" "few" "отзыва" "many" "отзывов") -}}
 {{- $one := partial "plural.html" (dict "n" $n "one" "участник" "few" "участника" "many" "участников") -}}
 
 <div class="detail-page">
@@ -88,10 +89,15 @@
 
       <div class="card-divider"></div>
 
-      {{- if and $isAuthor .Params.author_bio }}
-      <p class="card-desc">{{ .Params.author_bio }}</p>
-      {{- else }}
-      <p class="card-desc">{{ .Description | default .Params.description }}</p>
+      {{- /* Описание обрезается line-clamp'ом, кнопка «Читать ещё»
+             раскрывает его. Показывает/прячет кнопку JS: static/js/desc.js */ -}}
+      {{- $desc := .Description | default .Params.description -}}
+      {{- if and $isAuthor .Params.author_bio }}{{ $desc = .Params.author_bio }}{{ end -}}
+      {{- with $desc }}
+      <div class="desc-expand" data-desc-expand>
+        <p class="card-desc" data-desc-text>{{ . }}</p>
+        <button type="button" class="desc-more" data-desc-toggle aria-expanded="false">Читать ещё</button>
+      </div>
       {{- end }}
 
       {{- if $isAuthor }}
@@ -102,15 +108,12 @@
       </div>
       {{- end }}
 
+      {{- /* Только участники: счётчик отзывов убран, пока секция
+             отзывов закомментирована (см. ниже). */ -}}
       <div class="card-stats">
         <span class="stat">
           <span class="stat-num">{{ $n }}</span>
           {{ $one }}
-        </span>
-        <span class="stat-sep">•</span>
-        <span class="stat">
-          <span class="stat-num">{{ len $reviews }}</span>
-          {{ $rvOne }}
         </span>
       </div>
 

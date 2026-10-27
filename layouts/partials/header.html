@@ -26,6 +26,17 @@
         {{ .Name }}
       </a>
       {{- end }}
+
+      {{- /* Заглушки без ссылок: URL появятся позже, пока кнопки
+             инертны (см. button.header-nav-link в main.css). */ -}}
+      <button type="button" class="header-nav-link">
+        <svg class="header-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m22 2-7 20-4-9-9-4Z"/><path d="M22 2 11 13"/></svg>
+        Мы в Telegram
+      </button>
+      <button type="button" class="header-nav-link">
+        <svg class="header-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>
+        Блог
+      </button>
     </nav>
 
     {{- /* Мобильное меню: две полоски как бургер в site-nav victors-blog.
@@ -45,6 +56,9 @@
         {{- end }}
         <a href="{{ .URL }}"{{ if $active }} class="active"{{ end }}{{ if eq .Name "Добавить книгу" }} data-modal-open{{ end }}>{{ .Name }}</a>
         {{- end }}
+        {{- /* Те же заглушки, что в десктопной навигации: пока без ссылок. */ -}}
+        <button type="button">Мы в Telegram</button>
+        <button type="button">Блог</button>
       </nav>
     </div>
   </div>

@@ -15,6 +15,9 @@
             {{- range site.Menus.main }}
             <li><a href="{{ .URL }}" class="footer-link">{{ .Name }}</a></li>
             {{- end }}
+            {{- /* Заглушки без ссылок — как в шапке (button.footer-link). */ -}}
+            <li><button type="button" class="footer-link">Мы в Telegram</button></li>
+            <li><button type="button" class="footer-link">Блог</button></li>
           </ul>
         </nav>
 
