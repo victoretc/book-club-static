@@ -1,4 +1,4 @@
-baseURL = 'https://johnmakarov.github.io/book-club-static/'
+baseURL = 'https://victoretc.github.io/book-club-static/'
 languageCode = 'ru-ru'
 defaultContentLanguage = 'ru'
 title = 'Читальная'
