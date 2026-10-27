@@ -1,0 +1,65 @@
+name: Добавить отзыв
+description: Отзыв участника на клуб в Читальной
+title: "Отзыв: "
+labels: ["review-request"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Отзыв увидят участники клуба. Публикуется после проверки модератором.
+
+  - type: input
+    id: club
+    attributes:
+      label: Клуб
+      description: Название книги или автора, к которому относится отзыв
+      placeholder: Искусство тестирования программ
+    validations:
+      required: true
+
+  - type: input
+    id: user
+    attributes:
+      label: Ваше имя
+      placeholder: Алексей
+    validations:
+      required: true
+
+  - type: dropdown
+    id: assessment
+    attributes:
+      label: Оценка
+      options:
+        - "5"
+        - "4"
+        - "3"
+        - "2"
+        - "1"
+    validations:
+      required: true
+
+  - type: input
+    id: read-pages
+    attributes:
+      label: Прочитано страниц
+      description: Сколько страниц вы прочитали
+      placeholder: "320"
+    validations:
+      required: true
+
+  - type: textarea
+    id: review
+    attributes:
+      label: Отзыв
+      description: Что понравилось, что не зашло, кому посоветуете
+      placeholder: Понравилась глава про интеграционные тесты — сразу применил на работе.
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: preflight
+    attributes:
+      label: Перед отправкой
+      options:
+        - label: Я читал эту книгу и хочу поделиться впечатлением
+          required: true

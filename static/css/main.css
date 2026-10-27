@@ -264,18 +264,18 @@ main {
   flex-shrink: 0;
 }
 
-/* Стрелка «назад» на странице клуба — в одной строке с хлебными крошками,
-   слева от цепочки. Без hover-эффекта. */
+/* Стрелка «назад» на странице клуба — отдельной строкой ПОД хлебными
+   крошками, прижата влево. Без hover-эффекта. */
 .detail-top {
   width: 100%;
   display: flex;
-  align-items: center;
-  gap: 4px;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 6px;
 }
 
 .detail-top .breadcrumbs-nav {
-  flex: 1;
-  min-width: 0;
+  width: 100%;
 }
 
 .detail-back {
@@ -1799,9 +1799,11 @@ main {
   gap: 24px;
 }
 
+/* Ширина контента на главной: .content-grid и .filters-section —
+   minmax(0,704px) + gap 16 + 300px = 1020px, по центру. Держим ту же. */
 .detail-card-wrap {
   width: 100%;
-  max-width: 704px;
+  max-width: 1020px;
   margin: 0 auto;
 }
 
@@ -2052,11 +2054,11 @@ main {
   }
 }
 
-/* ===== Отзывы (ClubReviews) ===== */
+/* ===== Отзывы (ClubReviews) =====
+   Без border-top: раздел уже отделён .card-divider под кнопками действий. */
 .reviews {
   margin-top: 32px;
   padding-top: 32px;
-  border-top: 1px solid var(--color-stroke-subtle);
 }
 
 .reviews-head {
@@ -2073,6 +2075,14 @@ main {
   font-size: 24px;
   font-weight: 500;
   color: var(--color-text);
+}
+
+/* Кнопка «Добавить отзыв» — компактная, вровень с заголовком. */
+.reviews-add {
+  height: 40px;
+  padding: 0 18px;
+  font-size: 15px;
+  flex-shrink: 0;
 }
 
 .reviews-list {
