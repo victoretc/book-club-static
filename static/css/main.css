@@ -125,6 +125,54 @@ a {
   }
 }
 
+/* ===== Сплэш загрузки =====
+   Плашка на весь экран, пока грузятся шрифты и страница: сайт не
+   показывается с фолбэчными шрифтами. Гасит splash.js, без JS —
+   noscript в head. Стоит выше всех оверлеев. */
+.splash {
+  position: fixed;
+  inset: 0;
+  z-index: 3000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--color-bg);
+  transition: opacity 0.25s ease;
+}
+
+.splash.is-done {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.splash[hidden] {
+  display: none;
+}
+
+.splash-logo {
+  font-family: var(--font-display);
+  font-size: 34px;
+  line-height: 1;
+  color: var(--color-text);
+  animation: splash-pulse 1.1s ease-in-out infinite;
+}
+
+@keyframes splash-pulse {
+  0%,
+  100% {
+    opacity: 0.3;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .splash-logo {
+    animation: none;
+  }
+}
+
 /* ===== App layout (App.vue) ===== */
 .app-layout {
   display: flex;

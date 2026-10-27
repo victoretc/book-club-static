@@ -5,6 +5,12 @@
     {{- partial "head.html" . }}
   </head>
   <body>
+    {{- /* Сплэш на весь экран: сайт не показываем, пока грузятся шрифты
+           и страница. Прячет static/js/splash.js; без JS — noscript
+           в head. */ -}}
+    <div class="splash" data-splash aria-hidden="true">
+      <span class="splash-logo">Читальная</span>
+    </div>
     <div class="app-layout">
       {{- if not $hideChrome }}{{ partial "header.html" . }}{{ end }}
       <main>
