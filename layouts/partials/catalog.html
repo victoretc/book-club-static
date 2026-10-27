@@ -67,9 +67,15 @@
         </svg>
         Избранное
       </button>
-      <a href="{{ relURL "" }}" class="chip chip--all{{ if not $active }} chip--active{{ end }}">Все категории</a>
+      <a href="{{ relURL "" }}" class="chip chip--all{{ if not $active }} chip--active{{ end }}">
+        {{- if not $active }}{{ partial "check-badge.html" . }}{{ end -}}
+        Все категории
+      </a>
       {{- range $cats }}
-      <a href="{{ printf "categories/%s/" .slug | relURL }}" class="chip{{ if eq $.activeSlug .slug }} chip--active{{ end }}">{{ .name }}</a>
+      <a href="{{ printf "categories/%s/" .slug | relURL }}" class="chip{{ if eq $.activeSlug .slug }} chip--active{{ end }}">
+        {{- if eq $.activeSlug .slug }}{{ partial "check-badge.html" . }}{{ end -}}
+        {{ .name }}
+      </a>
       {{- end }}
     </nav>
 
@@ -123,10 +129,12 @@
         <div class="cat-list">
           <a href="{{ relURL "" }}" class="cat-item{{ if not $active }} active{{ end }}">
             <span class="cat-name">Все категории</span>
+            {{- if not $active }}{{ partial "check-badge.html" . }}{{ end }}
           </a>
           {{- range $cats }}
           <a href="{{ printf "categories/%s/" .slug | relURL }}" class="cat-item{{ if eq $active .slug }} active{{ end }}">
             <span class="cat-name">{{ .name }}</span>
+            {{- if eq $active .slug }}{{ partial "check-badge.html" . }}{{ end }}
           </a>
           {{- end }}
         </div>

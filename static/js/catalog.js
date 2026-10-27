@@ -166,7 +166,7 @@
         toggle.checked = favOnly
       } else {
         // Таблетка — обычный чип, поэтому живёт на тех же классах, что и
-        // категории: .chip--active даёт и заливку, и исключение из :hover.
+        // категории: .chip--active даёт рамку и брендовый текст.
         toggle.classList.toggle('chip--active', favOnly)
         toggle.setAttribute('aria-pressed', favOnly ? 'true' : 'false')
       }

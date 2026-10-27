@@ -52,8 +52,8 @@
     {{ partial "breadcrumbs.html" (dict "trail" $trail) }}
 
     {{- /* Стрелка «назад» — отдельной строкой под крошками, слева;
-         ведёт на главную (каталог). */ -}}
-    <a href="{{ relURL "" }}" class="detail-back" aria-label="На главную">
+         ведёт в каталог. */ -}}
+    <a href="{{ relURL "" }}" class="detail-back" aria-label="Назад в каталог">
       <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
         <path d="m12 19-7-7 7-7"/>
         <path d="M19 12H5"/>
@@ -160,8 +160,6 @@
         </div>
       </div>
 
-      <div class="card-divider"></div>
-
       <div class="fav-toast" role="status" aria-live="polite" data-fav-toast>
         <div class="fav-toast-icon-wrap">
           <svg class="fav-toast-ico" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
@@ -172,14 +170,29 @@
         <span class="fav-toast-text" data-toast-text></span>
       </div>
 
+      {{- /* «Отзывы участников» временно отключены: вся секция ниже
+             закомментирована Hugo-комментарием (в HTML не попадает, не
+             зависит от minify). Внутри была заметка: отзыв собирается
+             Issue'ей по шаблону review_request.yml, название клуба и title
+             предзаполняются из карточки, кнопка — в стиле «Добавить книгу»
+             (.header-nav-link). Чтобы вернуть, раскомментировать блок ниже
+             целиком — от открывающей пары фигурной скобки со звёздочкой
+             до такой же пары в конце секции; над секцией добавить
+             линию card-divider — та, что разделяла кнопки и отзывы,
+             убрана вместе с последней линией в конце карточки. */ -}}
+      {{/*
       <div class="reviews">
         <div class="reviews-head">
           <h2 class="reviews-title">Отзывы участников</h2>
-          {{- /* Отзывы собираем Issue'ами по шаблону review_request.yml;
-               club и title предзаполняются из карточки клуба. */ -}}
           {{- $reviewIssue := printf "https://github.com/victoretc/book-club-static/issues/new?template=review_request.yml&title=%s&club=%s" (urlquery (printf "Отзыв: %s" $shareTitle)) (urlquery $shareTitle) }}
-          <a class="base-btn base-btn--outline reviews-add" href="{{ $reviewIssue }}"
-             target="_blank" rel="noopener">Добавить отзыв</a>
+          <a class="header-nav-link reviews-add" href="{{ $reviewIssue }}"
+             target="_blank" rel="noopener">
+            <svg class="header-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M5 12h14"/>
+              <path d="M12 5v14"/>
+            </svg>
+            Оставить отзыв
+          </a>
         </div>
 
         {{- if $reviews }}
@@ -215,6 +228,7 @@
         <div class="empty">Пока нет отзывов. Будьте первым!</div>
         {{- end }}
       </div>
+      */}}
     </div>
   </div>
 </div>

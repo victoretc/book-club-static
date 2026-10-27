@@ -264,8 +264,8 @@ main {
   flex-shrink: 0;
 }
 
-/* Стрелка «назад» на странице клуба — отдельной строкой ПОД хлебными
-   крошками, прижата влево. Без hover-эффекта. */
+/* Крошки на странице клуба и стрелка «назад» под ними — стрелка
+   отдельной строкой, прижата влево. */
 .detail-top {
   width: 100%;
   display: flex;
@@ -278,16 +278,30 @@ main {
   width: 100%;
 }
 
+/* Стрелка «назад» — контентная кнопка под крошками: -9px подгоняет
+   svg под левый край контента, hover/focus как у кнопок.
+   Высота 32, а не 40: низ бокса вровень с низом текста крошек, чтобы
+   видимый зазор до карточки совпадал с зазором крошки → поиск на главной. */
 .detail-back {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
   width: 40px;
-  height: 40px;
+  height: 32px;
   margin-left: -9px;
   border-radius: 9999px;
   color: var(--color-text);
+  transition: background 0.2s ease;
+}
+
+.detail-back:hover {
+  background: var(--color-stroke-subtle);
+}
+
+.detail-back:focus-visible {
+  outline: 2px solid var(--color-brand);
+  outline-offset: 2px;
 }
 
 .header-nav {
@@ -654,19 +668,15 @@ main {
 
 /* Hover у таблеток не нужен: подсветка остаётся только за активной. */
 
+/* Выбранная категория — без заливки и рамок: та же белая пилюля, но
+   вес 600 и бейдж-галочка слева (.cat-check). */
 .chip--active {
-  background: var(--color-brand);
-  color: #FFFFFF;
+  font-weight: 600;
 }
 
-.chip--all {
-  color: var(--color-brand);
-  background: var(--color-brand-soft);
-}
-
-.chip--all.chip--active {
-  background: var(--color-brand);
-  color: #FFFFFF;
+.chip--active .cat-check {
+  width: 16px;
+  height: 16px;
 }
 
 /* Таблетка «Избранное» — мобильный двойник чекбокса из сайдбара: тот же
@@ -675,11 +685,6 @@ main {
 .chip--fav {
   color: var(--color-text);
   background: var(--color-surface);
-}
-
-.chip--fav.chip--active {
-  background: var(--color-brand);
-  color: #FFFFFF;
 }
 
 .chip--fav.chip--active .chip-fav-ico path {
@@ -1769,7 +1774,23 @@ main {
   transition: background var(--duration-fast) ease, color var(--duration-fast) ease;
 }
 
+/* Выбранная категория — фон строки не меняется: вес 600 и синий
+   бейдж-галочка справа. Hover не подсвечивает — отклик даёт только
+   active (как у таблеток). */
 .cat-item.active {
+  font-weight: 600;
+}
+
+/* Галочка-бейдж: мотив чекбокса «Избранное» и аватаров — синий кружок
+   с белым глифом; акцент, а не плашка. */
+.cat-check {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
   background: var(--color-brand);
   color: #FFFFFF;
 }
@@ -1790,13 +1811,16 @@ main {
   }
 }
 
-/* ===== Карточка клуба — детали (ClubDetails) ===== */
+/* ===== Карточка клуба — детали (ClubDetails) =====
+   gap 16 = gap у .clubs-content на главной: расстояние «стрелка →
+   карточка» повторяет «крошки → поиск». На телефоне главная даёт 20px
+   (.clubs-content .breadcrumbs-nav margin-bottom) — повторяем. */
 .detail-page {
   width: 100%;
   flex: 1;
   display: flex;
   flex-direction: column;
-  gap: 24px;
+  gap: 16px;
 }
 
 /* Ширина контента на главной: .content-grid и .filters-section —
@@ -2007,6 +2031,10 @@ main {
 }
 
 @media (max-width: 768px) {
+  .detail-page {
+    gap: 20px;
+  }
+
   .detail-card {
     padding: 24px;
     gap: 16px;
@@ -2077,11 +2105,9 @@ main {
   color: var(--color-text);
 }
 
-/* Кнопка «Добавить отзыв» — компактная, вровень с заголовком. */
+/* Кнопка «Добавить отзыв» — стиль пункта шапки (.header-nav-link),
+   только не сжимается в ряду с заголовком. */
 .reviews-add {
-  height: 40px;
-  padding: 0 18px;
-  font-size: 15px;
   flex-shrink: 0;
 }
 
