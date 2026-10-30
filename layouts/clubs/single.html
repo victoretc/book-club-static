@@ -121,7 +121,15 @@
 
       <div class="card-actions">
         {{- with .Params.telegram_chat_link }}
-        <a class="base-btn base-btn--brand-outline" href="{{ . }}" target="_blank" rel="noopener">Telegram чат</a>
+        <a class="base-btn base-btn--primary" href="{{ . }}" target="_blank" rel="noopener">
+          {{- /* Без заливки-кружка: контурный самолётик в стиле «Поделиться»
+               (feather send), stroke currentColor. */ -}}
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <line x1="22" y1="2" x2="11" y2="13"/>
+            <polygon points="22 2 15 22 11 13 2 9 22 2"/>
+          </svg>
+          Telegram чат
+        </a>
         {{- end }}
         {{- with .Params.max_chat_link }}
         <a class="base-btn base-btn--outline" href="{{ . }}" target="_blank" rel="noopener">Max чат</a>

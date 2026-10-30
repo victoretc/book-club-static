@@ -48,12 +48,6 @@
         </div>
       </div>
 
-      <div class="right-filters">
-        <div class="type-tabs" role="group" aria-label="Тип клуба">
-          <button type="button" class="type-tab active" data-type-filter="book">По книге</button>
-          <button type="button" class="type-tab" data-type-filter="author">Авторские</button>
-        </div>
-      </div>
     </div>
 
     {{- /* Ряд фишек — мобильный двойник сайдбара (как cat-list в
@@ -119,24 +113,60 @@
           <span class="fav-checkbox-label">Избранное</span>
         </label>
 
-        <h2 class="sidebar-title">Категории</h2>
-
-        {{- /* «Все категории» — пункт списка, а не кнопка внизу: так же
-             устроено в victors-blog, где «Все» — первая строка фильтра.
-             Стрелки у пунктов нет — они читаются как «откроется», а это
-             фильтр. */ -}}
+        {{- /* Селект категории — 1-в-1 sidebar-category-picker с hirehi.ru:
+             триггер с плавающим лейблом «Категория», текущим значением и
+             числом клубов; дропдаун — ссылки на страницы категорий, у
+             выбранного зелёная галочка. Выбор — обычные ссылки, серверный
+             рендер не трогаем. */ -}}
         {{- if $cats }}
-        <div class="cat-list">
-          <a href="{{ relURL "" }}" class="cat-item{{ if not $active }} active{{ end }}">
-            <span class="cat-name">Все категории</span>
-            {{- if not $active }}{{ partial "check-badge.html" . }}{{ end }}
-          </a>
-          {{- range $cats }}
-          <a href="{{ printf "categories/%s/" .slug | relURL }}" class="cat-item{{ if eq $active .slug }} active{{ end }}">
-            <span class="cat-name">{{ .name }}</span>
-            {{- if eq $active .slug }}{{ partial "check-badge.html" . }}{{ end }}
-          </a>
-          {{- end }}
+        {{- $terms := site.Taxonomies.categories -}}
+        {{- $total := len $clubsPage.Pages -}}
+        {{- $curName := "все клубы" -}}
+        {{- $curCount := $total -}}
+        {{- range $cats -}}
+          {{- if eq .slug $active -}}
+            {{- $curName = .name | lower -}}
+            {{- $curCount = len (index $terms .slug) -}}
+          {{- end -}}
+        {{- end -}}
+        <div class="sidebar-category-picker">
+          <div class="category-select-wrap">
+            <div class="resume-select category-select-trigger" id="categoryButton" role="button" tabindex="0" aria-haspopup="listbox" aria-controls="categoryDropdown" aria-expanded="false">
+              <span class="category-select-content">
+                <span class="category-select-text">
+                  <span class="floating-label active">Категория</span>
+                  <span class="resume-select-value">
+                    <span class="category-select-name">{{ $curName }}</span>
+                  </span>
+                </span>
+                <span class="category-select-count vacancy-count">{{ $curCount }}</span>
+              </span>
+            </div>
+            <div class="sort-dropdown category-select-dropdown" id="categoryDropdown" role="listbox" aria-hidden="true">
+              <a href="{{ relURL "" }}" data-category="all" class="sort-option category-option{{ if not $active }} selected{{ end }}" role="option" aria-selected="{{ if not $active }}true{{ else }}false{{ end }}">
+                <span class="sort-option-text">все клубы</span>
+                <span class="sort-check-icon" aria-hidden="true">
+                  <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <circle cx="10" cy="10" r="10" fill="#4DB288" fill-opacity="0.16"></circle><path d="M0.75 5.65909L4.04032 8.75L12.75 0.75" transform="translate(4.7 6.27) scale(0.786)" stroke="#4DB288" stroke-width="2.3" fill="none" stroke-linecap="round" stroke-linejoin="round"></path>
+                  </svg>
+                </span>
+              </a>
+              {{- range $cats }}
+              <a href="{{ printf "categories/%s/" .slug | relURL }}" data-category="{{ .slug }}" class="sort-option category-option{{ if eq $active .slug }} selected{{ end }}" role="option" aria-selected="{{ if eq $active .slug }}true{{ else }}false{{ end }}">
+                <span class="sort-option-text">{{ .name | lower }}</span>
+                <span class="sort-check-icon" aria-hidden="true">
+                  <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <circle cx="10" cy="10" r="10" fill="#4DB288" fill-opacity="0.16"></circle><path d="M0.75 5.65909L4.04032 8.75L12.75 0.75" transform="translate(4.7 6.27) scale(0.786)" stroke="#4DB288" stroke-width="2.3" fill="none" stroke-linecap="round" stroke-linejoin="round"></path>
+                  </svg>
+                </span>
+              </a>
+              {{- end }}
+            </div>
+          </div>
+          <div id="category-tooltip" class="category-tooltip" style="display:none;">
+            <span class="category-tooltip-text">Здесь можно выбрать категорию клубов</span>
+            <span class="category-tooltip-arrow"></span>
+          </div>
         </div>
         {{- else }}
         <div class="sidebar-empty">Категории появятся позже</div>
@@ -144,11 +174,15 @@
       </aside>
     </div>
 
+    {{- /* Кнопка «Наверх» — не показывается на главной (home.html передаёт
+           hideScrollTop); на /clubs/ и страницах категорий остаётся. */ -}}
+    {{- if not .hideScrollTop }}
     <button type="button" class="scroll-top" aria-label="Наверх" data-scroll-top hidden>
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
         <path d="M12 19V5M5 12l7-7 7 7"/>
       </svg>
     </button>
+    {{- end }}
 
     {{- /* Уведомление о результате клика: клуб добавлен или убран.
          Дизайн — ToastNotification из book-club-web (белая плашка, зелёная

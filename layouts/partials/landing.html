@@ -1,0 +1,20 @@
+{{- /* Хиро лэндинга на главной: первый экран на всю высоту, контент сверху
+       (padding-top 152px — как .lp-hero на preplab), типографика и кнопки
+       1-в-1 с preplab.ru. «Читать» ведёт на страницу клубов (/clubs/),
+       «Кликну сюда» — к каталогу ниже на этой же главной (#catalog).
+       Фон хиро — интерактивная сетка (static/js/interactive-grid.js):
+       ячейки загораются под указателем и гаснут следом, контент кликабелен. */ -}}
+<section class="landing-hero" data-interactive-grid>
+  <div class="landing-copy">
+    <div class="landing-heads">
+      <h1 class="landing-title">Каталог книжных клубов</h1>
+      <p class="landing-sub">
+        Читаешь книгу и не с кем обсудить? Найди клуб по названию книги. В карточке описание, число читающих и ссылка в Telegram чат для обсуждения. Не нашёл свою книгу — создай клуб по книге за несколько минут. Бесплатно и без регистрации.
+      </p>
+    </div>
+    <div class="landing-actions">
+      <a href="{{ "clubs/" | relURL }}" class="base-btn base-btn--primary">Читать</a>
+      <a href="#catalog" class="base-btn base-btn--outline">Кликну сюда</a>
+    </div>
+  </div>
+</section>

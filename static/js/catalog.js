@@ -279,9 +279,63 @@
     })
   }
 
-  // === Первичная фильтрация: по умолчанию таб «По книге» ===
-  var initialTab = typeTabs.filter(function (t) {
-    return t.classList.contains('active')
-  })[0]
-  setActiveTab(initialTab || typeTabs[0])
+  // === Селект категории в сайдбаре (sidebar-category-picker, как hirehi) ===
+  var catTrigger = document.getElementById('categoryButton')
+  var catDropdown = document.getElementById('categoryDropdown')
+  var catTooltip = document.getElementById('category-tooltip')
+
+  function setCatOpen(open) {
+    if (!catTrigger || !catDropdown) return
+    catTrigger.classList.toggle('open', open)
+    catDropdown.classList.toggle('show', open)
+    catTrigger.setAttribute('aria-expanded', open ? 'true' : 'false')
+    catDropdown.setAttribute('aria-hidden', open ? 'false' : 'true')
+    if (open) hideCatTooltip()
+  }
+
+  function hideCatTooltip() {
+    if (!catTooltip) return
+    catTooltip.classList.remove('visible')
+    try {
+      localStorage.setItem('book_club_cat_tooltip_seen', '1')
+    } catch (e) {}
+  }
+
+  if (catTrigger && catDropdown) {
+    catTrigger.addEventListener('click', function () {
+      setCatOpen(!catDropdown.classList.contains('show'))
+    })
+    catTrigger.addEventListener('keydown', function (event) {
+      if (event.key === 'Enter' || event.key === ' ') {
+        event.preventDefault()
+        setCatOpen(!catDropdown.classList.contains('show'))
+      }
+      if (event.key === 'Escape') setCatOpen(false)
+    })
+    document.addEventListener('click', function (event) {
+      if (!catDropdown.classList.contains('show')) return
+      if (catDropdown.contains(event.target) || catTrigger.contains(event.target)) return
+      setCatOpen(false)
+    })
+  }
+
+  // Подсказка «Здесь можно выбрать категорию» — один раз за браузер.
+  if (catTooltip) {
+    var tooltipSeen = false
+    try {
+      tooltipSeen = localStorage.getItem('book_club_cat_tooltip_seen') === '1'
+    } catch (e) {}
+    if (!tooltipSeen) {
+      catTooltip.style.display = ''
+      window.setTimeout(function () {
+        catTooltip.classList.add('visible')
+      }, 600)
+      catTooltip.addEventListener('click', hideCatTooltip)
+    }
+  }
+
+  // === Первичная фильтрация ===
+  // Табов типа больше нет (все клубы «по книге»), фильтруются только
+  // поиск и избранное.
+  applyFilters()
 })()

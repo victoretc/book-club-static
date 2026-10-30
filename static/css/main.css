@@ -98,6 +98,9 @@ body {
   line-height: 1.5;
   color: var(--color-text);
   background-color: var(--color-bg);
+  /* clip, а не hidden: 100vw у фул-блид-сцены шире колонки с полосой
+     прокрутки; clip не создаёт скролл-контейнер и не ломает sticky. */
+  overflow-x: clip;
 }
 
 :focus-visible {
@@ -310,6 +313,25 @@ main {
   color: var(--color-text);
   text-decoration: none;
   flex-shrink: 0;
+}
+
+/* Логотип: жёлтая «полка» под словом (вариант 1). */
+.header-brand,
+.footer-brand-link {
+  position: relative;
+  display: inline-block;
+}
+
+.header-brand::after,
+.footer-brand-link::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -6px;
+  height: 4px;
+  border-radius: 2px;
+  background: #ffe266;
 }
 
 /* Крошки на странице клуба и стрелка «назад» под ними — стрелка
@@ -661,7 +683,7 @@ button.footer-link {
   align-items: center;
   justify-content: space-between;
   flex-wrap: wrap;
-  gap: 8px 16px;
+  gap: 4px 8px;
   font-family: var(--font-body);
   font-size: 15px;
   line-height: 1.3;
@@ -671,7 +693,7 @@ button.footer-link {
   display: flex;
   align-items: center;
   flex-wrap: wrap;
-  gap: 4px;
+  gap: 2px;
 }
 
 .crumb {
@@ -712,7 +734,7 @@ button.footer-link {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  gap: 16px;
+  gap: 8px;
 }
 
 .category-chips {
@@ -730,7 +752,7 @@ button.footer-link {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 6px;
+  gap: 3px;
   padding: 10px 18px;
   background: var(--color-surface);
   border: none;
@@ -780,7 +802,7 @@ button.footer-link {
   display: grid;
   grid-template-columns: minmax(0, 704px) 300px;
   justify-content: center;
-  gap: 24px 16px;
+  gap: 12px 8px;
   align-items: start;
 }
 
@@ -788,7 +810,7 @@ button.footer-link {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 24px;
+  gap: 12px;
   min-width: 0;
 }
 
@@ -797,7 +819,7 @@ button.footer-link {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 12px;
+  gap: 6px;
   width: 100%;
 }
 
@@ -840,7 +862,7 @@ button.footer-link {
   width: 100%;
   max-width: 704px;
   background: var(--color-surface);
-  border-radius: 32px;
+  border-radius: 16px;
   padding: 28px;
   cursor: pointer;
   text-decoration: none;
@@ -861,7 +883,7 @@ button.footer-link {
 @media (min-width: 768px) {
   .club-card--grid {
     height: 100%;
-    border-radius: 24px;
+    border-radius: 12px;
     padding: 20px;
     gap: 0;
     overflow: hidden;
@@ -1093,7 +1115,7 @@ button.footer-link {
   color: var(--color-brand);
 }
 
-/* Клуб в избранном: сердечко синее и залитое. На мобильном кнопка
+/* Клуб в избранном: иконка закладки синяя и залитая. На мобильном кнопка
    видна всегда, и это единственный постоянный признак сохранённого
    клуба (уведомление исчезает). aria-pressed переключает JS в
    renderFavorites() при загрузке и по клику. */
@@ -1134,10 +1156,10 @@ button.footer-link {
 /* Пустое состояние режима избранного — вместо картинки 404. */
 .fav-empty {
   flex-direction: column;
-  gap: 4px;
+  gap: 2px;
   padding: 40px 24px;
   background: var(--color-surface);
-  border-radius: 24px;
+  border-radius: 12px;
   text-align: center;
 }
 
@@ -1201,15 +1223,15 @@ button.footer-link {
   }
 
   .breadcrumbs-nav__trail {
-    row-gap: 8px;
+    row-gap: 4px;
   }
 
   .clubs-content .breadcrumbs-nav {
-    margin-bottom: 20px;
+    margin-bottom: 10px;
   }
 
   .filters-section {
-    margin-bottom: 12px;
+    margin-bottom: 6px;
   }
 
   /* Категории под поиском: без панели-плашки — только строка фишек,
@@ -1217,9 +1239,9 @@ button.footer-link {
   .category-chips {
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: 4px;
     width: 100%;
-    margin-bottom: 24px;
+    margin-bottom: 12px;
     overflow-x: auto;
     scrollbar-width: none;
     padding-bottom: 2px;
@@ -1299,15 +1321,15 @@ button.footer-link {
 
 @media (max-width: 480px) {
   .clubs-page {
-    gap: 12px;
+    gap: 6px;
   }
 
   .clubs-list {
-    gap: 10px;
+    gap: 5px;
   }
 
   .clubs-column {
-    gap: 16px;
+    gap: 8px;
   }
 
   .club-card {
@@ -1409,12 +1431,12 @@ button.footer-link {
   z-index: 1000;
   display: flex;
   align-items: center;
-  gap: 14px;
+  gap: 7px;
   max-width: 420px;
   width: max-content;
   box-sizing: border-box;
   padding: 18px 20px;
-  border-radius: var(--radius-xl);
+  border-radius: 12px;
   background: var(--color-surface);
   color: var(--color-text);
   box-shadow: var(--shadow-lg);
@@ -1449,7 +1471,7 @@ button.footer-link {
   justify-content: center;
   width: 36px;
   height: 36px;
-  border-radius: var(--radius-md);
+  border-radius: 6px;
   flex-shrink: 0;
   background: rgba(66, 207, 113, 0.1);
   color: var(--color-success);
@@ -1475,7 +1497,7 @@ button.footer-link {
   margin: -4px -6px -4px 0;
   padding: 0;
   border: none;
-  border-radius: var(--radius-sm);
+  border-radius: 4px;
   background: transparent;
   color: var(--color-text-muted);
   cursor: pointer;
@@ -1522,13 +1544,21 @@ button.footer-link {
   max-width: 380px;
   box-sizing: border-box;
   padding: 16px 18px;
-  border-radius: var(--radius-xl);
+  /* Закругления как у карточек клубов: база 16px (.club-card),
+     на десктопе у карточек в сетке 12px (.club-card--grid, min-width 768). */
+  border-radius: 16px;
   background: var(--color-surface);
   box-shadow: var(--shadow-lg);
   font-family: var(--font-body);
   font-size: 14px;
   line-height: 1.45;
   color: var(--color-text-secondary);
+}
+
+@media (min-width: 768px) {
+  .privacy-note {
+    border-radius: 12px;
+  }
 }
 
 .privacy-note[hidden] {
@@ -1564,7 +1594,7 @@ button.footer-link {
   grid-template-columns: minmax(0, 704px) 300px;
   justify-content: center;
   align-items: start;
-  gap: 16px;
+  gap: 8px;
 }
 
 .right-filters {
@@ -1579,10 +1609,10 @@ button.footer-link {
 .type-tabs {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 4px;
   padding: 6px 8px;
   background: var(--color-surface);
-  border-radius: 30px;
+  border-radius: 15px;
   width: 100%;
   height: 56px;
   box-sizing: border-box;
@@ -1597,7 +1627,7 @@ button.footer-link {
   padding: 8px 16px;
   background: transparent;
   border: none;
-  border-radius: 30px;
+  border-radius: 15px;
   font-family: var(--font-body);
   font-size: 18px;
   font-weight: 500;
@@ -1649,7 +1679,7 @@ button.footer-link {
 .search-row {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 5px;
   width: 100%;
   min-width: 0;
 }
@@ -1662,9 +1692,9 @@ button.footer-link {
   flex: 1;
   min-width: 0;
   background: var(--color-surface);
-  border-radius: 30px;
+  border-radius: 15px;
   padding: 6px 8px 6px 22px;
-  gap: 8px;
+  gap: 4px;
 }
 
 .search-input {
@@ -1684,12 +1714,38 @@ button.footer-link {
   color: var(--color-text-secondary);
 }
 
+/* Жёлтая заливка как у «Читать» на лендинге: --c-yellow-strong #FFE266 на
+   --c-ink #191919. Гасим синие hover/active/.base-btn--primary (специфичность
+   ниже, чем у .base-btn--primary:hover:not(:disabled) — переопределяем явно). */
 .search-btn {
   width: 44px;
   height: 44px;
   padding: 0;
-  border-radius: 30px;
+  border-radius: 15px;
   flex-shrink: 0;
+  background: #ffe266;
+  color: #191919;
+  border-color: transparent;
+  box-shadow: none;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .search-btn:hover:not(:disabled) {
+    background: #ffe266;
+    border-color: transparent;
+    color: #191919;
+    box-shadow: none;
+    filter: brightness(0.96);
+    transform: translateY(-1px);
+  }
+}
+
+.search-btn:active:not(:disabled) {
+  background: #ffe266;
+  border-color: transparent;
+  color: #191919;
+  box-shadow: none;
+  filter: none;
 }
 
 .search-icon {
@@ -1697,47 +1753,55 @@ button.footer-link {
 }
 
 /* Переключатель вида скрывается на телефоне вместе с табами типа:
-   карточки в одну колонку одинаковы в обоих режимах. padding 4px, чтобы
+   карточки в одну колонку одинаковы в обоих режимах. padding 6px, чтобы
    плашка была 56px — вровень с поиском. */
 .view-toggle {
   flex-shrink: 0;
   display: flex;
   align-items: center;
-  gap: 4px;
-  padding: 4px;
+  gap: 2px;
+  padding: 6px;
   background: var(--color-surface);
-  border-radius: 30px;
+  border-radius: 15px;
 }
 
 .view-toggle-btn {
-  width: 48px;
-  height: 48px;
+  width: 44px;
+  height: 44px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   border: none;
-  border-radius: 30px;
+  border-radius: 15px;
   background: transparent;
   color: var(--color-text-secondary);
   cursor: pointer;
   transition: background 0.2s ease, color 0.2s ease;
 }
 
+/* Иконки мельче кнопки поиска (20px): 16px в 44px кнопке. */
+.view-toggle-btn svg {
+  width: 16px;
+  height: 16px;
+}
+
+/* Активный переключатель — тёмная плашка как «Кликну сюда» на лендинге
+   (--c-ink #191919 на --c-surface), hover — лёгкая серая подложка. */
 .view-toggle-btn:hover {
-  background: var(--color-brand-soft);
-  color: var(--color-brand);
+  background: rgba(25, 25, 25, 0.08);
+  color: #191919;
 }
 
 .view-toggle-btn.active {
-  background: var(--color-brand);
+  background: #191919;
   color: #FFFFFF;
-  box-shadow: 0 2px 8px rgba(59, 62, 255, 0.25);
+  box-shadow: none;
 }
 
 @media (max-width: 900px) {
   .filters-section {
     grid-template-columns: 1fr;
-    gap: 8px;
+    gap: 4px;
   }
 
   .search-bar {
@@ -1763,7 +1827,7 @@ button.footer-link {
   .search-bar {
     width: 100%;
     padding: 8px 8px 8px 18px;
-    gap: 8px;
+    gap: 4px;
   }
 
   .search-input {
@@ -1773,19 +1837,19 @@ button.footer-link {
   .search-btn {
     width: 44px;
     height: 44px;
-    border-radius: 30px;
+    border-radius: 15px;
   }
 }
 
 @media (max-width: 480px) {
   .filters-section {
-    gap: 8px;
+    gap: 4px;
   }
 
   /* Высота пола — 56px (44px кнопка + 12px паддинг). */
   .search-bar {
     padding: 6px 6px 6px 16px;
-    gap: 8px;
+    gap: 4px;
   }
 
   .search-input {
@@ -1795,7 +1859,7 @@ button.footer-link {
   .search-btn {
     width: 44px;
     height: 44px;
-    border-radius: 30px;
+    border-radius: 15px;
   }
 
   .search-icon {
@@ -1808,12 +1872,26 @@ button.footer-link {
 .sidebar {
   display: flex;
   flex-direction: column;
-  gap: 2px;
+  gap: 1px;
   background: var(--color-surface);
-  border-radius: var(--radius-2xl);
+  border-radius: 16px;
   padding: 20px 16px;
   position: sticky;
   top: 96px;
+}
+
+/* Десктоп (>900px, две колонки): сайдбар подтягиваем вровень с поиском и
+   липим на той же высоте, что и липкая строка фильтров. -64px сводит верх
+   карточки сайдбара с верхом плашки поиска (фильтры 68px + gap 8px −
+   12px padding-top липкой шапки). z-index выше фильтров (30): колонки не
+   пересекаются по X, но фон липкой шапки на всю ширину иначе скроет верх
+   карточки сайдбара. */
+@media (min-width: 901px) {
+  .sidebar.category-sidebar {
+    margin-top: -64px;
+    top: 12px;
+    z-index: 31;
+  }
 }
 
 /* Чекбокс «Избранное» — копия member-checkbox из book-club-web
@@ -1821,7 +1899,7 @@ button.footer-link {
 .fav-checkbox {
   display: inline-flex;
   align-items: center;
-  gap: 10px;
+  gap: 5px;
   cursor: pointer;
   user-select: none;
   padding: 10px 12px;
@@ -1840,7 +1918,7 @@ button.footer-link {
   justify-content: center;
   width: 18px;
   height: 18px;
-  border-radius: 5px;
+  border-radius: 2.5px;
   border: 1.5px solid var(--color-text-secondary);
   color: transparent;
   background: var(--color-surface);
@@ -1879,18 +1957,18 @@ button.footer-link {
 .cat-list {
   display: flex;
   flex-direction: column;
-  gap: 1px;
+  gap: 0.5px;
 }
 
 .cat-item {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 12px;
+  gap: 6px;
   width: 100%;
   padding: 10px 12px;
   border: none;
-  border-radius: var(--radius-md);
+  border-radius: 6px;
   background: transparent;
   font-family: var(--font-body);
   font-size: 15px;
@@ -1924,6 +2002,242 @@ button.footer-link {
   color: #FFFFFF;
 }
 
+/* ===== Селект категории в сайдбаре — перенос sidebar-category-picker
+   с hirehi.ru (вакансии): триггер с плавающим лейблом и счётчиком,
+   дропдаун-список с зелёной галочкой, тултип-подсказка.
+   Их CSS-переменные заменены на литералы/переменные сайта. */
+.sidebar-category-picker { position: static; flex: 0 0 auto; }
+
+.category-select-wrap { position: relative; }
+
+.resume-select {
+  position: relative;
+  border-radius: 16px;
+  background: #F8F7F7;
+  cursor: pointer;
+  padding: 10px 40px 10px 16px;
+  height: 44px;
+  box-sizing: border-box;
+  font-family: var(--font-body);
+  font-size: 16px;
+  line-height: 1.42;
+  letter-spacing: -0.02em;
+}
+
+.resume-select .resume-select-value {
+  position: absolute;
+  left: 16px;
+  right: 40px;
+  top: 19px;
+  font-size: 16px;
+  line-height: 1.42;
+  letter-spacing: -0.02em;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: var(--color-text);
+}
+
+.resume-select .floating-label {
+  position: absolute;
+  left: 16px;
+  top: 12px;
+  font-family: var(--font-body);
+  font-size: 16px;
+  line-height: 1.42;
+  letter-spacing: -0.02em;
+  color: #979693;
+  pointer-events: none;
+  transform-origin: left top;
+  transition: transform 0.2s cubic-bezier(0.2, 0, 0, 1), opacity 0.2s ease;
+}
+
+.resume-select .floating-label.active {
+  transform: translateY(-8px) scale(0.75);
+  opacity: 0.9;
+}
+
+.resume-select::after {
+  content: '';
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 24px;
+  height: 24px;
+  background-image: url("data:image/svg+xml,%3Csvg width='24' height='24' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M5.18762 8.20419C5.30791 8.08405 5.47096 8.01657 5.64097 8.01657C5.81098 8.01657 5.97403 8.08405 6.09432 8.20419L11.8425 13.9523L17.5906 8.20419C17.6493 8.14116 17.7202 8.0906 17.7989 8.05554C17.8776 8.02047 17.9625 8.00162 18.0486 8.0001C18.1348 7.99858 18.2203 8.01443 18.3002 8.04669C18.3801 8.07896 18.4527 8.12698 18.5136 8.1879C18.5745 8.24882 18.6225 8.32139 18.6548 8.40127C18.6871 8.48115 18.7029 8.56671 18.7014 8.65285C18.6999 8.73899 18.681 8.82394 18.646 8.90264C18.6109 8.98133 18.5603 9.05216 18.4973 9.11089L12.2958 15.3124C12.1755 15.4325 12.0125 15.5 11.8425 15.5C11.6725 15.5 11.5094 15.4325 11.3891 15.3124L5.18762 9.11089C5.06748 8.9906 5 8.82754 5 8.65754C5 8.48753 5.06748 8.32447 5.18762 8.20419Z' fill='%23121212'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 24px 24px;
+  pointer-events: none;
+}
+
+.resume-select.open::after {
+  transform: translateY(-50%) rotate(180deg);
+}
+
+.category-select-trigger {
+  width: 100%;
+  border: 0;
+  color: var(--color-text);
+  font-family: var(--font-body);
+  text-align: left;
+}
+
+.category-select-content {
+  position: absolute;
+  inset: 0 36px 0 16px;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 8px;
+}
+
+.category-select-text { position: relative; min-width: 0; height: 44px; }
+
+.category-select-trigger .category-select-text .floating-label.active,
+.category-select-trigger .category-select-text .resume-select-value { left: 0; }
+
+.category-select-trigger .category-select-text .resume-select-value { right: 0; min-width: 0; }
+
+.category-select-name {
+  display: block;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.category-select-count { justify-self: end; color: var(--color-text-muted); }
+
+.vacancy-count { margin-right: 4px; }
+
+.resume-select.category-select-trigger::after { width: 20px; height: 20px; background-size: 20px 20px; }
+
+.sort-dropdown {
+  position: absolute;
+  top: 48px;
+  right: 0;
+  background-color: var(--color-surface);
+  border-radius: 16px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  width: 226px;
+  padding: 0;
+  z-index: 100;
+  display: block;
+  opacity: 0;
+  transform: translateY(-10px);
+  transition: opacity 0.1s ease, transform 0.1s ease, visibility 0.1s ease;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.sort-dropdown.show {
+  display: block;
+  opacity: 1;
+  transform: translateY(0);
+  visibility: visible;
+  pointer-events: auto;
+}
+
+.category-select-dropdown {
+  top: 100%;
+  margin-top: 4px;
+  left: 0;
+  right: 0;
+  width: auto;
+  max-height: min(440px, 70vh);
+  overflow-y: auto;
+}
+
+.category-select-dropdown .sort-option { text-decoration: none; }
+
+.sort-option {
+  padding: 8px 16px;
+  font-family: var(--font-body);
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 1.42;
+  letter-spacing: -0.02em;
+  color: var(--color-text);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  transition: background-color 0.2s ease;
+}
+
+.sort-option:first-child { border-radius: 16px 16px 0 0; }
+
+.sort-option:last-child { border-radius: 0 0 16px 16px; }
+
+.sort-option:hover { background-color: #F8F7F7; }
+
+.sort-option-text { display: flex; align-items: center; }
+
+.sort-check-icon { display: none; }
+
+.sort-option.selected .sort-check-icon { display: flex; }
+
+.category-tooltip {
+  position: absolute;
+  left: 0;
+  right: auto;
+  margin: 0;
+  top: calc(100% + 8px);
+  transform: translateY(8px) scale(0.98);
+  z-index: 2000;
+  background: #1D1E20;
+  color: #fff;
+  font-family: var(--font-body);
+  font-size: 16px;
+  font-weight: 400;
+  letter-spacing: -0.02em;
+  line-height: 1.4;
+  border-radius: 20px;
+  box-shadow: 0 6px 24px 0 rgba(0, 0, 0, 0.13);
+  padding: 12px 16px;
+  display: flex;
+  align-items: center;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.7s cubic-bezier(0.4, 0, 0, 2, 1), transform 0.7s cubic-bezier(0.4, 0, 0, 2, 1);
+  width: 200px;
+  box-sizing: border-box;
+}
+
+.category-tooltip.visible {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateY(0) scale(1);
+}
+
+.category-tooltip-text { white-space: pre-line; line-height: 1.48; }
+
+.category-tooltip-arrow {
+  position: absolute;
+  left: 16px;
+  top: -10px;
+  width: 20px;
+  height: 10px;
+  pointer-events: none;
+  z-index: 1;
+  overflow: visible;
+}
+
+.category-tooltip-arrow::after {
+  content: '';
+  display: block;
+  width: 0;
+  height: 0;
+  position: absolute;
+  left: 50%;
+  top: 0;
+  transform: translateX(-50%);
+  border-left: 10px solid transparent;
+  border-right: 10px solid transparent;
+  border-bottom: 10px solid #1D1E20;
+}
+
 .sidebar-empty {
   font-family: var(--font-body);
   font-size: 15px;
@@ -1935,7 +2249,7 @@ button.footer-link {
 @media (max-width: 768px) {
   .sidebar {
     position: static;
-    border-radius: var(--radius-xl);
+    border-radius: 12px;
     padding: 16px 12px;
   }
 }
@@ -1962,11 +2276,96 @@ button.footer-link {
 
 .detail-card {
   background: var(--color-surface);
-  border-radius: 32px;
+  border-radius: 16px; /* как .club-card (32px → 16px на главной) */
   padding: 28px;
   display: flex;
   flex-direction: column;
   gap: 20px;
+}
+
+/* Белая панель контента: закругления точно как у карточек на главной —
+   база 16px, на десктопе карточки в сетке 12px (min-width 768). */
+@media (min-width: 768px) {
+  .detail-card {
+    border-radius: 12px;
+  }
+}
+
+/* ===== Кнопки на странице клуба — как на главной (стиль preplab) =====
+   Telegram — жёлтая, как «Читать»; «Поделиться» — чёрная, как «Кликну
+   сюда». Та же база: height 48, radius 8, 14/500/-0.02em, gap под
+   иконку, transition и hover-правила — дословно с лэндинга. */
+.detail-card .base-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  height: 48px;
+  padding: 12px 24px;
+  border-radius: 8px;
+  border: none;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 24px;
+  letter-spacing: -0.02em;
+  box-shadow: none;
+  transition: background-color 0.18s ease, filter 0.18s ease, transform 0.18s ease;
+}
+
+/* Telegram — жёлтая (#FFE266 на #191919), как «Читать» на главной. */
+.detail-card .base-btn--primary {
+  background: #ffe266;
+  color: #191919;
+  border: none;
+  box-shadow: none;
+}
+
+/* «Поделиться» — чёрная (#191919), как «Кликну сюда» на главной. */
+.detail-card .share-btn {
+  background: #191919;
+  color: #ffffff;
+  border: none;
+  box-shadow: none;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .detail-card .base-btn--primary:hover:not(:disabled) {
+    background: #ffe266;
+    border-color: transparent;
+    color: #191919;
+    box-shadow: none;
+    filter: brightness(0.96);
+    transform: translateY(-1px);
+  }
+
+  .detail-card .share-btn:hover:not(:disabled) {
+    background: #2e2e2e;
+    border-color: transparent;
+    color: #ffffff;
+    box-shadow: none;
+    filter: none;
+    transform: translateY(-1px);
+  }
+}
+
+/* Базовый :active .base-btn--primary (brightness 0.92) гасим —
+   на preplab для кнопок :active не описан. */
+.detail-card .base-btn--primary:active:not(:disabled) {
+  background: #ffe266;
+  border-color: transparent;
+  color: #191919;
+  box-shadow: none;
+  filter: none;
+  transform: none;
+}
+
+.detail-card .share-btn:active:not(:disabled) {
+  background: #191919;
+  border-color: transparent;
+  color: #ffffff;
+  box-shadow: none;
+  filter: none;
+  transform: none;
 }
 
 .card-head {
@@ -2654,5 +3053,244 @@ body.modal-open {
 
   .sitemap-title {
     font-size: 24px;
+  }
+}
+
+/* ===== Лэндинг-хиро (layouts/partials/landing.html) =====
+   Первый экран на всю высоту (100svh минус шапка — шапка не липкая,
+   живёт в потоке, её высота — --lh-header-h). Типографика и кнопки
+   в стилистике preplab.ru: заголовок 54/500/-0.03em, сабтайтл 16/24
+   #666, кнопки 48px, radius 8, жёлтая #FFE266 / тёмная #191919.
+   Заголовок — шрифт .card-title (Handil Pro, --font-heading), не Drabina.
+   Фон — интерактивная сетка static/js/interactive-grid.js (SVG, ячейки
+   загораются под указателем). */
+:root {
+  /* Высота шапки под хиро-во-весь-экран: десктоп 36+37+10,
+     мобильный (≤768) 14+36+10. */
+  --lh-header-h: 83px;
+}
+
+@media (max-width: 768px) {
+  :root {
+    --lh-header-h: 60px;
+  }
+}
+
+/* Hero — как .lp-hero на preplab: контент НЕ по центру экрана, а сверху
+   (padding-top 152px), колонка по центру. На мобиле (≤600) как на preplab:
+   padding-top 32px. */
+.landing-hero {
+  position: relative;
+  overflow: clip; /* сетка абсолютна и во 100vw-смысла не вылезает за хиро */
+  width: 100%;
+  min-height: calc(100vh - var(--lh-header-h));
+  min-height: calc(100svh - var(--lh-header-h));
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  padding: 152px 0 40px;
+}
+
+/* Сетка: заполняет хиро, за контентом (pointer-events: none — текст и
+   кнопки кликабельны). Ячейки — цвет текста; неактивные прозрачны
+   (fill-opacity 0, видна только обводка 0.1). Радиальная маска 400px
+   от центра — как в demo.tsx: к краям круга квадратики уходят в цвет
+   фона. */
+.interactive-grid {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  color: var(--color-text);
+  -webkit-mask-image: radial-gradient(400px circle at center, white, transparent);
+  mask-image: radial-gradient(400px circle at center, white, transparent);
+}
+
+.interactive-grid rect {
+  fill-opacity: 0;
+  /* Гашение после ухода указателя — медленное. */
+  transition: fill-opacity 1s ease-out;
+}
+
+.interactive-grid rect.is-active {
+  /* Загорается мгновенно (duration-0 из компонента). */
+  transition: none;
+  fill-opacity: 0.15;
+}
+
+/* Типографика — 1-в-1 с preplab (.lp-hero__heads gap 16, .lp-hero__body
+   gap 32): заголовок 54/54/500/-0.03em #191919, сабтайтл 16/24/400/-0.02em
+   #666. На мобиле (≤600) как на preplab: заголовок 28/30, сабтайтл не
+   меняется. Шрифт заголовка — .card-title (Handil Pro, --font-heading),
+   как договаривались, вместо Google Sans с референса. */
+.landing-copy {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 32px /* .lp-hero__body */;
+  width: 893px;
+  max-width: 100%;
+  padding: 0 24px;
+}
+
+.landing-heads {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px /* .lp-hero__heads */;
+}
+
+.landing-title {
+  font-family: var(--font-heading);
+  font-size: 54px;
+  font-weight: 500;
+  line-height: 54px;
+  letter-spacing: -0.03em;
+  color: #191919; /* --c-ink */
+  text-align: center;
+  margin: 0;
+}
+
+.landing-sub {
+  font-family: var(--font-body);
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 24px;
+  letter-spacing: -0.02em;
+  color: #666666; /* --c-muted-lp */
+  text-align: center;
+  margin: 0;
+}
+
+.landing-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 12px /* .lp-hero--hub .lp-hero__cta: ряд, gap 12 */;
+}
+
+/* Кнопки 1-в-1 с preplab.ru (.lp-btn):
+   height 48, padding 12/24, radius 8, gap 10, 14/500, line-height 24,
+   letter-spacing -0.02em; transition background-color/filter/transform
+   .18s ease; hover — только для мыши ((hover:hover) and (pointer:fine)),
+   как на preplab, чтобы на таче ховер не «залипал».
+   .base-btn переопределяется точечно внутри хиро (шапка и карточки
+   остаются со своими кнопками). */
+.landing-actions .base-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  height: 48px;
+  min-width: 180px; /* кнопки одинаковой «адекватной» ширины, hug-контент preplab */
+  padding: 12px 24px;
+  border-radius: 8px;
+  border: none;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 24px;
+  letter-spacing: -0.02em;
+  box-shadow: none;
+  transition: background-color 0.18s ease, filter 0.18s ease, transform 0.18s ease;
+}
+
+/* Жёлтая «Читать» — --c-yellow-strong: #FFE266 на --c-ink: #191919
+   (.lp-btn без модификатора). */
+.landing-actions .base-btn--primary {
+  background: #ffe266;
+  color: #191919;
+  border: none;
+  box-shadow: none;
+}
+
+/* Тёмная «Кликну сюда» — .lp-btn--dark: --c-ink на --c-surface. */
+.landing-actions .base-btn--outline {
+  background: #191919;
+  color: #ffffff;
+  border: none;
+  box-shadow: none;
+}
+
+/* Ховеры — дословно из preplab (блок @media (hover: hover) and (pointer: fine)):
+   ховер только для мыши, чтобы на таче не «залипал». В declarations перечислено
+   всё: базовые hover/active .base-btn--primary и .base-btn--outline (синяя тень,
+   brand-фон, brand-текст, brightness 1.08) ниже по специфичности и продолжали
+   бы действовать — на preplab их нет. */
+@media (hover: hover) and (pointer: fine) {
+  .landing-actions .base-btn--primary:hover:not(:disabled) {
+    background: #ffe266;
+    border-color: transparent;
+    color: #191919;
+    box-shadow: none;
+    filter: brightness(0.96);
+    transform: translateY(-1px);
+  }
+
+  .landing-actions .base-btn--outline:hover:not(:disabled) {
+    background: #2e2e2e;
+    border-color: transparent;
+    color: #ffffff;
+    box-shadow: none;
+    filter: none;
+    transform: translateY(-1px);
+  }
+}
+
+/* У preplab :active для кнопок не описан — гасим базовые active-эффекты
+   .base-btn (brightness 0.92). */
+.landing-actions .base-btn--primary:active:not(:disabled) {
+  background: #ffe266;
+  border-color: transparent;
+  color: #191919;
+  box-shadow: none;
+  filter: none;
+  transform: none;
+}
+
+.landing-actions .base-btn--outline:active:not(:disabled) {
+  background: #191919;
+  border-color: transparent;
+  color: #ffffff;
+  box-shadow: none;
+  filter: none;
+  transform: none;
+}
+
+/* Якорь «Кликну сюда»: каталог ниже хиро, запас под скролл. */
+#catalog {
+  scroll-margin-top: 16px;
+}
+
+/* Телефон (порт мобильного макета preplab, ≤600): заголовок 28/30,
+   hero padding-top 32, сабтайтл не меняется. Кнопки — в столбик во всю
+   ширину (как .lp-hero--cta-wide на preplab: flex-flow column + width 100%),
+   высота та же 48. */
+@media (max-width: 600px) {
+  .landing-hero {
+    padding: 32px 0 32px;
+  }
+
+  .landing-title {
+    font-size: 28px;
+    line-height: 30px;
+  }
+
+  .landing-actions {
+    flex-direction: column;
+    align-self: stretch;
+    width: 100%;
+    gap: 12px;
+  }
+
+  .landing-actions .base-btn {
+    width: 100%;
+    min-width: 0;
+    height: 48px;
+    padding: 12px 24px;
+    font-size: 14px;
   }
 }

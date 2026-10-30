@@ -2,5 +2,10 @@
 {{- /* На главной крошка «Клубы /» — обычная ссылка (не current, без
      жирного) со слэшем-хвостом; ведёт на главную (/), никуда не уводит. */ -}}
 {{- $trail := slice (dict "label" "Клубы" "url" "/") -}}
-{{ partial "catalog.html" (dict "activeSlug" "" "trail" $trail "trailingSlash" true) }}
+{{- /* Лэндинг-хиро (later/LANDING-PLAN.md) над каталогом: ссылки и SEO
+     не ломаются, каталог остаётся ниже. Якорь #catalog — цель кнопки
+     «Найти клуб» в хиро. */ -}}
+{{ partial "landing.html" . }}
+<div id="catalog"></div>
+{{ partial "catalog.html" (dict "activeSlug" "" "trail" $trail "trailingSlash" true "hideScrollTop" true) }}
 {{- end -}}
