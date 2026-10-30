@@ -595,100 +595,18 @@ button.header-nav-link {
    Логотип слева, колонки «Разделы» и «Категории» с заголовками,
    GitHub и Карта сайта — простые ссылки без заголовка. Копирайт внизу,
    без линии (линию убрали по правке).
-   Дизайн не менялся — добавлен только эффект-свечение (см. ниже). */
-/* Высота светящейся полосы подвала — одно значение на всё: высота
-   самой полосы (.footer-glow), зарезервированный под неё отступ футера
-   (.footer padding-bottom) и центр кнопки в полосе (.footer-cta).
-   Резерв меньше прежних 24svh: полоса осталась fixed у низа экрана с
-   появлением по скроллу, но футер перестал быть полутораэкранным и на
-   коротких страницах прижимается к низу. */
-:root {
-  --footer-glow-h: 120px;
-}
-
+   Высота футера — только его контент, одинакова на всех страницах.
+   Прижат к низу страницы паттерном .app-layout (min-height: 100svh)
+   и main (flex: 1): на коротких страницах main растягивается и футер
+   стоит у нижнего края экрана, на длинных — идёт сразу за контентом. */
 .footer {
-  position: relative; /* якорь для .footer-cta в отступе под свечением */
   background: var(--color-surface);
-  /* Место под светящуюся полосу — как paddingBottom у исходного
-     компонента: полоса fixed у низа экрана в конце прокрутки встаёт
-     ровно в этот отступ, поэтому контент футера остаётся над светом и
-     не прячется за эффектом. Высота обязательна = height у .footer-glow. */
-  padding-bottom: var(--footer-glow-h);
-}
-
-/* ===== Свечение подвала (Ruixen/Dia-gradient-footer) =====
-   Размытая радуга position: fixed у нижней кромки экрана, высота = зарезервированный отступ футера. Скрыта (scaleY 0), пока до конца
-   страницы больше одной высоты полосы, и в начальном положении страницы
-   (scrollY = 0) — пол появляется только по прокрутке вниз; дальше растёт и полная
-   (scaleY 1) приходится ровно на последний экран — там она и встаёт
-   в отступ под контентом футера, ничего не закрывая (доказательство:
-   верх полосы = верх отступа при любой прокрутке, см. footer-glow.js).
-   pointer-events: none — клики по ссылкам проходят; z-index не нужен:
-   плашки 40/1000/1100/2000 и всё позже в DOM остаются выше. Движок —
-   static/js/footer-glow.js; без JS и при prefers-reduced-motion не
-   показывается. Высота полосы и отступ футера задаются одним значением. */
-.footer-glow {
-  position: fixed;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  height: var(--footer-glow-h);
-  pointer-events: none;
-  transform-origin: bottom;
-  transform: scaleY(0);
-  will-change: transform;
-}
-
-.footer-glow svg {
-  display: block;
-  width: 100%;
-  height: 100%;
-}
-
-/* Белая кнопка «Мы в Telegram» на свечении: лежит в отступе под
-   контентом футера (padding-bottom = высота полосы), по центру полосы —
-   половина --footer-glow-h минус половина высоты кнопки (48px → 24px). В DOM идёт
-   после .footer-glow (оба позиционированы, z-index не нужен) — красится
-   поверх света; pointer-events у полосы none, клик проходит. Белая
-   заливка + тонкая рамка — без тени, чтобы кнопка не торчала из
-   общего плоского стиля (как у .base-btn--outline); рамка темнеет
-   при ховере. Скругление и размеры — как у .base-btn (radius 40). */
-.footer-cta {
-  position: absolute;
-  left: 50%;
-  transform: translateX(-50%);
-  bottom: calc(var(--footer-glow-h) / 2 - 24px);
-  background: var(--color-surface);
-  color: var(--color-text);
-  border-color: var(--color-stroke-subtle);
-  box-shadow: none;
-  /* transform не входит в transition у .base-btn — добавляем. */
-  transition:
-    background 0.2s ease,
-    border-color 0.2s ease,
-    color 0.2s ease,
-    filter 0.2s ease,
-    transform 0.2s ease;
-}
-
-@media (hover: hover) and (pointer: fine) {
-  .footer-cta:hover:not(:disabled) {
-    background: var(--color-bg);
-    border-color: var(--color-stroke-subtle);
-    color: var(--color-text);
-    transform: translateX(-50%);
-  }
-}
-
-.footer-cta:active:not(:disabled) {
-  background: var(--color-bg);
-  transform: translateX(-50%);
 }
 
 .footer-inner {
   max-width: 1200px;
   margin: 0 auto;
-  padding: 24px 24px 0;
+  padding: 24px;
 }
 
 .footer-main {
@@ -788,7 +706,7 @@ button.footer-link {
 
 @media (max-width: 768px) {
   .footer-inner {
-    padding: 20px 16px 0;
+    padding: 20px 16px;
   }
 
   .footer-main {
@@ -3171,19 +3089,18 @@ body.modal-open {
 }
 
 /* Ширина картинки подобрана, чтобы страница 404 целиком (шапка + текст
-   + футер с резервом под свечение) влезала в один экран десктопа и
-   футер стоял прижатым к низу без скролла: картинка 996×1068, при 220px
-   по ширине высота ≈ 236px. */
+   + футер) влезала в один экран десктопа и футер стоял прижатым к низу
+   без скролла: картинка 996×1068, при 300px по ширине высота ≈ 322px. */
 .not-found .not-found-img {
   max-width: 100%;
-  width: 220px;
+  width: 300px;
   height: auto;
   margin-bottom: 32px;
 }
 
 @media (max-width: 768px) {
   .not-found .not-found-img {
-    width: 180px;
+    width: 220px;
   }
 
   .not-found-title {
