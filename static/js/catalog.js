@@ -20,6 +20,9 @@
   var authorEmpty = document.querySelector('[data-author-empty]')
   var filtersSection = document.querySelector('.filters-section')
   var scrollTopBtn = document.querySelector('[data-scroll-top]')
+  // Контейнер сетки: его высота — почти вся высота каталога, и именно её
+  // схлопывание карточек роняет документ (см. favToggles ниже).
+  var grid = document.querySelector('.content-grid')
 
   var activeType = 'book'
   var query = ''
@@ -91,6 +94,17 @@
   // мобильным и десктопным правило фильтра меняется, надо пересчитать.
   window.addEventListener('resize', applyFilters)
 
+  // Пустое состояние встаёт там, где стояли карточки. Если юзер включил
+  // избранное, пролистав ниже (сайдбар липкий), сообщение остаётся над
+  // экраном и он видит одну пустоту — подтягиваем его в кадр.
+  function revealFavEmpty() {
+    if (!favEmpty || favEmpty.hidden) return
+    var rect = favEmpty.getBoundingClientRect()
+    if (rect.top >= 0 && rect.bottom <= window.innerHeight) return
+    // Запас сверху — чтобы над сообщением остались контролы каталога.
+    window.scrollTo({ top: Math.max(rect.top + window.scrollY - 96, 0), behavior: 'smooth' })
+  }
+
   // === Уведомление о добавлении/удалении ===
   // Повторяет showToast/hideToast из book-club-web: живёт 5 секунд,
   // закрывается кликом по плашке или крестиком.
@@ -154,8 +168,12 @@
     showToast(wasFavorite ? 'remove' : 'add')
 
     // В режиме избранного снятие сердечка сразу убирает карточку — иначе
-    // она останется в ленте до следующего фильтра.
-    if (favOnly) applyFilters()
+    // она останется в ленте до следующего фильтра. Высоту держит якорь,
+    // поставленный при включении режима.
+    if (favOnly) {
+      applyFilters()
+      revealFavEmpty()
+    }
   })
 
   // Чекбокс в сайдбаре и таблетка на мобильном — один фильтр, поэтому клик
@@ -177,7 +195,18 @@
     toggle.addEventListener('click', function () {
       favOnly = !favOnly
       syncFavToggles()
+
+      // Высота меряется, пока карточки ещё в потоке, и фиксируется раньше
+      // фильтра: схлопнувшийся документ браузер прижал бы скролл к своему
+      // краю — отсюда «выброс наверх» при пустом избранном.
+      if (favOnly && grid) grid.style.minHeight = grid.offsetHeight + 'px'
+
       applyFilters()
+
+      // Карточки вернулись — документ снова держит сам себя.
+      if (!favOnly && grid) grid.style.minHeight = ''
+
+      if (favOnly) revealFavEmpty()
     })
   })
 
