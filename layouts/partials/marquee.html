@@ -1,0 +1,25 @@
+{{- /* Бегущие строки внизу хиро главной: три линии с текстом
+       «Бесплатно и без регистрации». Трек каждого ряда содержит два
+       одинаковых списка: анимация сдвигает его на 50% своей ширины
+       (ровно на ширину одного списка), поэтому цикл бесшовный.
+       Чётные ряды едут в обратную сторону (animation-direction: reverse),
+       у третьего — другая скорость: ряды не двигаются синхронно.
+       Для скринридера читаемой остаётся только первая строка первого
+       ряда, остальные списки aria-hidden. */ -}}
+{{- $item := "Бесплатно и без регистрации" -}}
+<div class="landing-marquee">
+  {{- range seq 3 }}
+  {{- $row := . }}
+  <div class="landing-marquee__row">
+    <div class="landing-marquee__track">
+      {{- range seq 2 }}
+      <ul class="landing-marquee__list"{{ if or (gt $row 1) (gt . 1) }} aria-hidden="true"{{ end }}>
+        {{- range seq 10 }}
+        <li class="landing-marquee__item">{{ $item }}</li>
+        {{- end }}
+      </ul>
+      {{- end }}
+    </div>
+  </div>
+  {{- end }}
+</div>

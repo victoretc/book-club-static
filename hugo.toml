@@ -1,7 +1,7 @@
 baseURL = 'https://victoretc.github.io/book-club-static/'
 languageCode = 'ru-ru'
 defaultContentLanguage = 'ru'
-title = 'Читальная'
+title = 'Читка'
 hasCJKLanguage = false
 enableRobotsTXT = true
 summaryLength = 30
@@ -21,7 +21,7 @@ summaryLength = 30
     noClasses = true
 
 [params]
-  description = 'Читальная — каталог книжных клубов: клубы по книгам и авторские клубы, категории, отзывы участников.'
+  description = 'Читка — каталог книжных клубов: клубы по книгам и авторские клубы, категории, отзывы участников.'
   github = 'https://github.com/victoretc/book-club-static'
 
 [menu]

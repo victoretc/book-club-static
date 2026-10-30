@@ -315,25 +315,6 @@ main {
   flex-shrink: 0;
 }
 
-/* Логотип: жёлтая «полка» под словом (вариант 1). */
-.header-brand,
-.footer-brand-link {
-  position: relative;
-  display: inline-block;
-}
-
-.header-brand::after,
-.footer-brand-link::after {
-  content: '';
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: -6px;
-  height: 4px;
-  border-radius: 2px;
-  background: #ffe266;
-}
-
 /* Крошки на странице клуба и стрелка «назад» под ними — стрелка
    отдельной строкой, прижата влево. */
 .detail-top {
@@ -1895,14 +1876,26 @@ button.footer-link {
 }
 
 /* Чекбокс «Избранное» — копия member-checkbox из book-club-web
-   (CategorySidebar.vue): бокс 18px, скругление 5px, заливка брендом. */
+   (CategorySidebar.vue): бокс 18px, скругление 5px, заливка брендом.
+   padding-top сайдбара подобран так, чтобы центр строки совпадал с
+   центром плашки поиска (56px высоты → (56-38)/2 = 9px). */
+.sidebar.category-sidebar {
+  padding-top: 9px;
+}
+
 .fav-checkbox {
   display: inline-flex;
   align-items: center;
-  gap: 5px;
+  gap: 8px;
   cursor: pointer;
   user-select: none;
-  padding: 10px 12px;
+  padding: 10px 14px;
+  border-radius: 10px;
+  transition: background var(--duration-fast) ease;
+}
+
+.fav-checkbox:hover {
+  background: var(--color-brand-soft);
 }
 
 .fav-checkbox-input {
@@ -1916,19 +1909,29 @@ button.footer-link {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 18px;
-  height: 18px;
-  border-radius: 2.5px;
+  width: 20px;
+  height: 20px;
+  border-radius: 6px;
   border: 1.5px solid var(--color-text-secondary);
   color: transparent;
   background: var(--color-surface);
-  transition: background 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+  transition: background 0.2s ease, border-color 0.2s ease, color 0.2s ease,
+    box-shadow 0.2s ease, transform 0.15s ease;
+}
+
+.fav-checkbox:hover .fav-checkbox-box {
+  border-color: var(--color-brand);
+}
+
+.fav-checkbox:active .fav-checkbox-box {
+  transform: scale(0.92);
 }
 
 .fav-checkbox-input:checked + .fav-checkbox-box {
   background: var(--color-brand);
   border-color: var(--color-brand);
   color: #FFFFFF;
+  box-shadow: 0 2px 6px rgba(59, 62, 255, 0.3);
 }
 
 .fav-checkbox-input:focus-visible + .fav-checkbox-box {
@@ -2012,8 +2015,8 @@ button.footer-link {
 
 .resume-select {
   position: relative;
-  border-radius: 16px;
-  background: #F8F7F7;
+  border-radius: 12px; /* как .club-card--grid */
+  background: var(--color-bg);
   cursor: pointer;
   padding: 10px 40px 10px 16px;
   height: 44px;
@@ -2046,7 +2049,7 @@ button.footer-link {
   font-size: 16px;
   line-height: 1.42;
   letter-spacing: -0.02em;
-  color: #979693;
+  color: var(--color-text-muted);
   pointer-events: none;
   transform-origin: left top;
   transition: transform 0.2s cubic-bezier(0.2, 0, 0, 1), opacity 0.2s ease;
@@ -2065,7 +2068,7 @@ button.footer-link {
   transform: translateY(-50%);
   width: 24px;
   height: 24px;
-  background-image: url("data:image/svg+xml,%3Csvg width='24' height='24' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M5.18762 8.20419C5.30791 8.08405 5.47096 8.01657 5.64097 8.01657C5.81098 8.01657 5.97403 8.08405 6.09432 8.20419L11.8425 13.9523L17.5906 8.20419C17.6493 8.14116 17.7202 8.0906 17.7989 8.05554C17.8776 8.02047 17.9625 8.00162 18.0486 8.0001C18.1348 7.99858 18.2203 8.01443 18.3002 8.04669C18.3801 8.07896 18.4527 8.12698 18.5136 8.1879C18.5745 8.24882 18.6225 8.32139 18.6548 8.40127C18.6871 8.48115 18.7029 8.56671 18.7014 8.65285C18.6999 8.73899 18.681 8.82394 18.646 8.90264C18.6109 8.98133 18.5603 9.05216 18.4973 9.11089L12.2958 15.3124C12.1755 15.4325 12.0125 15.5 11.8425 15.5C11.6725 15.5 11.5094 15.4325 11.3891 15.3124L5.18762 9.11089C5.06748 8.9906 5 8.82754 5 8.65754C5 8.48753 5.06748 8.32447 5.18762 8.20419Z' fill='%23121212'/%3E%3C/svg%3E");
+  background-image: url("data:image/svg+xml,%3Csvg width='24' height='24' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M5.18762 8.20419C5.30791 8.08405 5.47096 8.01657 5.64097 8.01657C5.81098 8.01657 5.97403 8.08405 6.09432 8.20419L11.8425 13.9523L17.5906 8.20419C17.6493 8.14116 17.7202 8.0906 17.7989 8.05554C17.8776 8.02047 17.9625 8.00162 18.0486 8.0001C18.1348 7.99858 18.2203 8.01443 18.3002 8.04669C18.3801 8.07896 18.4527 8.12698 18.5136 8.1879C18.5745 8.24882 18.6225 8.32139 18.6548 8.40127C18.6871 8.48115 18.7029 8.56671 18.7014 8.65285C18.6999 8.73899 18.681 8.82394 18.646 8.90264C18.6109 8.98133 18.5603 9.05216 18.4973 9.11089L12.2958 15.3124C12.1755 15.4325 12.0125 15.5 11.8425 15.5C11.6725 15.5 11.5094 15.4325 11.3891 15.3124L5.18762 9.11089C5.06748 8.9906 5 8.82754 5 8.65754C5 8.48753 5.06748 8.32447 5.18762 8.20419Z' fill='%231A1C2B'/%3E%3C/svg%3E");
   background-repeat: no-repeat;
   background-position: center;
   background-size: 24px 24px;
@@ -2118,7 +2121,7 @@ button.footer-link {
   top: 48px;
   right: 0;
   background-color: var(--color-surface);
-  border-radius: 16px;
+  border-radius: 12px; /* как .club-card--grid */
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   width: 226px;
   padding: 0;
@@ -2166,11 +2169,11 @@ button.footer-link {
   transition: background-color 0.2s ease;
 }
 
-.sort-option:first-child { border-radius: 16px 16px 0 0; }
+.sort-option:first-child { border-radius: 12px 12px 0 0; }
 
-.sort-option:last-child { border-radius: 0 0 16px 16px; }
+.sort-option:last-child { border-radius: 0 0 12px 12px; }
 
-.sort-option:hover { background-color: #F8F7F7; }
+.sort-option:hover { background-color: var(--color-bg); }
 
 .sort-option-text { display: flex; align-items: center; }
 
@@ -3072,17 +3075,24 @@ body.modal-open {
 
 @media (max-width: 768px) {
   :root {
-    --lh-header-h: 60px;
+    /* + вырез iPhone: шапка выше на safe-area, хиро должно это учитывать,
+       иначе первый экран уезжает вниз и появляется скролл. */
+    --lh-header-h: calc(60px + env(safe-area-inset-top, 0px));
   }
 }
 
 /* Hero — как .lp-hero на preplab: контент НЕ по центру экрана, а сверху
    (padding-top 152px), колонка по центру. На мобиле (≤600) как на preplab:
-   padding-top 32px. */
+   padding-top 32px.
+   Фул-блид: ширина 100vw с отрицательными полями — хиро (и бегущая строка
+   внизу, которая тянется на всю ширину хиро) идут от края до края экрана,
+   игнорируя max-width/padding <main>. Лишние 7.5px под полосой прокрутки
+   срезает overflow-x: clip у body (см. комментарий там). */
 .landing-hero {
   position: relative;
-  overflow: clip; /* сетка абсолютна и во 100vw-смысла не вылезает за хиро */
-  width: 100%;
+  overflow: clip; /* сетка абсолютно в боксах хиро и не вылезает, но страхуем */
+  width: 100vw;
+  margin-inline: calc(50% - 50vw);
   min-height: calc(100vh - var(--lh-header-h));
   min-height: calc(100svh - var(--lh-header-h));
   display: flex;
@@ -3265,13 +3275,114 @@ body.modal-open {
   scroll-margin-top: 16px;
 }
 
+/* Бегущая строка (marquee) внизу хиро. Пока — рыбный текст-заглушка.
+   Трек шириной по контенту из двух одинаковых списков: translateX(-50%)
+   сдвигает ровно на один список, цикл бесшовный. overflow: clip на
+   .landing-hero режет всё, что уехало за края. Пауза на ховере — чтобы
+   строку можно было прочитать; под prefers-reduced-motion (глобальное
+   правило выше) анимация не играет, список стоит на месте. */
+.landing-marquee {
+  position: relative;
+  z-index: 1;
+  align-self: stretch;
+  margin-top: auto; /* прижимает строку к низу хиро */
+  overflow: hidden;
+  width: 100%;
+  padding-top: 40px;
+  /* Несколько линий бегущего текста. */
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+/* Чётный ряд едет справа налево — линии не сливаются в одну. */
+.landing-marquee__row:nth-child(even) .landing-marquee__track {
+  animation-direction: reverse;
+}
+
+/* Третий ряд — своя скорость, чтобы ряды не двигались синхронно. */
+.landing-marquee__row:nth-child(3) .landing-marquee__track {
+  animation-duration: 42s;
+}
+
+.landing-marquee__track {
+  display: flex;
+  width: max-content;
+  animation: landing-marquee 32s linear infinite;
+}
+
+.landing-marquee:hover .landing-marquee__track {
+  animation-play-state: paused;
+}
+
+.landing-marquee__list {
+  display: flex;
+  flex: none;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.landing-marquee__item {
+  flex: none;
+  font-family: var(--font-body);
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 24px;
+  letter-spacing: -0.02em;
+  color: #666666;
+  white-space: nowrap;
+}
+
+/* Разделитель — россыпь между пунктами, включая стык двух списков. */
+.landing-marquee__item::after {
+  content: "·";
+  padding: 0 16px;
+  color: #cccccc;
+}
+
+@keyframes landing-marquee {
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+@media (max-width: 600px) {
+  .landing-marquee {
+    padding-top: 32px;
+  }
+
+  .landing-marquee__item::after {
+    padding: 0 12px;
+  }
+}
+
+/* Планшет / крупный телефон (≤768): между десктопным 152 и телефонным 32
+   padding-top 72 — текст ближе к верху, но экран не пустует. Заголовок
+   40/42: 54px на ширине 600-768 смотрится тяжело. Блок стоит ПЕРЕД
+   ≤600 — тот перебивает значения для телефона. */
+@media (max-width: 768px) {
+  .landing-hero {
+    padding: 72px 0 40px;
+  }
+
+  .landing-title {
+    font-size: 40px;
+    line-height: 42px;
+  }
+}
+
 /* Телефон (порт мобильного макета preplab, ≤600): заголовок 28/30,
    hero padding-top 32, сабтайтл не меняется. Кнопки — в столбик во всю
    ширину (как .lp-hero--cta-wide на preplab: flex-flow column + width 100%),
-   высота та же 48. */
+   высота та же 48. Поля контента 16 — gutter мобильного макета preplab. */
 @media (max-width: 600px) {
   .landing-hero {
     padding: 32px 0 32px;
+  }
+
+  .landing-copy {
+    padding: 0 16px;
   }
 
   .landing-title {
@@ -3279,18 +3390,27 @@ body.modal-open {
     line-height: 30px;
   }
 
+  /* Маска сетки пропорциональна экрану: круг 400px на телефоне
+     перекрывал бы всю ширину — края квадратиков не растворялись бы. */
+  .interactive-grid {
+    -webkit-mask-image: radial-gradient(300px circle at center, white, transparent);
+    mask-image: radial-gradient(300px circle at center, white, transparent);
+  }
+
   .landing-actions {
-    flex-direction: column;
+    /* Кнопки в РЯД, а не столбиком: каждая занимает половину строки. */
+    flex-direction: row;
     align-self: stretch;
     width: 100%;
     gap: 12px;
   }
 
   .landing-actions .base-btn {
-    width: 100%;
+    flex: 1 1 0;
+    width: auto;
     min-width: 0;
     height: 48px;
-    padding: 12px 24px;
+    padding: 12px 16px;
     font-size: 14px;
   }
 }

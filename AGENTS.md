@@ -2,7 +2,7 @@
 
 ## Status
 
-Hugo-сайт «Читальная» собран: каталог (`/`, `/clubs/`), карточки клубов (`/clubs/<slug>/`), категории (`/categories/<slug>/`), 404. Проверка: `hugo --minify --gc` (должно собраться без ошибок). Деплой — GH Pages через ветку `gh-pages` (`.github/workflows/deploy.yml`).
+Hugo-сайт «Читка» собран: каталог (`/`, `/clubs/`), карточки клубов (`/clubs/<slug>/`), категории (`/categories/<slug>/`), 404. Проверка: `hugo --minify --gc` (должно собраться без ошибок). Деплой — GH Pages через ветку `gh-pages` (`.github/workflows/deploy.yml`).
 
 Контент клубов — `content/clubs/*.md` (front matter валидируется `errorf` в `layouts/clubs/single.html`, ошибка роняет билд). Категории — плоские Hugo-таксономии (`category = 'categories'`): страница `/categories/<slug>/` генерируется для каждого term'а из front matter клубов; русские имена и порядок — `data/categories.yml` (без вложенности), список живых категорий — `partials/categories-active.html`.
 
