@@ -2,9 +2,10 @@
 {{- /* /sitemap/ — карта сайта для людей (sitemap.xml — для роботов,
      ссылка внизу страницы). Списки строятся из данных сайта, без
      хардкода: меню, живые категории, страницы клубов. */ -}}
-{{- $trail := slice (dict "label" "Клубы" "url" "/") (dict "label" "Карта сайта") -}}
+{{- $trail := slice (dict "label" "Клубы" "url" "/#catalog") (dict "label" "Карта сайта") -}}
 {{- $cats := partial "categories-active.html" -}}
 {{- $clubs := where site.RegularPages "Section" "clubs" -}}
+{{- $posts := where site.RegularPages "Section" "blog" -}}
 <div class="detail-page">
   {{ partial "breadcrumbs.html" (dict "trail" $trail) }}
 
@@ -16,7 +17,7 @@
         <h2 class="sitemap-heading">Навигация</h2>
         <ul class="sitemap-list">
           {{- range site.Menus.main }}
-          <li><a class="sitemap-link" href="{{ .URL }}">{{ .Name }}</a></li>
+          <li><a class="sitemap-link" href="{{ .URL }}{{ if eq .Name "Клубы" }}#catalog{{ end }}">{{ .Name }}</a></li>
           {{- end }}
         </ul>
       </section>
@@ -27,6 +28,17 @@
         <ul class="sitemap-list">
           {{- range $cats }}
           <li><a class="sitemap-link" href="{{ printf "categories/%s/" .slug | relURL }}">{{ .name }}</a></li>
+          {{- end }}
+        </ul>
+      </section>
+      {{- end }}
+
+      {{- with $posts }}
+      <section class="sitemap-section">
+        <h2 class="sitemap-heading">Блог</h2>
+        <ul class="sitemap-list">
+          {{- range sort . "Title" }}
+          <li><a class="sitemap-link" href="{{ .RelPermalink }}">{{ .Title }}</a></li>
           {{- end }}
         </ul>
       </section>

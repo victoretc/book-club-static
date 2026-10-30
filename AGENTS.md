@@ -1,8 +1,12 @@
 # AGENTS.md
 
+## Главное правило
+
+**Не использовать Playwright MCP** (навигация, клики, скриншоты, снапшоты, `browser_*`, `playwright_cli_*`) — пока пользователь явно не попросит. Вёрстку и правки пользователь проверяет сам. Единственное исключение — скилл `user-docs-playwright`, и только когда задача прямо про базу знаний MARPLA.
+
 ## Status
 
-Hugo-сайт «Читка» собран: каталог (`/`, `/clubs/`), карточки клубов (`/clubs/<slug>/`), категории (`/categories/<slug>/`), 404. Проверка: `hugo --minify --gc` (должно собраться без ошибок). Деплой — GH Pages через ветку `gh-pages` (`.github/workflows/deploy.yml`).
+Hugo-сайт «Читка» собран: главная `/` — лэндинг-хиро (ровно один экран) и под ним каталог клубов, открытый ВТОРОЙ шапкой (дубль `partials/header.html`, `suffix "-second"`, стоит в потоке после хиро — `static/js/scroll-lock.js` гасит колесо и палец выше верха `#catalog`, на главную ведёт только клик по «Читка»; страницы `/clubs/` больше нет — `content/clubs/_index.md` с `build.render: never`), карточки клубов (`/clubs/<slug>/`), категории (`/categories/<slug>/`), 404. Проверка: `hugo --minify --gc` (должно собраться без ошибок). Деплой — GH Pages через ветку `gh-pages` (`.github/workflows/deploy.yml`).
 
 Контент клубов — `content/clubs/*.md` (front matter валидируется `errorf` в `layouts/clubs/single.html`, ошибка роняет билд). Категории — плоские Hugo-таксономии (`category = 'categories'`): страница `/categories/<slug>/` генерируется для каждого term'а из front matter клубов; русские имена и порядок — `data/categories.yml` (без вложенности), список живых категорий — `partials/categories-active.html`.
 
@@ -13,6 +17,7 @@ Hugo-сайт «Читка» собран: каталог (`/`, `/clubs/`), ка
 - `collections.Append ELEMENT COLLECTION` — коллекция последним аргументом.
 - `--minify` удаляет HTML-комментарии (не полагаться на них в диагнозе).
 - `relURL`/`absURL` с ведущим `/` отсчитывают путь от protocol+host и игнорируют подпуть `baseURL` (`/book-club-static/`) — на GH Pages ссылки будут битыми. Всегда без ведущего слэша: `relURL "clubs/"`, `printf "categories/%s/" .slug | relURL` (в `breadcrumbs.html` слэш срезается `strings.TrimPrefix`).
+- `_build` во front matter устарел с 0.145 (WARN на билде) — ключ называется `build`.
 
 ## Layout
 

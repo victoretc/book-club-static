@@ -14,9 +14,12 @@
   }
 
   function closeBurger() {
-    var burger = document.querySelector('[data-burger]')
-    var panel = document.querySelector('[data-burger-panel]')
-    if (burger && panel && panel.classList.contains('is-open')) burger.click()
+    // Шапок две на главной (вторая под хиро) — закрываем открытую панель.
+    var burgers = document.querySelectorAll('[data-burger]')
+    Array.prototype.forEach.call(burgers, function (burger) {
+      var panel = burger.parentNode.querySelector('[data-burger-panel]')
+      if (panel && panel.classList.contains('is-open')) burger.click()
+    })
   }
 
   function open(trigger) {

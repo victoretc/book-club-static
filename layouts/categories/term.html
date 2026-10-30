@@ -1,9 +1,10 @@
 {{- define "main" -}}
-{{- /* /categories/<slug>/ — список клубов категории */ -}}
+{{- /* /categories/<slug>/ — список клубов категории. «Клубы» ведёт в
+       каталог (#catalog), на хиро-главную — только клик по «Читка». */ -}}
 {{- $slug := .Data.Term -}}
 {{- $node := partial "category-by-slug.html" (dict "slug" $slug) -}}
 {{- $name := $slug -}}
 {{- with $node }}{{ $name = .name }}{{ end -}}
-{{- $trail := slice (dict "label" "Клубы" "url" "/") (dict "label" $name) -}}
+{{- $trail := slice (dict "label" "Клубы" "url" "/#catalog") (dict "label" $name) -}}
 {{ partial "catalog.html" (dict "activeSlug" $slug "trail" $trail) }}
 {{- end -}}

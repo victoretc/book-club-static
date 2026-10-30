@@ -23,12 +23,20 @@ summaryLength = 30
 [params]
   description = 'Читка — каталог книжных клубов: клубы по книгам и авторские клубы, категории, отзывы участников.'
   github = 'https://github.com/victoretc/book-club-static'
+  telegram = 'https://t.me/chitkaaaaaa'
 
 [menu]
   [[menu.main]]
     name = 'Клубы'
     pageRef = '/'
     weight = 10
+  # Блог: пока не до конца реализован — пункт в шапке скрыт (и в десктопной
+  # навигации, и в мобильной панели — обе строятся из site.Menus.main).
+  # Раскомментировать, когда блок будет готов.
+  # [[menu.main]]
+  #   name = 'Блог'
+  #   pageRef = '/blog'
+  #   weight = 15
   [[menu.main]]
     name = 'Добавить книгу'
     url = 'https://github.com/victoretc/book-club-static/issues/new?template=book_request.yml'

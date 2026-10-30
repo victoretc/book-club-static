@@ -1,0 +1,59 @@
+{{- define "main" -}}
+{{- /* /blog/<slug>/ — пост. Раскладка как в victors-blog (page.html):
+       колонка даты слева, справа заголовок и текст, внизу «Читайте
+       также» со случайными постами. Карточка — в стиле страницы клуба
+       (.detail-card): пилюля «Назад в блог», наши шрифты и скругления. */ -}}
+{{- $trail := slice (dict "label" "Блог" "url" "/blog/") (dict "label" .Title) -}}
+{{- /* «Читайте также»: три случайных поста, кроме текущого. */ -}}
+{{- $others := slice -}}
+{{- range shuffle (where site.RegularPages "Section" "blog") -}}
+  {{- if and (lt (len $others) 3) (ne .RelPermalink $.RelPermalink) -}}
+    {{- $others = $others | append . -}}
+  {{- end -}}
+{{- end -}}
+
+<div class="detail-page">
+  <div class="detail-top">
+    {{ partial "breadcrumbs.html" (dict "trail" $trail) }}
+  </div>
+
+  <div class="blog-wrap">
+    <article class="blog-post">
+      <div class="card-back-row">
+        <a href="{{ "blog/" | relURL }}" class="detail-back">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="m12 19-7-7 7-7"/>
+            <path d="M19 12H5"/>
+          </svg>
+          <span>Назад в блог</span>
+        </a>
+      </div>
+
+      <div class="blog-post-head">
+        {{- with .Date }}
+        <span class="blog-post-date">{{ .Format "02.01.2006" }}</span>
+        {{- end }}
+        <h1 class="blog-post-title">{{ .Title }}</h1>
+      </div>
+
+      <div class="blog-post-content">
+        {{ .Content }}
+      </div>
+
+      {{- if $others }}
+      <div class="read-more">
+        <h3 class="read-more-header">Читайте также</h3>
+        <div class="read-more-posts">
+          {{- range $others }}
+          <a class="read-more-post" href="{{ .RelPermalink }}">
+            <span class="read-more-date">{{ .Date.Format "02.01.2006" }}</span>
+            <h4 class="read-more-title">{{ .Title }}</h4>
+          </a>
+          {{- end }}
+        </div>
+      </div>
+      {{- end }}
+    </article>
+  </div>
+</div>
+{{- end -}}

@@ -7,13 +7,13 @@
   <body>
     {{- /* Сплэш на весь экран: сайт не показываем, пока грузятся шрифты
            и страница. Прячет static/js/splash.js; без JS — noscript
-           в head. */ -}}
+           в head. Внутри — типовой крутящийся спиннер. */ -}}
     <div class="splash" data-splash aria-hidden="true">
-      <span class="splash-logo">Читка</span>
+      <span class="splash-spinner"></span>
     </div>
     <div class="app-layout">
-      {{- if not $hideChrome }}{{ partial "header.html" . }}{{ end }}
-      <main>
+      {{- if not $hideChrome }}{{ partial "header.html" (dict "page" .) }}{{ end }}
+      <main{{ if .IsHome }} class="main--landing"{{ end }}>
         {{- block "main" . }}{{ end }}
       </main>
       {{- if not $hideChrome }}{{ partial "footer.html" . }}{{ end }}

@@ -78,6 +78,13 @@
 {{- $trail = $trail | append (dict "@type" "ListItem" "position" (add (len $trail) 1) "name" $name) -}}
 {{- $ld := dict "@context" "https://schema.org" "@type" "BreadcrumbList" "itemListElement" $trail -}}
 <script type="application/ld+json">{{ $ld }}</script>
+{{- else if and .IsPage (eq .Section "blog") }}
+{{- /* Пост блога: крошки шаблона — Блог / название */ -}}
+{{- $trail := slice
+  (dict "@type" "ListItem" "position" 1 "name" "Блог" "item" (printf "blog/" | absURL))
+  (dict "@type" "ListItem" "position" 2 "name" $title) -}}
+{{- $ld := dict "@context" "https://schema.org" "@type" "BreadcrumbList" "itemListElement" $trail -}}
+<script type="application/ld+json">{{ $ld }}</script>
 {{- else if .IsPage }}
 {{- /* Не-клубные страницы (add-book): крошки шаблона — Клубы / название */ -}}
 {{- $trail := slice
@@ -86,9 +93,16 @@
 {{- $ld := dict "@context" "https://schema.org" "@type" "BreadcrumbList" "itemListElement" $trail -}}
 <script type="application/ld+json">{{ $ld }}</script>
 {{- else if or .IsSection (eq .Kind "taxonomy") (eq .Kind "term") }}
-{{- $trail := slice
-  (dict "@type" "ListItem" "position" 1 "name" "Клубы" "item" site.BaseURL)
-  (dict "@type" "ListItem" "position" 2 "name" $title) -}}
+{{- /* Корень секции Блог в крошках стоит сам, без «Клубы» сверху и без
+       дубля «Блог / Блог» */ -}}
+{{- $trail := slice -}}
+{{- if eq .Section "blog" -}}
+  {{- $trail = slice (dict "@type" "ListItem" "position" 1 "name" "Блог" "item" (printf "blog/" | absURL)) -}}
+{{- else -}}
+  {{- $trail = slice
+    (dict "@type" "ListItem" "position" 1 "name" "Клубы" "item" site.BaseURL)
+    (dict "@type" "ListItem" "position" 2 "name" $title) -}}
+{{- end -}}
 {{- $ld := dict "@context" "https://schema.org" "@type" "BreadcrumbList" "itemListElement" $trail -}}
 <script type="application/ld+json">{{ $ld }}</script>
 {{- end -}}

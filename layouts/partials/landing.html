@@ -1,7 +1,8 @@
 {{- /* Хиро лэндинга на главной: первый экран на всю высоту, контент сверху
        (padding-top 152px — как .lp-hero на preplab), типографика и кнопки
-       1-в-1 с preplab.ru. «Читать» ведёт на страницу клубов (/clubs/),
-       «Кликну сюда» — к каталогу ниже на этой же главной (#catalog).
+       1-в-1 с preplab.ru. Обе кнопки ведут вниз этой же страницы — к
+       каталогу клубов (#catalog, он начинается сразу под хиро). Своей
+       страницы клубов (/clubs/) нет — каталог только на главной.
        Фон хиро — интерактивная сетка (static/js/interactive-grid.js):
        ячейки загораются под указателем и гаснут следом, контент кликабелен. */ -}}
 <section class="landing-hero" data-interactive-grid>
@@ -13,7 +14,7 @@
       </p>
     </div>
     <div class="landing-actions">
-      <a href="{{ "clubs/" | relURL }}" class="base-btn base-btn--primary">Читать</a>
+      <a href="#catalog" class="base-btn base-btn--primary">Читать</a>
       <a href="#catalog" class="base-btn base-btn--outline">Кликну сюда</a>
     </div>
   </div>

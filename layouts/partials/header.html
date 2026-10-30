@@ -1,3 +1,9 @@
+{{- /* Аргументы: dict "page" (страница — от неё активность меню),
+       "suffix" (суффикс id панели бургера). На главной шапка рендерится
+       дважды: штатно сверху (baseof) и дублем сразу под хиро (home.html) —
+       у дубля суффикс "-second", чтобы id не повторялись. */ -}}
+{{- $page := .page -}}
+{{- $suffix := .suffix | default "" -}}
 <header class="header">
   <div class="header-inner">
     <a href="{{ relURL "" }}" class="header-brand">Читка</a>
@@ -8,57 +14,59 @@
          плюс главная, таксономии и страницы клубов. Иконки — по имени пункта. */ -}}
     {{- $icons := dict
       "Клубы" `<svg class="header-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"/></svg>`
+      "Блог" `<svg class="header-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>`
       "Добавить книгу" `<svg class="header-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M12 5v14"/></svg>`
     -}}
 
     <nav class="header-nav">
       {{- range site.Menus.main }}
-      {{- $active := or ($.IsMenuCurrent .Menu .) ($.HasMenuCurrent .Menu .) }}
+      {{- $active := or ($page.IsMenuCurrent .Menu .) ($page.HasMenuCurrent .Menu .) }}
       {{- /* «Клубы» ведёт на главную (каталог); подсвечиваем пункт ещё на
              страницах клубов, /categories/ и страницах категорий. */ -}}
       {{- if and .Page .Page.IsHome }}
-        {{- $active = or $active $.IsHome (eq $.Section "clubs") (eq $.Kind "taxonomy") (eq $.Kind "term") }}
+        {{- $active = or $active $page.IsHome (eq $page.Section "clubs") (eq $page.Kind "taxonomy") (eq $page.Kind "term") }}
       {{- end }}
       {{- /* «Добавить книгу» без JS уходит на GitHub-шаблон; с JS
-             перехватывается и открывает модалку ([data-modal-open]). */ -}}
-      <a href="{{ .URL }}" class="header-nav-link{{ if $active }} active{{ end }}"{{ if eq .Name "Добавить книгу" }} data-modal-open{{ end }}>
+             перехватывается и открывает модалку ([data-modal-open]).
+             «Клубы» — якорь на каталог главной (#catalog): со страницы
+             клуба открывается каталог, а не лэндинг-хиро сверху. */ -}}
+      <a href="{{ .URL }}{{ if eq .Name "Клубы" }}#catalog{{ end }}" class="header-nav-link{{ if $active }} active{{ end }}"{{ if eq .Name "Добавить книгу" }} data-modal-open{{ end }}>
         {{ index $icons .Name | default "" | safeHTML }}
         {{ .Name }}
       </a>
       {{- end }}
 
-      {{- /* Заглушки без ссылок: URL появятся позже, пока кнопки
-             инертны (см. button.header-nav-link в main.css). */ -}}
-      <button type="button" class="header-nav-link">
+      {{- /* «Мы в Telegram» — site.Params.telegram (hugo.toml), открывается
+             в новой вкладке. */ -}}
+      {{- with site.Params.telegram }}
+      <a href="{{ . }}" class="header-nav-link" target="_blank" rel="noopener">
         <svg class="header-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m22 2-7 20-4-9-9-4Z"/><path d="M22 2 11 13"/></svg>
         Мы в Telegram
-      </button>
-      <button type="button" class="header-nav-link">
-        <svg class="header-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>
-        Блог
-      </button>
+      </a>
+      {{- end }}
     </nav>
 
     {{- /* Мобильное меню: две полоски как бургер в site-nav victors-blog.
          На десктопе скрыто (CSS .header-menu), ссылки несут .header-nav. */ -}}
     <div class="header-menu" data-header-menu>
       <button type="button" class="header-burger" data-burger
-              aria-expanded="false" aria-controls="header-menu-panel"
+              aria-expanded="false" aria-controls="header-menu-panel{{ $suffix }}"
               aria-label="Меню">
         <span></span>
         <span></span>
       </button>
-      <nav class="header-panel" id="header-menu-panel" data-burger-panel>
+      <nav class="header-panel" id="header-menu-panel{{ $suffix }}" data-burger-panel>
         {{- range site.Menus.main }}
-        {{- $active := or ($.IsMenuCurrent .Menu .) ($.HasMenuCurrent .Menu .) }}
+        {{- $active := or ($page.IsMenuCurrent .Menu .) ($page.HasMenuCurrent .Menu .) }}
         {{- if and .Page .Page.IsHome }}
-          {{- $active = or $active $.IsHome (eq $.Section "clubs") (eq $.Kind "taxonomy") (eq $.Kind "term") }}
+          {{- $active = or $active $page.IsHome (eq $page.Section "clubs") (eq $page.Kind "taxonomy") (eq $page.Kind "term") }}
         {{- end }}
-        <a href="{{ .URL }}"{{ if $active }} class="active"{{ end }}{{ if eq .Name "Добавить книгу" }} data-modal-open{{ end }}>{{ .Name }}</a>
+        <a href="{{ .URL }}{{ if eq .Name "Клубы" }}#catalog{{ end }}"{{ if $active }} class="active"{{ end }}{{ if eq .Name "Добавить книгу" }} data-modal-open{{ end }}>{{ .Name }}</a>
         {{- end }}
-        {{- /* Те же заглушки, что в десктопной навигации: пока без ссылок. */ -}}
-        <button type="button">Мы в Telegram</button>
-        <button type="button">Блог</button>
+        {{- /* «Мы в Telegram» — та же ссылка, что в десктопной навигации. */ -}}
+        {{- with site.Params.telegram }}
+        <a href="{{ . }}" target="_blank" rel="noopener">Мы в Telegram</a>
+        {{- end }}
       </nav>
     </div>
   </div>

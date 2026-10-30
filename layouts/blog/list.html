@@ -1,0 +1,34 @@
+{{- define "main" -}}
+{{- /* /blog/ — список постов. Раскладка как в victors-blog: колонка
+       даты слева (разделительная линия) и колонка «заголовок + описание»
+       справа; сами карточки — наши: белая плашка, radius, без жёстких
+       теней. Заголовка «Блог» над списком нет — только крошки. */ -}}
+<div class="detail-page">
+  <div class="detail-top">
+    {{ partial "breadcrumbs.html" (dict "trail" (slice (dict "label" "Блог"))) }}
+  </div>
+
+  <div class="blog-wrap">
+    {{- /* Видимого h1 нет (только крошки), но для семантики и SEO
+           заголовок страницы остаётся — визуально скрытый. */ -}}
+    <h1 class="blog-sr-only">Блог</h1>
+
+    {{- $posts := .RegularPages.ByDate.Reverse -}}
+    {{- if $posts }}
+    <div class="blog-list">
+      {{- range $posts }}
+      <a class="blog-card" href="{{ .RelPermalink }}">
+        <span class="blog-card-date">{{ .Date.Format "02.01.2006" }}</span>
+        <h2 class="blog-card-title">{{ .Title }}</h2>
+        {{- with .Description }}
+        <p class="blog-card-desc">{{ . }}</p>
+        {{- end }}
+      </a>
+      {{- end }}
+    </div>
+    {{- else }}
+    <div class="blog-empty">Постов пока нет — но они точно будут.</div>
+    {{- end }}
+  </div>
+</div>
+{{- end -}}

@@ -1,5 +1,5 @@
 {{- /* Вход: dict "activeSlug" ("" | slug категории), "trail" (для breadcrumbs,
-     пустой — крошки не рендерятся, как на /clubs/) */ -}}
+     пустой — крошки не рендерятся) */ -}}
 {{- $active := .activeSlug | default "" -}}
 {{- $clubsPage := site.GetPage "/clubs" -}}
 {{- $clubs := $clubsPage.Pages -}}
@@ -56,12 +56,16 @@
          всего каталога. На десктопе ряд скрыт (см. .category-chips). */ -}}
     <nav class="category-chips" aria-label="Категории">
       <button type="button" class="chip chip--fav" data-fav-toggle aria-pressed="false">
+        {{- /* Закладка вместо сердечка — та же иконка, что на карточке
+             клуба (.card-fav): книга → закладка читается точнее. */ -}}
         <svg class="chip-fav-ico" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-          <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+          <path d="m19 21-7-4-7 4V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/>
         </svg>
         Избранное
       </button>
-      <a href="{{ relURL "" }}" class="chip chip--all{{ if not $active }} chip--active{{ end }}">
+      {{- /* Все категории → каталог (#catalog), не хиро-главная:
+             на главную уводит только «Читка». */ -}}
+      <a href="{{ relURL "" }}#catalog" class="chip chip--all{{ if not $active }} chip--active{{ end }}">
         {{- if not $active }}{{ partial "check-badge.html" . }}{{ end -}}
         Все категории
       </a>
@@ -89,7 +93,7 @@
              сохранить клуб; своя надпись врёт меньше, чем картинка 404. */ -}}
         <div class="no-results fav-empty" data-fav-empty hidden>
           <p class="fav-empty-title">В избранном пока пусто</p>
-          <p class="fav-empty-text">Нажми на сердечко в карточке клуба — он останется здесь.</p>
+          <p class="fav-empty-text">Нажми на закладку в карточке клуба — он останется здесь.</p>
         </div>
 
         {{- /* Таб «Авторские» пока ведёт сюда: раздел не реализован,
@@ -101,23 +105,11 @@
       </div>
 
       <aside class="sidebar category-sidebar">
-        {{- /* Чекбокс как «Участвую» в book-club-web: ставится — и в каталоге
-             остаются только сохранённые клубы. */ -}}
-        <label class="fav-checkbox">
-          <input type="checkbox" class="fav-checkbox-input" data-fav-toggle>
-          <span class="fav-checkbox-box">
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-              <polyline points="20 6 9 17 4 12"/>
-            </svg>
-          </span>
-          <span class="fav-checkbox-label">Избранное</span>
-        </label>
-
         {{- /* Селект категории — 1-в-1 sidebar-category-picker с hirehi.ru:
              триггер с плавающим лейблом «Категория», текущим значением и
              числом клубов; дропдаун — ссылки на страницы категорий, у
              выбранного зелёная галочка. Выбор — обычные ссылки, серверный
-             рендер не трогаем. */ -}}
+             рендер не трогаем. Сверху — категория, под ней избранное. */ -}}
         {{- if $cats }}
         {{- $terms := site.Taxonomies.categories -}}
         {{- $total := len $clubsPage.Pages -}}
@@ -143,22 +135,12 @@
               </span>
             </div>
             <div class="sort-dropdown category-select-dropdown" id="categoryDropdown" role="listbox" aria-hidden="true">
-              <a href="{{ relURL "" }}" data-category="all" class="sort-option category-option{{ if not $active }} selected{{ end }}" role="option" aria-selected="{{ if not $active }}true{{ else }}false{{ end }}">
+              <a href="{{ relURL "" }}#catalog" data-category="all" class="sort-option category-option{{ if not $active }} selected{{ end }}" role="option" aria-selected="{{ if not $active }}true{{ else }}false{{ end }}">
                 <span class="sort-option-text">все клубы</span>
-                <span class="sort-check-icon" aria-hidden="true">
-                  <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <circle cx="10" cy="10" r="10" fill="#42CF71" fill-opacity="0.16"></circle><path d="M0.75 5.65909L4.04032 8.75L12.75 0.75" transform="translate(4.7 6.27) scale(0.786)" stroke="#42CF71" stroke-width="2.3" fill="none" stroke-linecap="round" stroke-linejoin="round"></path>
-                  </svg>
-                </span>
               </a>
               {{- range $cats }}
               <a href="{{ printf "categories/%s/" .slug | relURL }}" data-category="{{ .slug }}" class="sort-option category-option{{ if eq $active .slug }} selected{{ end }}" role="option" aria-selected="{{ if eq $active .slug }}true{{ else }}false{{ end }}">
                 <span class="sort-option-text">{{ .name | lower }}</span>
-                <span class="sort-check-icon" aria-hidden="true">
-                  <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <circle cx="10" cy="10" r="10" fill="#42CF71" fill-opacity="0.16"></circle><path d="M0.75 5.65909L4.04032 8.75L12.75 0.75" transform="translate(4.7 6.27) scale(0.786)" stroke="#42CF71" stroke-width="2.3" fill="none" stroke-linecap="round" stroke-linejoin="round"></path>
-                  </svg>
-                </span>
               </a>
               {{- end }}
             </div>
@@ -171,11 +153,23 @@
         {{- else }}
         <div class="sidebar-empty">Категории появятся позже</div>
         {{- end }}
+
+        {{- /* Чекбокс как «Участвую» в book-club-web: ставится — и в каталоге
+             остаются только сохранённые клубы. */ -}}
+        <label class="fav-checkbox">
+          <input type="checkbox" class="fav-checkbox-input" data-fav-toggle>
+          <span class="fav-checkbox-box">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <polyline points="20 6 9 17 4 12"/>
+            </svg>
+          </span>
+          <span class="fav-checkbox-label">Избранное</span>
+        </label>
       </aside>
     </div>
 
     {{- /* Кнопка «Наверх» — не показывается на главной (home.html передаёт
-           hideScrollTop); на /clubs/ и страницах категорий остаётся. */ -}}
+           hideScrollTop); на страницах категорий остаётся. */ -}}
     {{- if not .hideScrollTop }}
     <button type="button" class="scroll-top" aria-label="Наверх" data-scroll-top hidden>
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">

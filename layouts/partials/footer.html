@@ -1,23 +1,28 @@
-{{- /* Футер: логотип слева, колонки «Разделы» и «Категории» с
-     заголовками, справа отдельные ссылки GitHub и Карта сайта —
-     без заголовка, как простые ссылки. Копирайт над линией,
-     линия внизу. */ -}}
+{{- /* Футер: логотип и копирайт слева (копирайт — прямо под «Читкой»),
+     колонки «Разделы» и «Категории», справа отдельные ссылки GitHub и
+     Карта сайта — без заголовка, как простые ссылки. */ -}}
 {{- $cats := partial "categories-active.html" -}}
 <footer class="footer">
   <div class="footer-inner">
     <div class="footer-main">
-      <a href="{{ relURL "" }}" class="footer-brand-link" aria-label="Читка — на главную">Читка</a>
+      <div class="footer-brand">
+        <a href="{{ relURL "" }}" class="footer-brand-link" aria-label="Читка — на главную">Читка</a>
+        <p class="footer-copyright">© {{ now.Year }} Читка</p>
+      </div>
 
       <div class="footer-cols">
         <nav class="footer-col" aria-label="Разделы сайта">
           <h2 class="footer-heading">Разделы</h2>
           <ul class="footer-list">
             {{- range site.Menus.main }}
-            <li><a href="{{ .URL }}" class="footer-link">{{ .Name }}</a></li>
+            {{- /* «Клубы» → каталог (#catalog), как в шапке: хиро-главная
+                 открывается только кликом по «Читка». */ -}}
+            <li><a href="{{ .URL }}{{ if eq .Name "Клубы" }}#catalog{{ end }}" class="footer-link">{{ .Name }}</a></li>
             {{- end }}
-            {{- /* Заглушки без ссылок — как в шапке (button.footer-link). */ -}}
-            <li><button type="button" class="footer-link">Мы в Telegram</button></li>
-            <li><button type="button" class="footer-link">Блог</button></li>
+            {{- /* «Мы в Telegram» — site.Params.telegram, как в шапке. */ -}}
+            {{- with site.Params.telegram }}
+            <li><a href="{{ . }}" class="footer-link" target="_blank" rel="noopener">Мы в Telegram</a></li>
+            {{- end }}
           </ul>
         </nav>
 
@@ -40,10 +45,57 @@
         </div>
       </div>
     </div>
-
-    <div class="footer-bottom">
-      <p class="footer-copyright">© {{ now.Year }} Читка</p>
-      <div class="footer-rule" aria-hidden="true"></div>
-    </div>
   </div>
+
+  {{- /* Эффект-свечение (Ruixen/Dia-gradient-footer, как в исходном
+         компоненте): полоса с размытой радугой position: fixed у низа
+         экрана, скрыта до последней высоты полосы прокрутки и в конце
+         встаёт в зарезервированный отступ футера (padding-bottom в
+         main.css) — контент футера остаётся над светом. Движок —
+         static/js/footer-glow.js; data-min-reveal="0" — не показывать
+         до самого низа. */ -}}
+  <div class="footer-glow" data-footer-glow data-min-reveal="0" aria-hidden="true">
+    <svg viewBox="0 0 1271 599" preserveAspectRatio="none" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        {{- /* Радуга от пола (offset 0) к верху (1): уголь → синий →
+               почти-белый → жёлтый → красно-оранжевый → маджента → прозрачный. */ -}}
+        <linearGradient id="footer-glow-grad" x1="0" y1="1" x2="0" y2="0">
+          <stop offset="0" stop-color="#340B05"/>
+          <stop offset="0.1827" stop-color="#0358F7"/>
+          <stop offset="0.2837" stop-color="#5092C7"/>
+          <stop offset="0.4135" stop-color="#E1ECFE"/>
+          <stop offset="0.5866" stop-color="#FFD400"/>
+          <stop offset="0.6827" stop-color="#FA3D1D"/>
+          <stop offset="0.8029" stop-color="#FD02F5"/>
+          <stop offset="1" stop-color="#FFC0FD00"/>
+        </linearGradient>
+        <filter id="footer-glow-blur" x="-50%" y="-50%" width="200%" height="200%">
+          <feGaussianBlur stdDeviation="15"/>
+        </filter>
+      </defs>
+      {{- /* Девять столбцов высотой по «колоколу» (peak 0.98, valley 0.55):
+             середина выше краёв — пирамида, как в оригинале. */ -}}
+      <g filter="url(#footer-glow-blur)"><rect x="0" y="276.14" width="173.7" height="322.86" fill="url(#footer-glow-grad)"/></g>
+      <g filter="url(#footer-glow-blur)"><rect x="141.22" y="196.88" width="173.7" height="402.12" fill="url(#footer-glow-grad)"/></g>
+      <g filter="url(#footer-glow-blur)"><rect x="282.44" y="123.82" width="173.7" height="475.18" fill="url(#footer-glow-grad)"/></g>
+      <g filter="url(#footer-glow-blur)"><rect x="423.67" y="59.33" width="173.7" height="539.67" fill="url(#footer-glow-grad)"/></g>
+      <g filter="url(#footer-glow-blur)"><rect x="564.89" y="11.98" width="173.7" height="587.02" fill="url(#footer-glow-grad)"/></g>
+      <g filter="url(#footer-glow-blur)"><rect x="706.11" y="59.33" width="173.7" height="539.67" fill="url(#footer-glow-grad)"/></g>
+      <g filter="url(#footer-glow-blur)"><rect x="847.33" y="123.82" width="173.7" height="475.18" fill="url(#footer-glow-grad)"/></g>
+      <g filter="url(#footer-glow-blur)"><rect x="988.56" y="196.88" width="173.7" height="402.12" fill="url(#footer-glow-grad)"/></g>
+      <g filter="url(#footer-glow-blur)"><rect x="1129.78" y="276.14" width="173.7" height="322.86" fill="url(#footer-glow-grad)"/></g>
+    </svg>
+  </div>
+
+  {{- /* Белая кнопка поверх свечения: лежит в зарезервированном отступе
+         футера (padding-bottom = высота .footer-glow), поэтому в конце
+         прокрутки попадает ровно в полосу света. Идёт после .footer-glow
+         в DOM — красится поверх (оба позиционированы, z-index не нужен).
+         Ссылка — site.Params.telegram (hugo.toml), как GitHub в колонке. */ -}}
+  {{- with site.Params.telegram }}
+  <a href="{{ . }}" class="base-btn footer-cta" target="_blank" rel="noopener">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m22 2-7 20-4-9-9-4Z"/><path d="M22 2 11 13"/></svg>
+    Мы в Telegram
+  </a>
+  {{- end }}
 </footer>

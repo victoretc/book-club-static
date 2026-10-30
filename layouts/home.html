@@ -1,11 +1,22 @@
 {{- define "main" -}}
 {{- /* На главной крошка «Клубы /» — обычная ссылка (не current, без
-     жирного) со слэшем-хвостом; ведёт на главную (/), никуда не уводит. */ -}}
-{{- $trail := slice (dict "label" "Клубы" "url" "/") -}}
+     жирного) со слэшем-хвостом; ведёт в каталог (#catalog), а не наверх
+     к хиро: на главную — только клик по «Читка». */ -}}
+{{- $trail := slice (dict "label" "Клубы" "url" "/#catalog") -}}
 {{- /* Лэндинг-хиро (later/LANDING-PLAN.md) над каталогом: ссылки и SEO
-     не ломаются, каталог остаётся ниже. Якорь #catalog — цель кнопки
-     «Найти клуб» в хиро. */ -}}
+     не ломаются, каталог остаётся ниже. Обе кнопки хиро ведут на якорь
+     #catalog — каталог клубов начинается сразу под хиро. Своей страницы
+     /clubs/ нет. */ -}}
 {{ partial "landing.html" . }}
-<div id="catalog"></div>
-{{ partial "catalog.html" (dict "activeSlug" "" "trail" $trail "trailingSlash" true "hideScrollTop" true) }}
+{{- /* #catalog — цель обеих кнопок хиро: он начинается сразу под хиро
+       и открывается ВТОРОЙ шапкой (дубль штатной, см. partials/header.html
+       с suffix "-second"): первый экран — шапка + хиро, а ниже при скролле
+       читатель встречает обычную шапку. Шапка в потоке, без липкости —
+       уезжает со страницей; выше верха #catalog колесом и пальцем не
+       прокрутить (замок js/scroll-lock.js), на главную ведёт только клик
+       по «Читка». */ -}}
+<div id="catalog">
+  {{ partial "header.html" (dict "page" . "suffix" "-second") }}
+  {{ partial "catalog.html" (dict "activeSlug" "" "trail" $trail "trailingSlash" true "hideScrollTop" true) }}
+</div>
 {{- end -}}
