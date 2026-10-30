@@ -1,12 +1,11 @@
-// Модалка «Добавить книгу»: открытие по клику на [data-modal-open]
-// (пункты меню в шапке), закрытие — крестиком, по подложке и по Esc.
+// Модалки («Добавить книгу», «Создать клуб»): открытие по клику на
+// [data-modal-open] — в атрибуте id модалки, пустое значение = «Добавить
+// книгу» (пункты меню в шапке). Закрытие — крестиком, по подложке и по Esc.
 // Фокус уходит в модалку и возвращается на триггер при закрытии;
 // Tab зациклен внутри. Пока модалка открыта, бургер-панель закрывается.
 // Без JS ссылка спокойно ведёт на GitHub-шаблон (см. hugo.toml).
 ;(function () {
-  var modal = document.getElementById('add-book-modal')
-  if (!modal) return
-
+  var modal = null // открытая модалка
   var lastTrigger = null
 
   function focusables() {
@@ -23,6 +22,9 @@
   }
 
   function open(trigger) {
+    var id = trigger.getAttribute('data-modal-open') || 'add-book-modal'
+    modal = document.getElementById(id)
+    if (!modal) return
     lastTrigger = trigger || null
     closeBurger()
     modal.hidden = false
@@ -32,11 +34,12 @@
   }
 
   function close() {
-    if (modal.hidden) return
+    if (!modal || modal.hidden) return
     modal.hidden = true
     document.body.classList.remove('modal-open')
     if (lastTrigger) lastTrigger.focus()
     lastTrigger = null
+    modal = null
   }
 
   document.addEventListener('click', function (event) {
@@ -50,7 +53,7 @@
   })
 
   document.addEventListener('keydown', function (event) {
-    if (modal.hidden) return
+    if (!modal || modal.hidden) return
 
     if (event.key === 'Escape') {
       close()

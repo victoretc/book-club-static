@@ -19,6 +19,11 @@
       {{- if not $hideChrome }}{{ partial "footer.html" . }}{{ end }}
     </div>
     {{- if not $hideChrome }}{{ partial "add-book-modal.html" . }}{{ end }}
+    {{- if not $hideChrome }}{{ partial "add-club-modal.html" . }}{{ end }}
+    {{- /* Нижнее меню отключено пока: раскомментировать, когда будем
+           снова смотреть. Файлы (bottom-nav.html/.js, CSS, add-club-modal)
+           на месте. */ -}}
+    {{- /* if not $hideChrome }}{{ partial "bottom-nav.html" . }}{{ end */ -}}
     {{- /* Плашка о данных — всегда, даже на страницах без шапки/футера. */ -}}
     {{ partial "privacy-note.html" . }}
   </body>

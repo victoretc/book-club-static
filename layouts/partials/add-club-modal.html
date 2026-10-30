@@ -1,0 +1,28 @@
+{{- /* Модалка «Создать клуб»: открывается кнопкой «+» в нижнем меню
+       (bottom-nav.html, data-modal-open="add-club-modal"), закрывается
+       крестиком, по подложке и по Esc — всё ведёт modal.js. Как и
+       «Добавить книгу», ведёт на GitHub-шаблон issue. */ -}}
+<div class="modal" id="add-club-modal" role="dialog" aria-modal="true" aria-labelledby="add-club-modal-title" hidden>
+  <div class="modal-backdrop" data-modal-close></div>
+  <div class="modal-panel">
+    <div class="modal-head">
+      <h2 class="modal-title" id="add-club-modal-title">Создать клуб</h2>
+      <button type="button" class="modal-close" data-modal-close aria-label="Закрыть">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M18 6 6 18M6 6l12 12"/>
+        </svg>
+      </button>
+    </div>
+
+    <p class="modal-note">
+      «Читка» — статический сайт, клубы добавляются вручную. Опишите клуб: название книги или автор, формат встреч и ссылку на сообщество. После проверки модератором клуб появится в каталоге.
+    </p>
+
+    <a
+      href="https://github.com/victoretc/book-club-static/issues/new?template=club_request.yml"
+      class="base-btn base-btn--primary base-btn--full modal-btn"
+    >
+      Создать Issue
+    </a>
+  </div>
+</div>

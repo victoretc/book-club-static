@@ -18,6 +18,14 @@
 // к порогу. Иначе тачпад успевает утащить кадр в хиро раньше preventDefault.
 // Дальше порога жест идёт обычным ходом — рывка «вверх на тысячи пикселей»
 // не бывает. Два пальца (пинч-зум) не трогаем.
+//
+// Запасной ход для Chrome (Blink, macOS): во время инерции тачпада wheel
+// приходит с cancelable: false — preventDefault там бесполезен, браузер
+// применяет прокрутку уже ПОСле наших слушателей. Ловим такое событием
+// scroll: замок включён, жест тачпада/колеса ещё идёт (окно 150ms —
+// инерция шлёт wheel каждый кадр) и направление жеста вверх — подтягиваем
+// позицию к порогу. Окно во времени и флаг направления не дают замку
+// дёргать клавиатурную прокрутку к хиро (ей разрешено ездить выше порога).
 ;(function () {
   var catalog = document.getElementById('catalog')
   if (!catalog) return // не главная — замок не нужен
@@ -27,6 +35,8 @@
   var interacted = false // пользователь уже водил вводом (см. шапку файла)
   var lastY = window.scrollY // scrollY прошлого события — ловит переход порога
   var lastTouchY = null // clientY прошлого touchmove
+  var lastGestureAt = 0 // время последнего wheel/touchmove — окно запасного хода
+  var gestureUp = false // текущий жест (колесо/палец) идёт вверх
 
   function measure() {
     threshold = catalog.getBoundingClientRect().top + window.scrollY
@@ -64,6 +74,17 @@
     if (!engaged && interacted && lastY < threshold && y >= threshold) {
       engaged = true
     }
+    // Запасной ход (Chrome): жест колеса/пальца идёт вверх, а прокрутка
+    // ушла выше порога — wheel пришёл с cancelable: false, preventDefault
+    // не сработал. Догоняем позицией. lastY >= threshold — мы пересекли
+    // порог снизу этим же жестом: если мы уже были выше порога (клавиатура
+    // довезла до хиро), колесо там свободно и дёргать замок не нужно.
+    // Наш же scrollTo порог не задевает (y == threshold), зациклиться нечему.
+    if (engaged && gestureUp && y < threshold && lastY >= threshold &&
+        Date.now() - lastGestureAt < 150) {
+      window.scrollTo(0, threshold)
+      y = threshold
+    }
     lastY = y
   }, { passive: true })
 
@@ -73,6 +94,8 @@
     // deltaMode: 0 — пиксели, 1 — строки, 2 — страницы (так шлёт Firefox).
     if (event.deltaMode === 1) delta *= 16
     else if (event.deltaMode === 2) delta *= window.innerHeight
+    gestureUp = delta < 0 // направление жеста — для запасного хода в scroll
+    lastGestureAt = Date.now()
     if (holds(delta)) event.preventDefault()
   }, { passive: false })
 
@@ -88,7 +111,10 @@
     lastTouchY = y
     if (prev === null || event.touches.length > 1) return // пинч-зум
     // Палец вверх (clientY уменьшился) — страница едет вверх к хиро.
-    if (holds(prev - y)) event.preventDefault()
+    var delta = prev - y
+    gestureUp = delta > 0 // направление жеста — для запасного хода в scroll
+    lastGestureAt = Date.now()
+    if (holds(delta)) event.preventDefault()
   }, { passive: false })
 
   function touchEnd(event) {

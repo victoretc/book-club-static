@@ -182,7 +182,13 @@ a {
 .app-layout {
   display: flex;
   flex-direction: column;
+  /* Sticky-footer: при коротком контенте main растягивается (flex: 1) и
+     футер упирается в низ экрана. svh, а не vh: на мобиле 100vh считается
+     по большой высоте вьюпорта (адресная строка скрыта) — страница была
+     всегда длиннее видимой области на высоту адресной строки и футер не
+     дотягивался до низа. */
   min-height: 100vh;
+  min-height: 100svh;
 }
 
 main {
@@ -590,6 +596,16 @@ button.header-nav-link {
    GitHub и Карта сайта — простые ссылки без заголовка. Копирайт внизу,
    без линии (линию убрали по правке).
    Дизайн не менялся — добавлен только эффект-свечение (см. ниже). */
+/* Высота светящейся полосы подвала — одно значение на всё: высота
+   самой полосы (.footer-glow), зарезервированный под неё отступ футера
+   (.footer padding-bottom) и центр кнопки в полосе (.footer-cta).
+   Резерв меньше прежних 24svh: полоса осталась fixed у низа экрана с
+   появлением по скроллу, но футер перестал быть полутораэкранным и на
+   коротких страницах прижимается к низу. */
+:root {
+  --footer-glow-h: 120px;
+}
+
 .footer {
   position: relative; /* якорь для .footer-cta в отступе под свечением */
   background: var(--color-surface);
@@ -597,13 +613,13 @@ button.header-nav-link {
      компонента: полоса fixed у низа экрана в конце прокрутки встаёт
      ровно в этот отступ, поэтому контент футера остаётся над светом и
      не прячется за эффектом. Высота обязательна = height у .footer-glow. */
-  padding-bottom: 24vh;
-  padding-bottom: 24svh;
+  padding-bottom: var(--footer-glow-h);
 }
 
 /* ===== Свечение подвала (Ruixen/Dia-gradient-footer) =====
    Размытая радуга position: fixed у нижней кромки экрана, высота = зарезервированный отступ футера. Скрыта (scaleY 0), пока до конца
-   страницы больше одной высоты полосы; дальше растёт и полная
+   страницы больше одной высоты полосы, и в начальном положении страницы
+   (scrollY = 0) — пол появляется только по прокрутке вниз; дальше растёт и полная
    (scaleY 1) приходится ровно на последний экран — там она и встаёт
    в отступ под контентом футера, ничего не закрывая (доказательство:
    верх полосы = верх отступа при любой прокрутке, см. footer-glow.js).
@@ -616,8 +632,7 @@ button.header-nav-link {
   left: 0;
   right: 0;
   bottom: 0;
-  height: 24vh;
-  height: 24svh;
+  height: var(--footer-glow-h);
   pointer-events: none;
   transform-origin: bottom;
   transform: scaleY(0);
@@ -632,7 +647,7 @@ button.header-nav-link {
 
 /* Белая кнопка «Мы в Telegram» на свечении: лежит в отступе под
    контентом футера (padding-bottom = высота полосы), по центру полосы —
-   bottom: 12svh минус половина высоты кнопки (48px → 24px). В DOM идёт
+   половина --footer-glow-h минус половина высоты кнопки (48px → 24px). В DOM идёт
    после .footer-glow (оба позиционированы, z-index не нужен) — красится
    поверх света; pointer-events у полосы none, клик проходит. Белая
    заливка + тонкая рамка — без тени, чтобы кнопка не торчала из
@@ -642,9 +657,7 @@ button.header-nav-link {
   position: absolute;
   left: 50%;
   transform: translateX(-50%);
-  bottom: 12vh;
-  bottom: calc(12vh - 24px);
-  bottom: calc(12svh - 24px);
+  bottom: calc(var(--footer-glow-h) / 2 - 24px);
   background: var(--color-surface);
   color: var(--color-text);
   border-color: var(--color-stroke-subtle);
@@ -3157,16 +3170,20 @@ body.modal-open {
   margin-bottom: 32px;
 }
 
+/* Ширина картинки подобрана, чтобы страница 404 целиком (шапка + текст
+   + футер с резервом под свечение) влезала в один экран десктопа и
+   футер стоял прижатым к низу без скролла: картинка 996×1068, при 220px
+   по ширине высота ≈ 236px. */
 .not-found .not-found-img {
   max-width: 100%;
-  width: 320px;
+  width: 220px;
   height: auto;
   margin-bottom: 32px;
 }
 
 @media (max-width: 768px) {
   .not-found .not-found-img {
-    width: 220px;
+    width: 180px;
   }
 
   .not-found-title {
@@ -3981,4 +3998,232 @@ main.main--landing {
   font-weight: 500;
   line-height: 1.3;
   color: var(--color-text);
+}
+
+/* ===== Нижнее меню (bottom nav) =====
+   Плавающая pill-панель внизу экрана (bottom-nav.html). Появляется,
+   только когда шапка ушла из вида — bottom-nav.js (IntersectionObserver).
+   Подменю выезжают сверху панели с blur — порт motion-анимации из
+   исходного React-компонента на CSS. */
+.bnav {
+  position: fixed;
+  left: 50%;
+  bottom: max(16px, env(safe-area-inset-bottom, 0px));
+  transform: translateX(-50%);
+  z-index: 1050;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+}
+
+.bnav[hidden] {
+  display: none;
+}
+
+.bnav-bar {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px;
+  border-radius: 18px;
+  border: 1px solid var(--color-stroke-subtle);
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  box-shadow: var(--shadow-md);
+}
+
+.bnav-btn {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border: 0;
+  border-radius: 14px;
+  background: transparent;
+  color: var(--color-text-muted);
+  cursor: pointer;
+  text-decoration: none;
+  transition:
+    background var(--duration-fast) var(--ease-out),
+    color var(--duration-fast) var(--ease-out);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .bnav-btn:hover {
+    background: var(--color-bg);
+    color: var(--color-text);
+  }
+}
+
+.bnav-btn[aria-expanded='true'] {
+  background: var(--color-bg);
+  color: var(--color-text);
+}
+
+/* «+» —.primary: брендовая заливка, как у base-btn--primary. */
+.bnav-btn--primary {
+  background: var(--color-brand);
+  color: #fff;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .bnav-btn--primary:hover {
+    background: var(--color-brand);
+    color: #fff;
+    filter: brightness(1.08);
+  }
+}
+
+/* Подменю: над панелью, по центру, fade+lift. */
+.bnav-pop {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 220px;
+  padding: 6px;
+  border-radius: 16px;
+  border: 1px solid var(--color-stroke-subtle);
+  background: rgba(255, 255, 255, 0.92);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  box-shadow: var(--shadow-lg);
+  animation: bnav-pop-in 0.2s var(--ease-out);
+}
+
+.bnav-pop[hidden] {
+  display: none;
+}
+
+@keyframes bnav-pop-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px) scale(0.96);
+  }
+}
+
+.bnav-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  padding: 8px 12px;
+  border: 0;
+  border-radius: 10px;
+  background: transparent;
+  color: var(--color-text-secondary);
+  font-family: var(--font-body);
+  font-size: 15px;
+  text-align: left;
+  cursor: pointer;
+  transition:
+    background var(--duration-fast) var(--ease-out),
+    color var(--duration-fast) var(--ease-out);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .bnav-item:hover {
+    background: var(--color-bg);
+    color: var(--color-text);
+  }
+}
+
+.bnav-item--danger {
+  color: var(--color-error);
+}
+
+.bnav-sep {
+  height: 1px;
+  margin: 4px 6px;
+  background: var(--color-stroke-subtle);
+}
+
+/* Поиск в подменю: поле + два чипса рядом. */
+.bnav-pop--search {
+  min-width: 280px;
+  gap: 8px;
+  padding: 8px;
+}
+
+.bnav-search {
+  position: relative;
+}
+
+.bnav-search-icon {
+  position: absolute;
+  left: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--color-text-muted);
+  pointer-events: none;
+}
+
+.bnav-search-input {
+  width: 100%;
+  padding: 7px 12px 7px 34px;
+  border: 1px solid var(--color-stroke-subtle);
+  border-radius: 10px;
+  background: var(--color-bg);
+  color: var(--color-text);
+  font-family: var(--font-body);
+  font-size: 14px;
+}
+
+.bnav-search-input::placeholder {
+  color: var(--color-text-muted);
+}
+
+.bnav-search-input:focus {
+  outline: none;
+  border-color: var(--color-brand);
+}
+
+.bnav-chips {
+  display: flex;
+  gap: 6px;
+}
+
+.bnav-chip {
+  flex: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 6px 10px;
+  border: 0;
+  border-radius: 10px;
+  background: var(--color-bg);
+  color: var(--color-text-secondary);
+  font-family: var(--font-body);
+  font-size: 13px;
+  cursor: pointer;
+  transition:
+    background var(--duration-fast) var(--ease-out),
+    color var(--duration-fast) var(--ease-out);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .bnav-chip:hover {
+    background: var(--color-brand-soft);
+    color: var(--color-text);
+  }
+}
+
+@media (max-width: 480px) {
+  .bnav {
+    width: calc(100% - 24px);
+  }
+
+  .bnav-pop,
+  .bnav-pop--search {
+    width: 100%;
+    min-width: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .bnav-pop {
+    animation: none;
+  }
 }
