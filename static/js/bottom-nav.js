@@ -4,59 +4,28 @@
 // IntersectionObserver за первым .header на странице. На главной шапок
 // две (вторая открывает каталог) — смотрим на первую: как только она
 // перестаёт пересекаться с вьюпортом, панель показывается; возврат
-// к первому экрану прячет её обратно и закрывает подменю.
+// к первому экрану прячет её обратно.
 //
-// Подменю (поиск / уведомления / профиль — демо): открытие по кнопке,
-// закрытие — повторный тап, клик мимо, Escape и скрытие панели.
+// «Избранное» на страницах без каталога (клуб, блог, категории): ссылка
+// ведёт в каталог, а флаг в sessionStorage просит catalog.js открыть его
+// сразу в режиме избранного. На страницах с каталогом фильтром владеет
+// catalog.js (кнопка несёт data-fav-toggle).
 // Без JS панель остаётся в hidden — сайт полностью работаем без неё.
 ;(function () {
   var nav = document.querySelector('[data-bnav]')
   if (!nav) return
 
-  var toggles = nav.querySelectorAll('[data-bnav-toggle]')
-  var pops = nav.querySelectorAll('[data-bnav-pop]')
-
-  function popByName(name) {
-    return nav.querySelector('[data-bnav-pop="' + name + '"]')
-  }
-
-  function closeAll() {
-    Array.prototype.forEach.call(pops, function (pop) {
-      pop.hidden = true
-    })
-    Array.prototype.forEach.call(toggles, function (btn) {
-      btn.setAttribute('aria-expanded', 'false')
+  var favBtn = nav.querySelector('[data-bnav-fav]')
+  if (favBtn) {
+    favBtn.addEventListener('click', function () {
+      // Каталог на странице есть — навигацию и фильтр гасит catalog.js,
+      // флаг не нужен.
+      if (document.querySelector('[data-catalog-list]')) return
+      try {
+        sessionStorage.setItem('book_club_fav_open', '1')
+      } catch (e) {}
     })
   }
-
-  function isOpen(name) {
-    var pop = popByName(name)
-    return pop && !pop.hidden
-  }
-
-  Array.prototype.forEach.call(toggles, function (btn) {
-    btn.addEventListener('click', function (event) {
-      event.stopPropagation()
-      var name = btn.getAttribute('data-bnav-toggle')
-      var wasOpen = isOpen(name)
-      closeAll()
-      if (!wasOpen) {
-        popByName(name).hidden = false
-        btn.setAttribute('aria-expanded', 'true')
-      }
-    })
-  })
-
-  // Клики внутри панели не должны закрывать подменю (document-click ниже).
-  // Кнопка «+» (data-modal-open) при этом свободно всплывает до document,
-  // где её перехватывает modal.js.
-  document.addEventListener('click', function (event) {
-    if (!nav.contains(event.target)) closeAll()
-  })
-
-  document.addEventListener('keydown', function (event) {
-    if (event.key === 'Escape') closeAll()
-  })
 
   // ===== Показ/скрытие по видимости шапки =====
   var header = document.querySelector('.header')
@@ -67,9 +36,7 @@
   }
 
   var observer = new IntersectionObserver(function (entries) {
-    var headerVisible = entries[0].isIntersecting
-    nav.hidden = headerVisible
-    if (headerVisible) closeAll()
+    nav.hidden = entries[0].isIntersecting
   })
   observer.observe(header)
 })()

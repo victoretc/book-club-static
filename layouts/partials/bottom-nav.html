@@ -3,62 +3,37 @@
        visibility — static/js/bottom-nav.js (IntersectionObserver по
        первому .header), без JS панель остаётся скрытой (hidden).
 
+       data-tip — подсказка при наведении: показывается только на десктопе
+       (CSS: media hover+fine pointer), на тач-устройствах её нет.
+
        Кнопки:
        • Клубы — якорь на каталог (#catalog), как в шапке;
-       • Поиск — демо-подменю (поле + чипсы), ввод пока не работает;
-       • «+» — модалка «Создать клуб» (add-club-modal.html);
-       • Уведомления / Профиль — демо-подменю, чтобы посмотреть
-         поведение на мобилке и десктопе. */ -}}
+       • Избранное — закладка как на карточке клуба (data-fav-toggle):
+         на страницах с каталогом переключает фильтр «только избранное»
+         (catalog.js), на остальных — ссылка в каталог, который
+         catalog.js откроет сразу в режиме избранного (флаг в
+         sessionStorage, см. bottom-nav.js);
+       • Добавить книгу — модалка add-book-modal (data-modal-open);
+       • Telegram — site.Params.telegram, в новой вкладке. */ -}}
 <div class="bnav" data-bnav hidden>
-  {{- /* Подменю: одно на кнопку, скрыто по умолчанию. */ -}}
-  <div class="bnav-pop bnav-pop--search" data-bnav-pop="search" hidden>
-    <div class="bnav-search">
-      <svg class="bnav-search-icon" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
-      <input type="search" class="bnav-search-input" placeholder="Клуб, книга, автор…" aria-label="Поиск по каталогу">
-    </div>
-    <div class="bnav-chips">
-      <button type="button" class="bnav-chip">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 6h18M7 12h10M10 18h4"/></svg>
-        Фильтры
-      </button>
-      <button type="button" class="bnav-chip">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m3 17 6-6 4 4 8-8"/><path d="M17 7h4v4"/></svg>
-        В тренде
-      </button>
-    </div>
-  </div>
-
-  <div class="bnav-pop" data-bnav-pop="notifications" hidden>
-    <button type="button" class="bnav-item">Отзывы на ваши клубы</button>
-    <button type="button" class="bnav-item">Новые клубы в каталоге</button>
-  </div>
-
-  <div class="bnav-pop" data-bnav-pop="profile" hidden>
-    <button type="button" class="bnav-item">Мой аккаунт</button>
-    <button type="button" class="bnav-item">Настройки</button>
-    <div class="bnav-sep" role="presentation"></div>
-    <button type="button" class="bnav-item bnav-item--danger">Выйти</button>
-  </div>
-
-  {{- /* Сама панель: pill с backdrop-blur, кнопки-иконки. */ -}}
   <div class="bnav-bar">
-    <a href="{{ relURL "" }}#catalog" class="bnav-btn" aria-label="Клубы">
+    <a href="{{ relURL "" }}#catalog" class="bnav-btn" aria-label="Клубы" data-tip="Клубы">
       <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"/></svg>
     </a>
-    <button type="button" class="bnav-btn" data-bnav-toggle="search"
-            aria-expanded="false" aria-controls="bnav-pop-search" aria-label="Поиск">
-      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+    <a href="{{ relURL "" }}#catalog" class="bnav-btn" data-fav-toggle data-bnav-fav
+       aria-pressed="false" aria-label="Избранное" data-tip="Избранное">
+      {{- /* Закладка — та же, что на карточке клуба (.card-fav) и в
+             мобильной таблетке (.chip--fav): залитое состояние
+             (aria-pressed=true) красит её в бренд, см. CSS. */ -}}
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m19 21-7-4-7 4V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>
+    </a>
+    <button type="button" class="bnav-btn" data-modal-open aria-label="Добавить книгу" data-tip="Добавить книгу">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="M12 5v14"/></svg>
     </button>
-    <button type="button" class="bnav-btn bnav-btn--primary" data-modal-open="add-club-modal" aria-label="Создать клуб">
-      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M12 5v14"/></svg>
-    </button>
-    <button type="button" class="bnav-btn" data-bnav-toggle="notifications"
-            aria-expanded="false" aria-controls="bnav-pop-notifications" aria-label="Уведомления">
-      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/><path d="M21 15H3a1 1 0 0 1-.7-1.7c.9-.9 1.7-1.7 1.7-4.3a8 8 0 1 1 16 0c0 2.6.8 3.4 1.7 4.3A1 1 0 0 1 21 15"/></svg>
-    </button>
-    <button type="button" class="bnav-btn" data-bnav-toggle="profile"
-            aria-expanded="false" aria-controls="bnav-pop-profile" aria-label="Профиль">
-      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="5"/><path d="M20 21a8 8 0 0 0-16 0"/></svg>
-    </button>
+    {{- with site.Params.telegram }}
+    <a href="{{ . }}" class="bnav-btn" target="_blank" rel="noopener" aria-label="Мы в Telegram" data-tip="Мы в Telegram">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m22 2-7 20-4-9-9-4Z"/><path d="M22 2 11 13"/></svg>
+    </a>
+    {{- end }}
   </div>
 </div>

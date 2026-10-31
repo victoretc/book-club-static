@@ -4026,156 +4026,65 @@ main.main--landing {
   }
 }
 
-.bnav-btn[aria-expanded='true'] {
-  background: var(--color-bg);
-  color: var(--color-text);
+/* «Избранное» включено (aria-pressed=true) — закладка брендом и залита,
+   как у .chip--fav.chip--active. */
+.bnav-btn[aria-pressed='true'] {
+  color: var(--color-brand);
 }
 
-/* «+» —.primary: брендовая заливка, как у base-btn--primary. */
-.bnav-btn--primary {
-  background: var(--color-brand);
-  color: #fff;
+.bnav-btn[aria-pressed='true'] svg path {
+  fill: currentColor;
 }
 
-@media (hover: hover) and (pointer: fine) {
-  .bnav-btn--primary:hover {
-    background: var(--color-brand);
-    color: #fff;
-    filter: brightness(1.08);
-  }
-}
-
-/* Подменю: над панелью, по центру, fade+lift. */
-.bnav-pop {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-  min-width: 220px;
-  padding: 6px;
-  border-radius: 16px;
-  border: 1px solid var(--color-stroke-subtle);
-  background: rgba(255, 255, 255, 0.92);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  box-shadow: var(--shadow-lg);
-  animation: bnav-pop-in 0.2s var(--ease-out);
-}
-
-.bnav-pop[hidden] {
-  display: none;
-}
-
-@keyframes bnav-pop-in {
-  from {
-    opacity: 0;
-    transform: translateY(8px) scale(0.96);
-  }
-}
-
-.bnav-item {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  width: 100%;
-  padding: 8px 12px;
-  border: 0;
-  border-radius: 10px;
-  background: transparent;
-  color: var(--color-text-secondary);
-  font-family: var(--font-body);
-  font-size: 15px;
-  text-align: left;
-  cursor: pointer;
-  transition:
-    background var(--duration-fast) var(--ease-out),
-    color var(--duration-fast) var(--ease-out);
-}
-
-@media (hover: hover) and (pointer: fine) {
-  .bnav-item:hover {
-    background: var(--color-bg);
-    color: var(--color-text);
-  }
-}
-
-.bnav-item--danger {
-  color: var(--color-error);
-}
-
-.bnav-sep {
-  height: 1px;
-  margin: 4px 6px;
-  background: var(--color-stroke-subtle);
-}
-
-/* Поиск в подменю: поле + два чипса рядом. */
-.bnav-pop--search {
-  min-width: 280px;
-  gap: 8px;
-  padding: 8px;
-}
-
-.bnav-search {
+/* Подсказка сверху кнопки: контент — data-tip, хвост как у category-tooltip.
+   Показывается только при наведении мышью (media hover+fine pointer ниже) —
+   на тач-устройствах ховера нет, подсказка не мешает. */
+.bnav-btn {
   position: relative;
 }
 
-.bnav-search-icon {
+.bnav-btn::after {
+  content: attr(data-tip);
   position: absolute;
-  left: 10px;
-  top: 50%;
-  transform: translateY(-50%);
-  color: var(--color-text-muted);
-  pointer-events: none;
-}
-
-.bnav-search-input {
-  width: 100%;
-  padding: 7px 12px 7px 34px;
-  border: 1px solid var(--color-stroke-subtle);
+  left: 50%;
+  bottom: calc(100% + 10px);
+  transform: translateX(-50%) translateY(4px);
+  padding: 8px 12px;
   border-radius: 10px;
-  background: var(--color-bg);
-  color: var(--color-text);
-  font-family: var(--font-body);
-  font-size: 14px;
-}
-
-.bnav-search-input::placeholder {
-  color: var(--color-text-muted);
-}
-
-.bnav-search-input:focus {
-  outline: none;
-  border-color: var(--color-brand);
-}
-
-.bnav-chips {
-  display: flex;
-  gap: 6px;
-}
-
-.bnav-chip {
-  flex: 1;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 6px;
-  padding: 6px 10px;
-  border: 0;
-  border-radius: 10px;
-  background: var(--color-bg);
-  color: var(--color-text-secondary);
+  background: #1D1E20;
+  color: #fff;
   font-family: var(--font-body);
   font-size: 13px;
-  cursor: pointer;
-  transition:
-    background var(--duration-fast) var(--ease-out),
-    color var(--duration-fast) var(--ease-out);
+  font-weight: 400;
+  line-height: 1.3;
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--duration-fast) var(--ease-out), transform var(--duration-fast) var(--ease-out);
+  z-index: 1;
+}
+
+.bnav-btn::before {
+  /* Хвост стрелки — тот же треугольник, что у category-tooltip. */
+  content: '';
+  position: absolute;
+  left: 50%;
+  bottom: calc(100% + 4px);
+  transform: translateX(-50%) translateY(4px);
+  border-left: 5px solid transparent;
+  border-right: 5px solid transparent;
+  border-bottom: 6px solid #1D1E20;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--duration-fast) var(--ease-out), transform var(--duration-fast) var(--ease-out);
+  z-index: 1;
 }
 
 @media (hover: hover) and (pointer: fine) {
-  .bnav-chip:hover {
-    background: var(--color-brand-soft);
-    color: var(--color-text);
+  .bnav-btn:hover::after,
+  .bnav-btn:hover::before {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
   }
 }
 
@@ -4183,16 +4092,13 @@ main.main--landing {
   .bnav {
     width: calc(100% - 24px);
   }
-
-  .bnav-pop,
-  .bnav-pop--search {
-    width: 100%;
-    min-width: 0;
-  }
 }
 
-@media (prefers-reduced-motion: reduce) {
-  .bnav-pop {
-    animation: none;
+/* Тач-устройства: ховера нет в принципе, подсказки не показываем даже
+   если media-запрос где-то совпал (например, гибридный ноутбук). */
+@media (hover: none), (pointer: coarse) {
+  .bnav-btn::after,
+  .bnav-btn::before {
+    display: none;
   }
 }

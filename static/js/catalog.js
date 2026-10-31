@@ -192,7 +192,10 @@
   }
 
   favToggles.forEach(function (toggle) {
-    toggle.addEventListener('click', function () {
+    toggle.addEventListener('click', function (event) {
+      // Кнопка в нижнем меню — ссылка в каталог: на странице с каталогом
+      // переключаем только фильтр, перехода к якорю не даём.
+      if (toggle.tagName === 'A') event.preventDefault()
       favOnly = !favOnly
       syncFavToggles()
 
@@ -343,5 +346,14 @@
   // === Первичная фильтрация ===
   // Табов типа больше нет (все клубы «по книге»), фильтруются только
   // поиск и избранное.
+  // Пришли из нижнего меню со страницы без каталога (кнопка «Избранное»,
+  // bottom-nav.js ставит флаг) — открываем каталог сразу в избранном.
+  var openFav = false
+  try {
+    openFav = sessionStorage.getItem('book_club_fav_open') === '1'
+    sessionStorage.removeItem('book_club_fav_open')
+  } catch (e) {}
+  if (openFav && favToggles.length) favToggles[0].click()
+
   applyFilters()
 })()
