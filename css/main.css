@@ -1,0 +1,4130 @@
+/* ===== FONTS =====
+   "Handil Pro" — HandilPro-Medium, (c) 2023 Alifinart Studio.
+   Licence requires crediting the foundry:
+   https://behance.net/alifinart
+   Attribution живёт в meta-теге (layouts/partials/head.html), комментарий
+   здесь не годится — hugo --minify вырезает комментарии. */
+@font-face {
+  font-family: 'Handil Pro';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url('../fonts/HandilPro-Medium.woff2') format('woff2');
+}
+
+/* "Drabina" — Drabina Solid, (c) Mark Blondie / Redage Works, бесплатный
+   экспериментальный шрифт (https://fonts.redage.works/en/drabina), OFL 1.1.
+   В archive лежал OTF на 187 глифов; как и в victors-blog, он подрезан до
+   используемых символов (латиница, кириллица, цифры, пунктуация) и сжат
+   в woff2 — 6 КБ. */
+@font-face {
+  font-family: 'Drabina';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url('../fonts/Drabina-Solid.woff2') format('woff2');
+}
+
+/* ===== Tokens (book-club-web/src/assets/main.css) ===== */
+:root {
+  --color-bg: #F2F2F4;
+  --color-surface: #FFFFFF;
+  --color-brand: #3B3EFF;
+  --color-brand-soft: rgba(59, 62, 255, 0.08);
+  --color-brand-ring: rgba(59, 62, 255, 0.2);
+  --color-error-soft: rgba(224, 83, 83, 0.08);
+  --color-text: #1A1C2B;
+  --color-text-secondary: #575757;
+  --color-text-muted: #9A9A9A;
+  --color-stroke-subtle: rgba(26, 28, 43, 0.06);
+  /* Волосяные линии футера: чуть контрастнее stroke-subtle, видны
+     и на фоне, и на белой поверхности. */
+  --color-hairline: rgba(26, 28, 43, 0.12);
+  --color-error: #E05353;
+  --color-success: #42CF71;
+  --color-accent: #A0EC06;
+
+  --font-display: 'Drabina', 'Georgia', serif;
+  --font-heading: 'Handil Pro', 'Georgia', serif;
+  --font-body: 'Inter', system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+
+  --text-xs: 0.75rem;
+  --text-sm: 0.875rem;
+  --text-base: 1rem;
+  --text-lg: 1.125rem;
+  --text-xl: 1.25rem;
+  --text-2xl: 1.5rem;
+  --text-3xl: 2rem;
+
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.25rem;
+  --space-6: 1.5rem;
+  --space-8: 2rem;
+  --space-10: 2.5rem;
+
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-xl: 24px;
+  --radius-2xl: 32px;
+  --radius-pill: 9999px;
+
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.04);
+  --shadow-hover: 0 4px 16px rgba(0, 0, 0, 0.1);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.07);
+  --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.08);
+
+  --ease-out: cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  --duration-fast: 0.15s;
+  --duration-normal: 0.25s;
+}
+
+/* tap-highlight — вспышка подсветки при тапе на тач-устройствах (Android
+   рисует серый/синий оверлей поверх любого эффекта). Гасим глобально:
+   на мобильных нажатия кнопок не дают визуальных эффектов. */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+}
+
+html {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  margin: 0;
+  font-family: var(--font-body);
+  font-size: var(--text-base);
+  line-height: 1.5;
+  color: var(--color-text);
+  background-color: var(--color-bg);
+  /* clip, а не hidden: 100vw у фул-блид-сцены шире колонки с полосой
+     прокрутки; clip не создаёт скролл-контейнер и не ломает sticky. */
+  overflow-x: clip;
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-brand);
+  outline-offset: 2px;
+}
+
+h1, h2, h3, h4, p {
+  margin: 0;
+}
+
+img {
+  display: block;
+}
+
+a {
+  color: inherit;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* ===== Сплэш загрузки =====
+   Плашка на весь экран, пока грузятся шрифты и страница: сайт не
+   показывается с фолбэчными шрифтами. Гасит splash.js, без JS —
+   noscript в head. Стоит выше всех оверлеев. */
+.splash {
+  position: fixed;
+  inset: 0;
+  z-index: 3000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--color-bg);
+  transition: opacity 0.25s ease;
+}
+
+.splash.is-done {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.splash[hidden] {
+  display: none;
+}
+
+/* Типовой спиннер: круг с прозрачной частью, крутится по часовой. */
+.splash-spinner {
+  width: 40px;
+  height: 40px;
+  border: 3px solid var(--color-brand-soft);
+  border-top-color: var(--color-brand);
+  border-radius: 50%;
+  animation: splash-spin 0.8s linear infinite;
+}
+
+@keyframes splash-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .splash-spinner {
+    animation-duration: 2s;
+  }
+}
+
+/* ===== App layout (App.vue) ===== */
+.app-layout {
+  display: flex;
+  flex-direction: column;
+  /* Sticky-footer: при коротком контенте main растягивается (flex: 1) и
+     футер упирается в низ экрана. svh, а не vh: на мобиле 100vh считается
+     по большой высоте вьюпорта (адресная строка скрыта) — страница была
+     всегда длиннее видимой области на высоту адресной строки и футер не
+     дотягивался до низа. */
+  min-height: 100vh;
+  min-height: 100svh;
+}
+
+main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 24px 24px 60px;
+}
+
+@media (max-width: 768px) {
+  main {
+    padding: 16px 16px 40px;
+  }
+}
+
+@media (max-width: 480px) {
+  main {
+    padding: 12px 12px 32px;
+  }
+}
+
+/* ===== BaseButton ===== */
+.base-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  height: 48px;
+  padding: 0 24px;
+  border-radius: 40px;
+  font-family: var(--font-body);
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 1.2;
+  cursor: pointer;
+  white-space: nowrap;
+  text-decoration: none;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+  border: 1px solid transparent;
+  transition:
+    background 0.2s ease,
+    border-color 0.2s ease,
+    color 0.2s ease,
+    box-shadow 0.2s ease,
+    filter 0.2s ease;
+}
+
+.base-btn:focus-visible {
+  outline: 2px solid var(--color-brand);
+  outline-offset: 2px;
+}
+
+.base-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+.base-btn--full {
+  width: 100%;
+}
+
+.base-btn--primary {
+  background: var(--color-brand);
+  color: #FFFFFF;
+  border-color: rgba(59, 62, 255, 0.4);
+  box-shadow: 0 2px 8px rgba(59, 62, 255, 0.25);
+}
+
+/* Hover/active — только для мыши ((hover: hover) and (pointer: fine)):
+   на тач-устройствах hover «залипает» после тапа, а :active мигает
+   яркостью — эффектов при нажатии быть не должно. */
+@media (hover: hover) and (pointer: fine) {
+  .base-btn--primary:hover:not(:disabled) {
+    filter: brightness(1.08);
+    box-shadow: 0 4px 16px rgba(59, 62, 255, 0.25);
+  }
+
+  .base-btn--primary:active:not(:disabled) {
+    filter: brightness(0.92);
+  }
+}
+
+.base-btn--outline {
+  background: transparent;
+  color: var(--color-text);
+  border-color: var(--color-stroke-subtle);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .base-btn--outline:hover:not(:disabled) {
+    background: var(--color-brand-soft);
+    border-color: var(--color-brand);
+    color: var(--color-brand);
+  }
+}
+
+.base-btn--brand-outline {
+  background: transparent;
+  color: var(--color-brand);
+  border-color: var(--color-brand);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .base-btn--brand-outline:hover:not(:disabled) {
+    background: var(--color-brand-soft);
+  }
+}
+
+/* ===== Header ===== */
+.header {
+  position: relative;
+  z-index: 100;
+  width: 100%;
+}
+
+/* Флекс, а не сетка 1fr auto 1fr: логотип прижат слева на всех экранах,
+   навигация уходит вправо через margin-left: auto. Стрелка «назад» (только
+   страница клуба) стоит перед логотипом. */
+.header-inner {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 36px 24px 10px;
+}
+
+.header-brand {
+  font-family: var(--font-display);
+  font-size: 22px;
+  font-weight: 400;
+  line-height: 1;
+  color: var(--color-text);
+  text-decoration: none;
+  flex-shrink: 0;
+}
+
+/* Крошки на странице клуба — строка над карточкой (сама кнопка
+   «назад» живёт внутри карточки, см. .card-back-row). */
+.detail-top {
+  width: 100%;
+}
+
+.detail-top .breadcrumbs-nav {
+  width: 100%;
+}
+
+/* Ряд «назад» внутри карточки клуба. */
+.card-back-row {
+  display: flex;
+  width: 100%;
+}
+
+/* Стрелка «назад» — пилюля в левом верхнем углу карточки:
+   margin-left: -8px оптически выравнивает стрелку под левый край
+   контента карточки. */
+.detail-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-left: -8px;
+  padding: 6px 14px;
+  border-radius: 9999px;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 20px;
+  letter-spacing: -0.02em;
+  color: var(--color-text);
+  text-decoration: none;
+  transition: background 0.2s ease;
+}
+
+.detail-back svg {
+  flex-shrink: 0;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .detail-back:hover {
+    background: var(--color-stroke-subtle);
+  }
+}
+
+.detail-back:focus-visible {
+  outline: 2px solid var(--color-brand);
+  outline-offset: 2px;
+}
+
+.header-nav {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.header-nav-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 14px;
+  border-radius: var(--radius-pill);
+  font-family: var(--font-body);
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--color-text-secondary);
+  text-decoration: none;
+  /* Без переноса: сжатый пункт (узкое окно) переносился бы на вторую
+     строку и удваивал высоту шапки — на разных страницах она должна
+     совпадать. Место есть: на самом узком десктопе (769px) навигация
+     влезает целиком, ниже включается бургер. */
+  white-space: nowrap;
+  transition: color 0.2s ease, background 0.2s ease;
+}
+
+.header-nav-link.active {
+  color: var(--color-text);
+  background: var(--color-stroke-subtle);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .header-nav-link:hover {
+    color: var(--color-text);
+    background: var(--color-stroke-subtle);
+  }
+}
+
+.header-icon {
+  flex-shrink: 0;
+  opacity: 0.5;
+}
+
+.header-nav-link.active .header-icon {
+  opacity: 0.8;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .header-nav-link:hover .header-icon {
+    opacity: 0.8;
+  }
+}
+
+/* Кнопка-заглушка «Блог» — без ссылки, но вид
+   как у пунктов меню: гасим дефолты <button>, hover берётся
+   у .header-nav-link:hover (специфичность выше). */
+button.header-nav-link {
+  border: none;
+  background: transparent;
+  /* <button> не наследует line-height — без этого кнопки на 4px ниже
+     ссылок рядом (21px против normal). */
+  line-height: inherit;
+  cursor: pointer;
+}
+
+/* --- Бургер-меню (как site-nav в victors-blog) ---------------------------
+   На десктопе скрыто: ссылки несёт .header-nav. Показывается на ≤768px,
+   где навигация уезжает в панель под двумя полосками. */
+.header-menu {
+  display: none;
+  position: relative;
+}
+
+.header-burger {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-end;
+  gap: 7px;
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: pointer;
+}
+
+.header-burger span {
+  display: block;
+  width: 24px;
+  height: 2px;
+  border-radius: 2px;
+  background: var(--color-text);
+  opacity: 0.65;
+  transition: opacity 180ms ease, transform 180ms ease;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .header-burger:hover span {
+    opacity: 1;
+  }
+}
+
+.header-burger[aria-expanded='true'] span:first-child {
+  opacity: 1;
+  transform: translateY(4.5px) rotate(45deg);
+}
+
+.header-burger[aria-expanded='true'] span:last-child {
+  opacity: 1;
+  transform: translateY(-4.5px) rotate(-45deg);
+}
+
+.header-panel {
+  position: absolute;
+  top: calc(100% + 12px);
+  right: 0;
+  min-width: 232px;
+  padding: 8px;
+  background: var(--color-surface);
+  border: 1px solid var(--color-stroke-subtle);
+  border-radius: 14px;
+  box-shadow: var(--shadow-lg);
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-6px);
+  transition:
+    opacity 160ms ease,
+    transform 160ms ease,
+    visibility 160ms;
+}
+
+.header-panel.is-open {
+  opacity: 1;
+  visibility: visible;
+  transform: none;
+}
+
+/* a и button: в панели наравне со ссылками живут и заглушки на <button>
+   («Блог»; у <button> дефолты гасим здесь же). */
+.header-panel a,
+.header-panel button {
+  display: block;
+  width: 100%;
+  padding: 10px 14px;
+  border: none;
+  border-radius: 8px;
+  background: transparent;
+  font-family: var(--font-body);
+  font-size: 15px;
+  font-weight: 500;
+  line-height: 1.4;
+  color: var(--color-text);
+  text-align: left;
+  text-decoration: none;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: background 140ms ease, color 140ms ease;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .header-panel a:hover,
+  .header-panel button:hover {
+    background: var(--color-stroke-subtle);
+  }
+}
+
+.header-panel a.active {
+  background: var(--color-brand-soft);
+  color: var(--color-brand);
+}
+
+@media (max-width: 768px) {
+  /* Шапка не липкая — уезжает со страницей при скролле (и на главной
+     тоже: вторая шапка под хиро просто стоит в потоке). Логотип слева,
+     бургер справа (margin-left: auto), как и на десктопе. */
+  .header-inner {
+    min-height: 56px;
+    gap: 16px;
+    padding: calc(14px + env(safe-area-inset-top, 0px)) 16px 10px;
+  }
+
+  .header-brand {
+    font-size: 21px;
+    letter-spacing: 0.02em;
+  }
+
+  /* Назад — широкая кнопка на всю ширину карточки сверху:
+     тап-таргет 44px, текст по центру. */
+  .detail-back {
+    margin-left: 0;
+    margin-right: 0;
+    width: 100%;
+    height: 44px;
+    padding: 0 16px;
+    justify-content: center;
+    background: var(--color-stroke-subtle);
+  }
+
+  .header-nav {
+    display: none;
+  }
+
+  .header-menu {
+    display: block;
+    margin-left: auto;
+  }
+}
+
+/* Сайд-паддинг шапки — как у main на ≤480px (12px): логотип «Читка»
+   встаёт по той же вертикальной линии, что хлебные крошки под ним.
+   Блок стоит ПОСЛЕ .header-inner из @media (max-width: 768px) выше —
+   иначе тот (той же специфичности, но позднее в файле) перебивает
+   padding: 16px и логотип уезжает правее крошек. Верх у шапки больше
+   (воздух под safe-area) — его не трогаем, меняем только бока. */
+@media (max-width: 480px) {
+  .header-inner {
+    padding-left: 12px;
+    padding-right: 12px;
+  }
+}
+
+/* ===== Footer (minimal-footer) =====
+   Оригинал (React + Tailwind) разложен так:
+   <footer class="relative">  — во всю ширину экрана;
+     <div class="mx-auto max-w-4xl md:border-x + radial-gradient">
+       <div class="absolute inset-x-0 h-px" />  — линия во всю ШИРИНУ
+       <div class="grid grid-cols-6 gap-6 p-4">…</div>
+       <div class="absolute inset-x-0 h-px" />
+       <div class="flex flex-col gap-2 pt-2 pb-5">© …</div>
+     </div>
+   </footer>
+   Ключевое: линии позиционируются от <footer> (у рамки relative нет),
+   поэтому они идут во всю ширину экрана и только пересекают
+   центрированную рамку 896px с вертикальными краями.
+   Высота футера — только контент: прижат к низу страницы паттерном
+   .app-layout (min-height: 100svh) и main (flex: 1). */
+.footer {
+  position: relative;
+}
+
+/* Рамка: центр, max-w-4xl, радиальный wash (foreground/.1 от 30% 0%).
+   Позиционирования НЕТ — иначе линии привязались бы к рамке. */
+.footer-frame {
+  max-width: 896px;
+  margin: 0 auto;
+  background: radial-gradient(35% 80% at 30% 0%,
+    rgba(26, 28, 43, 0.1),
+    transparent);
+}
+
+/* Вертикальные края рамки — только на десктопе (md:border-x). */
+@media (min-width: 768px) {
+  .footer-frame {
+    border-left: 1px solid var(--color-hairline);
+    border-right: 1px solid var(--color-hairline);
+  }
+}
+
+/* Волосяные линии во всю ширину футера: containing block — .footer
+   (position:relative), у .footer-frame позиционирования нет.
+   Вторая линия без --top стоит в потоке после сетки, у неё top:auto —
+   она занимает своё статическое место (на границе .footer-bottom). */
+.footer-hairline {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: var(--color-hairline);
+}
+
+.footer-hairline--top {
+  top: 0;
+}
+
+/* Сетка: grid-cols-6 gap-6 (24px) p-4 (16px), одинаково на всех
+   размерах — в оригинале мобильных переопределений нет. */
+.footer-grid {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: 24px;
+  padding: 16px;
+}
+
+/* Бренд: col-span-6 → md:col-span-4, flex-col gap-5 (20px). */
+.footer-brand {
+  grid-column: span 6;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  align-items: flex-start;
+}
+
+/* Логотип: w-max + opacity-25 (у оригинала декоративный икон
+   Grid2X2Plus size-8 при opacity-25 — здесь такой же «тихий»
+   логотип-вордмарк высотой ~32px). */
+.footer-logo {
+  width: max-content;
+  font-family: var(--font-display);
+  font-size: 32px;
+  line-height: 1;
+  color: var(--color-text);
+  text-decoration: none;
+  opacity: 0.25;
+}
+
+/* Подпись: muted, max-w-sm (24rem), font-mono, text-sm, text-balance. */
+.footer-tagline {
+  max-width: 24rem;
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+  line-height: 1.25rem;
+  color: var(--color-text-muted);
+  text-wrap: balance;
+}
+
+.footer-socials {
+  display: flex;
+  gap: 8px;
+}
+
+/* Иконки: rounded-md (6px) + border (1px) + p-1.5 (6px),
+   hover:bg-accent → у сайта светлая поверхность (белый на #F2F2F4). */
+.footer-social {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 6px;
+  border: 1px solid var(--color-hairline);
+  border-radius: 6px;
+  color: var(--color-text-secondary);
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .footer-social:hover {
+    background-color: var(--color-surface);
+    color: var(--color-text);
+  }
+}
+
+/* Колонки: col-span-3 → md:col-span-1, w-full. Внутри — span-заголовок
+   (mb-1) и flex-col gap-1 (4px) ссылок, как в оригинале. */
+.footer-col {
+  grid-column: span 3;
+  width: 100%;
+  min-width: 0;
+}
+
+/* Без колонки «Категории» «Разделы» занимают её место. */
+.footer-grid--solo .footer-col {
+  grid-column: span 3;
+}
+
+@media (min-width: 768px) {
+  .footer-brand {
+    grid-column: span 4;
+  }
+
+  .footer-col {
+    grid-column: span 1;
+  }
+
+  .footer-grid--solo .footer-col {
+    grid-column: span 2;
+  }
+}
+
+/* Заголовок колонки — обычный span: text-xs (12px), muted, mb-1 (4px). */
+.footer-heading {
+  display: block;
+  font-size: var(--text-xs);
+  line-height: 1rem;
+  font-weight: 400;
+  color: var(--color-text-muted);
+  margin: 0 0 4px;
+}
+
+.footer-list {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+/* Ссылка: w-max, py-1 (4px), text-sm, duration-200;
+   hover — только подчёркивание, цвет не меняется. */
+.footer-link {
+  width: max-content;
+  padding: 4px 0;
+  font-size: var(--text-sm);
+  line-height: 1.25rem;
+  color: var(--color-text);
+  text-decoration: none;
+  transition: text-decoration-color 0.2s ease;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .footer-link:hover {
+    text-decoration: underline;
+  }
+}
+
+/* Копирайт: flex-col gap-2 (8px), pt-2 (8px), pb-5 (20px), без px. */
+.footer-bottom {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 8px 0 20px;
+}
+
+/* p без размера шрифта — наследует 1rem, font-thin (100). */
+.footer-copy {
+  margin: 0;
+  font-size: var(--text-base);
+  font-weight: 100;
+  line-height: 1.5;
+  text-align: center;
+  color: var(--color-text-muted);
+}
+
+.footer-copy a {
+  color: inherit;
+  text-decoration: none;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .footer-copy a:hover {
+    text-decoration: underline;
+  }
+}
+
+/* ===== Breadcrumbs (BreadcrumbsNav) ===== */
+.breadcrumbs-nav {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 4px 8px;
+  font-family: var(--font-body);
+  font-size: 15px;
+  line-height: 1.3;
+}
+
+/* column-gap — воздух вбок между звеньями («Клубы / категория / клуб»),
+   row-gap — между перенесёнными строками. */
+.breadcrumbs-nav__trail {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  column-gap: 8px;
+  row-gap: 2px;
+}
+
+.crumb {
+  color: var(--color-text-secondary);
+  text-decoration: none;
+  border-radius: 8px;
+  transition: color 0.2s ease, background 0.2s ease;
+}
+
+.crumb--link:hover {
+  color: var(--color-text);
+  background: var(--color-bg);
+}
+
+.crumb--current {
+  /* Текущая страница заметно темнее ссылок — иначе в длинной цепочке
+     «Клубы / категория / клуб» непонятно, где ты находишься. */
+  color: var(--color-text);
+  font-weight: 500;
+}
+
+.crumb-sep {
+  color: var(--color-text-muted);
+}
+
+/* ===== Каталог: страница (ClubCards) ===== */
+.clubs-page {
+  width: 100%;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0;
+}
+
+.clubs-content {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+}
+
+.category-chips {
+  display: none;
+}
+
+.category-sidebar {
+  display: block;
+}
+
+/* Таблетки — копия мобильных .cat-item из victors-blog: пилюля без рамки
+   на фоне surface, активная — бренд. Ряд виден только на ≤768px.
+   Закругления — как у карточек на мобильном (16px, .club-card),
+   не full-pill. */
+.chip {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 10px 18px;
+  background: var(--color-surface);
+  border: none;
+  border-radius: 16px;
+  font-family: var(--font-body);
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1.21;
+  color: var(--color-text);
+  cursor: pointer;
+  white-space: nowrap;
+  text-decoration: none;
+  transition: background 0.2s ease, color 0.2s ease;
+}
+
+/* Hover у таблеток не нужен: подсветка остаётся только за активной. */
+
+/* Выбранная категория — без заливки и рамок: та же белая пилюля, но
+   вес 600 и бейдж-галочка слева (.cat-check). */
+.chip--active {
+  font-weight: 600;
+}
+
+.chip--active .cat-check {
+  width: 16px;
+  height: 16px;
+}
+
+/* Таблетка «Избранное» — мобильный двойник чекбокса из сайдбара: тот же
+   pill, что и категории, плюс закладка слева (как на карточке клуба).
+   Активность приходит классом .chip--active из catalog.js — закладка
+   становится синей и заливается. */
+/* Активность приходит классом .chip--active из catalog.js — синей
+   становится только закладка, текст остаётся обычным. */
+.chip--fav {
+  color: var(--color-text);
+  background: var(--color-surface);
+}
+
+.chip--fav.chip--active .chip-fav-ico {
+  color: var(--color-brand);
+}
+
+.chip--fav.chip--active .chip-fav-ico path {
+  fill: currentColor;
+}
+
+.chip-fav-ico {
+  flex-shrink: 0;
+}
+
+.content-grid {
+  width: 100%;
+  display: grid;
+  grid-template-columns: minmax(0, 704px) 300px;
+  justify-content: center;
+  gap: 12px 8px;
+  align-items: start;
+}
+
+.clubs-column {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+}
+
+.clubs-list {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  width: 100%;
+}
+
+/* display:flex/grid выше по специфичности перебивает атрибут hidden —
+   подтверждаем, что скрытый список действительно исчезает из потока. */
+.clubs-list[hidden] {
+  display: none;
+}
+
+@media (min-width: 768px) {
+  .clubs-list--grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    align-items: stretch;
+  }
+
+  .clubs-list--grid .club-card-wrap {
+    max-width: none;
+  }
+
+  .clubs-list--grid .club-card {
+    max-width: none;
+  }
+}
+
+/* ===== Карточка клуба ===== */
+/* Обёртка карточки: держит ссылку и кнопку избранного рядом. Кнопка не может
+   лежать внутри <a> (невалидная вложенность), поэтому она позиционируется
+   поверх карточки, а скрытие при фильтрации применяется к обёртке. */
+.club-card-wrap {
+  position: relative;
+  display: flex;
+  width: 100%;
+  max-width: 704px;
+  min-width: 0;
+}
+
+.club-card {
+  flex: 1;
+  width: 100%;
+  max-width: 704px;
+  background: var(--color-surface);
+  border-radius: 16px;
+  padding: 28px;
+  cursor: pointer;
+  text-decoration: none;
+  color: inherit;
+  transition: box-shadow var(--duration-normal) var(--ease-out), transform var(--duration-normal) var(--ease-out);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* Тень и подъём считаются от обёртки: курсор, наведённый на кнопку
+   избранного, тоже должен приподнимать карточку. */
+.club-card-wrap:hover .club-card {
+  box-shadow: var(--shadow-lg);
+  transform: translateY(-2px);
+}
+
+@media (min-width: 768px) {
+  .club-card--grid {
+    height: 100%;
+    border-radius: 12px;
+    padding: 20px;
+    gap: 0;
+    overflow: hidden;
+  }
+
+  .club-card--grid .card-header {
+    margin-bottom: 8px;
+  }
+
+  .club-card--grid .card-author-club {
+    margin-bottom: 8px;
+  }
+
+  .club-card--grid .now-reading {
+    margin-bottom: 8px;
+  }
+
+  .club-card--grid .card-title {
+    font-size: 18px;
+  }
+
+  .club-card--grid .author-avatar {
+    width: 44px;
+    height: 44px;
+  }
+
+  .club-card--grid .now-reading {
+    font-size: 12px;
+  }
+
+  .club-card--grid .card-desc {
+    margin-top: auto;
+    font-size: 14px;
+    line-height: 1.55;
+    -webkit-line-clamp: 2;
+  }
+
+  .club-card--grid .card-footer {
+    margin-top: 12px;
+    padding-top: 12px;
+    gap: 8px;
+  }
+
+  .club-card--grid .title-year {
+    font-size: 12px;
+  }
+
+  .club-card--grid .member-avatar {
+    width: 28px;
+    height: 28px;
+    font-size: 10px;
+  }
+
+  .club-card--grid .member-count {
+    font-size: 13px;
+  }
+}
+
+.card-header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.card-title {
+  font-family: var(--font-heading);
+  font-size: 24px;
+  font-weight: 500;
+  line-height: 1.1;
+  color: var(--color-text);
+  overflow-wrap: break-word;
+}
+
+.title-year {
+  font-family: var(--font-heading);
+  font-weight: 500;
+  color: var(--color-text-secondary);
+}
+
+.card-author {
+  font-family: var(--font-body);
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 1.21;
+  color: var(--color-text-secondary);
+}
+
+.card-author-club {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.author-avatar {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  object-fit: cover;
+  flex-shrink: 0;
+  background: var(--color-brand-soft);
+}
+
+.now-reading {
+  font-family: var(--font-body);
+  font-size: 15px;
+  font-weight: 400;
+  line-height: 1.6;
+  color: var(--color-text-secondary);
+  margin-top: 8px;
+}
+
+.card-desc {
+  font-family: var(--font-body);
+  font-size: 15px;
+  font-weight: 400;
+  line-height: 1.6;
+  color: var(--color-text-secondary);
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.card-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  padding-top: 16px;
+  border-top: 1px solid var(--color-stroke-subtle);
+}
+
+.card-members {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+}
+
+.member-avatars {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.member-avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-body);
+  font-size: 11px;
+  font-weight: 700;
+  color: #FFFFFF;
+  border: 2px solid var(--color-surface);
+  margin-left: -8px;
+  flex-shrink: 0;
+}
+
+.member-avatar:first-child {
+  margin-left: 0;
+}
+
+.member-count {
+  font-family: var(--font-body);
+  font-size: 15px;
+  font-weight: 400;
+  color: var(--color-text-secondary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.card-arrow {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-text-secondary);
+}
+
+/* --- Кнопка избранного на карточке ---------------------------------------
+   Сердечко лежит поверх карточки в её правом верхнем углу. Заголовку
+   оставлено поле справа, иначе длинный title уезжает под кнопку. */
+.club-card-wrap .card-header {
+  padding-right: 44px;
+}
+
+.card-fav {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  border: none;
+  border-radius: var(--radius-pill);
+  background: var(--color-bg);
+  color: var(--color-text-secondary);
+  cursor: pointer;
+  opacity: 0;
+  pointer-events: none;
+  transform: scale(0.85);
+  transition:
+    background var(--duration-fast) var(--ease-out),
+    color var(--duration-fast) var(--ease-out),
+    transform var(--duration-fast) var(--ease-out),
+    opacity var(--duration-fast) var(--ease-out);
+}
+
+/* На десктопе кнопка появляется при наведении на карточку (или при
+   фокусе с клавиатуры). На тач-устройствах наведения нет, кнопка видна
+   всегда (@media (hover: none) ниже). */
+.club-card-wrap:hover .card-fav,
+.card-fav:focus-visible {
+  opacity: 1;
+  pointer-events: auto;
+  transform: none;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .card-fav:hover {
+    background: var(--color-brand-soft);
+    color: var(--color-brand);
+  }
+
+  .card-fav:active {
+    transform: scale(0.92);
+  }
+}
+
+/* Клуб в избранном: иконка закладки синяя и залитая. На мобильном кнопка
+   видна всегда, и это единственный постоянный признак сохранённого
+   клуба (уведомление исчезает). aria-pressed переключает JS в
+   renderFavorites() при загрузке и по клику. */
+.card-fav[aria-pressed='true'] {
+  color: var(--color-brand);
+  background: var(--color-brand-soft);
+}
+
+.card-fav[aria-pressed='true'] svg {
+  fill: currentColor;
+}
+
+.card-fav:focus-visible {
+  outline: 2px solid var(--color-brand);
+  outline-offset: 2px;
+}
+
+.no-results {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}
+
+.no-results[hidden] {
+  display: none;
+}
+
+.not-found-img {
+  max-width: 100%;
+  height: auto;
+  width: 360px;
+}
+
+/* Пустое состояние режима избранного — вместо картинки 404. */
+.fav-empty {
+  flex-direction: column;
+  gap: 2px;
+  padding: 40px 24px;
+  background: var(--color-surface);
+  border-radius: 12px;
+  text-align: center;
+}
+
+.fav-empty-title {
+  font-family: var(--font-heading);
+  font-size: 22px;
+  font-weight: 500;
+  line-height: 1.2;
+  color: var(--color-text);
+  margin: 0;
+}
+
+.fav-empty-text {
+  font-family: var(--font-body);
+  font-size: 15px;
+  line-height: 1.5;
+  color: var(--color-text-secondary);
+  margin: 0;
+}
+
+.fav-empty-link {
+  color: var(--color-brand);
+  font-weight: 500;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.fav-empty-link:hover {
+  text-decoration: none;
+}
+
+@media (max-width: 900px) {
+  .content-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .clubs-column {
+    order: 1;
+  }
+}
+
+@media (max-width: 768px) {
+  .clubs-page {
+    gap: 0;
+  }
+
+  /* Расстояния как в victors-blog: поиск → таблетки 12px, таблетки →
+     лента 24px. Равный gap колонки (16px) размывал связь «поиск +
+     фильтры» как одного блока управления. */
+  .clubs-content {
+    gap: 0;
+  }
+
+  /* Крошки на телефоне: воздух сверху (шапка больше не липкая) и снизу —
+     под контентом. При длинной цепочке (Клубы / категория / клуб) звенья
+     переносятся целиком, row-gap разводит перенесённые строки. */
+  .breadcrumbs-nav {
+    margin: 4px 0 0;
+    font-size: 14px;
+    line-height: 1.4;
+  }
+
+  .breadcrumbs-nav__trail {
+    row-gap: 4px;
+  }
+
+  .clubs-content .breadcrumbs-nav {
+    margin-bottom: 10px;
+  }
+
+  .filters-section {
+    margin-bottom: 6px;
+  }
+
+  /* Категории под поиском: без панели-плашки — только строка фишек,
+     листается пальцем по горизонтали. */
+  .category-chips {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    width: 100%;
+    margin-bottom: 12px;
+    overflow-x: auto;
+    scrollbar-width: none;
+    padding-bottom: 2px;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .category-chips::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* Селектор с двумя классами, а не .category-sidebar: лежащий ниже
+     .sidebar { display: flex } иначе перебивает правило по порядку
+     следования, и сайдбар на телефоне остаётся виден рядом с чипсами. */
+  .sidebar.category-sidebar {
+    display: none;
+  }
+
+  .club-card {
+    width: 100%;
+    padding: 20px;
+    gap: 10px;
+  }
+
+  .card-fav {
+    top: 12px;
+    right: 12px;
+    width: 32px;
+    height: 32px;
+  }
+
+  .card-header {
+    gap: 10px;
+  }
+
+  .card-title {
+    font-size: 24px;
+    flex: 1;
+  }
+
+  .card-desc {
+    font-size: 14px;
+  }
+
+  .card-footer {
+    gap: 12px;
+    padding-top: 12px;
+  }
+
+  .member-count {
+    font-size: 13px;
+  }
+
+  .not-found-img {
+    max-width: 100%;
+    width: 240px;
+    height: auto;
+  }
+
+  .no-results {
+    width: 100%;
+  }
+}
+
+@media (hover: none) {
+  .club-card-wrap:hover .club-card {
+    box-shadow: none;
+    transform: none;
+  }
+
+  /* На тач-устройствах наведения нет: сердечко видно всегда. */
+  .card-fav {
+    opacity: 1;
+    pointer-events: auto;
+    transform: none;
+  }
+}
+
+@media (max-width: 480px) {
+  .clubs-page {
+    gap: 6px;
+  }
+
+  .clubs-list {
+    gap: 5px;
+  }
+
+  .clubs-column {
+    gap: 8px;
+  }
+
+  .club-card {
+    padding: 16px;
+    gap: 8px;
+  }
+
+  .card-header {
+    gap: 8px;
+  }
+
+  .card-title {
+    font-size: 20px;
+    flex: 1;
+  }
+
+  .card-desc {
+    font-size: 13px;
+    line-height: 1.5;
+    -webkit-line-clamp: 2;
+  }
+
+  .card-footer {
+    gap: 8px;
+    padding-top: 10px;
+  }
+
+  .card-members {
+    gap: 8px;
+  }
+
+  .member-avatar {
+    width: 28px;
+    height: 28px;
+    font-size: 10px;
+    border-width: 1.5px;
+    margin-left: -6px;
+  }
+
+  .member-count {
+    font-size: 12px;
+  }
+
+  .card-arrow svg {
+    width: 16px;
+    height: 16px;
+  }
+}
+
+/* ===== Кнопка «Наверх» ===== */
+.scroll-top {
+  position: fixed;
+  right: 24px;
+  bottom: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 52px;
+  height: 52px;
+  border: none;
+  border-radius: 50%;
+  background: var(--color-brand);
+  color: #FFFFFF;
+  cursor: pointer;
+  box-shadow: 0 8px 24px rgba(59, 62, 255, 0.35);
+  z-index: 40;
+  transition: background 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease, opacity 0.25s ease;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .scroll-top:hover {
+    filter: brightness(1.08);
+    transform: translateY(-2px);
+    box-shadow: 0 12px 28px rgba(59, 62, 255, 0.4);
+  }
+
+  .scroll-top:active {
+    transform: translateY(0);
+  }
+}
+
+@media (max-width: 480px) {
+  .scroll-top {
+    right: 16px;
+    bottom: 16px;
+    width: 48px;
+    height: 48px;
+  }
+}
+
+/* ===== Уведомление избранного (favorites toast) =====
+   Дизайн — ToastNotification из book-club-web: белая плашка, зелёная
+   иконка-кружок, текст, крестик закрытия. Отличие: закреплено вверху
+   экрана (как в book-club-web), максимально близко к верхней кромке —
+   шапка не липкая, плашка висит поверх контента. Живёт 5 секунд,
+   закрывается крестиком или кликом по плашке. */
+.fav-toast {
+  position: fixed;
+  top: 16px;
+  left: 50%;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  max-width: 420px;
+  width: max-content;
+  box-sizing: border-box;
+  padding: 18px 20px;
+  border-radius: 12px;
+  background: var(--color-surface);
+  color: var(--color-text);
+  box-shadow: var(--shadow-lg);
+  font-family: var(--font-body);
+  font-size: 15px;
+  font-weight: 500;
+  line-height: 1.4;
+  cursor: pointer;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateX(-50%) translateY(-12px) scale(0.95);
+  transition:
+    opacity 0.2s ease-in,
+    transform 0.2s ease-in,
+    visibility 0s linear 0.2s;
+  pointer-events: none;
+}
+
+.fav-toast.is-visible {
+  opacity: 1;
+  visibility: visible;
+  transform: translateX(-50%) scale(1);
+  transition:
+    opacity 0.25s var(--ease-out),
+    transform 0.25s var(--ease-out);
+  pointer-events: auto;
+}
+
+.fav-toast-icon-wrap {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 6px;
+  flex-shrink: 0;
+  background: rgba(66, 207, 113, 0.1);
+  color: var(--color-success);
+}
+
+.fav-toast-ico {
+  display: block;
+}
+
+.fav-toast-text {
+  flex: 1;
+  min-width: 0;
+  color: var(--color-text);
+}
+
+.fav-toast-close {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  margin: -4px -6px -4px 0;
+  padding: 0;
+  border: none;
+  border-radius: 4px;
+  background: transparent;
+  color: var(--color-text-muted);
+  cursor: pointer;
+  transition: color var(--duration-fast) ease, background var(--duration-fast) ease;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .fav-toast-close:hover {
+    color: var(--color-text);
+    background: var(--color-brand-soft);
+  }
+}
+
+@media (max-width: 768px) {
+  /* Высоко под самой кромкой: шапка не липкая, safe-area для выреза. */
+  .fav-toast {
+    top: calc(12px + env(safe-area-inset-top, 0px));
+  }
+}
+
+@media (max-width: 480px) {
+  .fav-toast {
+    left: 16px;
+    right: 16px;
+    width: auto;
+    max-width: none;
+    transform: translateY(-12px) scale(0.95);
+  }
+
+  .fav-toast.is-visible {
+    transform: scale(1);
+  }
+}
+
+/* Модификатор для тоста «Ссылка скопирована» (страница клуба,
+   markup в layouts/clubs/single.html): шире штатного тоста и ниже —
+   не садится на шапку. */
+.fav-toast--share {
+  top: 24px;
+  width: min(560px, calc(100vw - 32px));
+  max-width: none;
+}
+
+@media (max-width: 768px) {
+  .fav-toast--share {
+    top: calc(16px + env(safe-area-inset-top, 0px));
+  }
+}
+
+@media (max-width: 480px) {
+  /* Штатное правило ≤480 растягивает тост на всю ширину с полями
+     16px — отдаём ему width: auto, чтобы не спорить с left/right. */
+  .fav-toast--share {
+    width: auto;
+  }
+}
+
+/* ===== Плашка «Мы не собираем ваши данные» (privacy note) =====
+   Внизу слева, без подложки: текст + «Ок». Показ/скрытие —
+   static/js/privacy.js (флаг в localStorage). */
+.privacy-note {
+  position: fixed;
+  left: 24px;
+  bottom: 24px;
+  z-index: 1100;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  max-width: 380px;
+  box-sizing: border-box;
+  padding: 16px 18px;
+  /* Закругления как у карточек клубов: база 16px (.club-card),
+     на десктопе у карточек в сетке 12px (.club-card--grid, min-width 768). */
+  border-radius: 16px;
+  background: var(--color-surface);
+  box-shadow: var(--shadow-lg);
+  font-family: var(--font-body);
+  font-size: 14px;
+  line-height: 1.45;
+  color: var(--color-text-secondary);
+}
+
+@media (min-width: 768px) {
+  .privacy-note {
+    border-radius: 12px;
+  }
+}
+
+.privacy-note[hidden] {
+  display: none;
+}
+
+.privacy-note-text {
+  margin: 0;
+}
+
+/* Компактнее дефолтной .base-btn (48px) — плашка не должна занимать
+   полэкрана. */
+.privacy-note-ok {
+  flex-shrink: 0;
+  height: 40px;
+  padding: 0 18px;
+  font-size: 14px;
+}
+
+@media (max-width: 480px) {
+  .privacy-note {
+    left: 16px;
+    right: 16px;
+    bottom: 16px;
+    max-width: none;
+    /* Текст прижат влево, «Ок» — у правого края на той же дистанции
+       (симметричный padding плашки). */
+    justify-content: space-between;
+  }
+
+  .privacy-note-text {
+    flex: 1;
+  }
+}
+
+/* ===== Фильтры (ClubFilters) ===== */
+.filters-section {
+  width: 100%;
+  display: grid;
+  grid-template-columns: minmax(0, 704px) 300px;
+  justify-content: center;
+  align-items: start;
+  gap: 8px;
+}
+
+.right-filters {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  min-width: 0;
+}
+
+/* Табы высотой 56px — вровень с плашкой поиска (44px кнопка + 12px
+   паддинг), иначе правая плашка висела на 8px ниже левой. */
+.type-tabs {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 6px 8px;
+  background: var(--color-surface);
+  border-radius: 15px;
+  width: 100%;
+  height: 56px;
+  box-sizing: border-box;
+}
+
+.type-tab {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  padding: 8px 16px;
+  background: transparent;
+  border: none;
+  border-radius: 15px;
+  font-family: var(--font-body);
+  font-size: 18px;
+  font-weight: 500;
+  line-height: 1.21;
+  color: var(--color-text);
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background 0.25s ease, color 0.25s ease;
+}
+
+.type-tab.active {
+  background: var(--color-brand);
+  color: #FFFFFF;
+  box-shadow: 0 2px 8px rgba(59, 62, 255, 0.25);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .type-tab:not(.active):hover {
+    background: var(--color-brand-soft);
+  }
+}
+
+@media (min-width: 769px) {
+  /* Крошки над поиском: у .filters-section margin-top: -12px и фон
+     surface — он наезжал на низ строки (gap всего 8px) и срезал
+     хвосты букв («Клубы», /). Запас 20px гасит наезд (20+8-12=16px
+     чистого воздуха) и приподнимает крошки над поиском. */
+  .clubs-content .breadcrumbs-nav {
+    margin-bottom: 20px;
+  }
+
+  .filters-section {
+    position: sticky;
+    top: 0;
+    z-index: 30;
+    padding-top: 12px;
+    margin-top: -12px;
+    background: var(--color-bg);
+  }
+
+  .filters-section::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: -40px;
+    height: 40px;
+    background: linear-gradient(to bottom, var(--color-bg), transparent);
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+  }
+
+  .filters-section.is-sticky::after {
+    opacity: 1;
+  }
+}
+
+.search-row {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  width: 100%;
+  min-width: 0;
+}
+
+/* Поиск — копия design из victors-blog (там, в свою очередь, из
+   ClubFilters.vue): плашка 56px, кнопка 44px, поле 20px. */
+.search-bar {
+  display: flex;
+  align-items: center;
+  flex: 1;
+  min-width: 0;
+  background: var(--color-surface);
+  border-radius: 15px;
+  padding: 6px 8px 6px 22px;
+  gap: 4px;
+}
+
+.search-input {
+  flex: 1;
+  background: none;
+  border: none;
+  font-family: var(--font-body);
+  font-size: 20px;
+  font-weight: 400;
+  line-height: 1.21;
+  color: var(--color-text);
+  outline: none;
+  min-width: 0;
+}
+
+.search-input::placeholder {
+  color: var(--color-text-secondary);
+}
+
+/* Жёлтая заливка как у «Читать» на лендинге: --c-yellow-strong #FFE266 на
+   --c-ink #191919. Гасим синие hover/active/.base-btn--primary (специфичность
+   ниже, чем у .base-btn--primary:hover:not(:disabled) — переопределяем явно). */
+.search-btn {
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  border-radius: 15px;
+  flex-shrink: 0;
+  background: #ffe266;
+  color: #191919;
+  border-color: transparent;
+  box-shadow: none;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .search-btn:hover:not(:disabled) {
+    background: #ffe266;
+    border-color: transparent;
+    color: #191919;
+    box-shadow: none;
+    filter: brightness(0.96);
+    transform: translateY(-1px);
+  }
+}
+
+.search-btn:active:not(:disabled) {
+  background: #ffe266;
+  border-color: transparent;
+  color: #191919;
+  box-shadow: none;
+  filter: none;
+}
+
+.search-icon {
+  display: block;
+}
+
+/* Переключатель вида скрывается на телефоне вместе с табами типа:
+   карточки в одну колонку одинаковы в обоих режимах. padding 6px, чтобы
+   плашка была 56px — вровень с поиском. */
+.view-toggle {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  padding: 6px;
+  background: var(--color-surface);
+  border-radius: 15px;
+}
+
+.view-toggle-btn {
+  width: 44px;
+  height: 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  border-radius: 15px;
+  background: transparent;
+  color: var(--color-text-secondary);
+  cursor: pointer;
+  transition: background 0.2s ease, color 0.2s ease;
+}
+
+/* Иконки мельче кнопки поиска (20px): 16px в 44px кнопке. */
+.view-toggle-btn svg {
+  width: 16px;
+  height: 16px;
+}
+
+/* Активный переключатель — тёмная плашка как «Кликну сюда» на лендинге
+   (--c-ink #191919 на --c-surface), hover — лёгкая серая подложка. */
+@media (hover: hover) and (pointer: fine) {
+  .view-toggle-btn:hover {
+    background: rgba(25, 25, 25, 0.08);
+    color: #191919;
+  }
+}
+
+.view-toggle-btn.active {
+  background: #191919;
+  color: #FFFFFF;
+  box-shadow: none;
+}
+
+@media (max-width: 900px) {
+  .filters-section {
+    grid-template-columns: 1fr;
+    gap: 4px;
+  }
+
+  .search-bar {
+    width: 100%;
+  }
+}
+
+@media (max-width: 768px) {
+  /* Табы «По книге / Авторские» и переключатель вида на телефоне не
+     нужны: секция авторских не реализована, а карточки в одну колонку
+     одинаковы в обоих режимах. */
+  .right-filters {
+    display: none;
+  }
+
+  .view-toggle {
+    display: none;
+  }
+
+  /* Поиск на телефоне — главный контроль, поэтому не мельчает: поле
+     60px (44px кнопка + 12px паддинг), шрифт 17px. Значения из
+     victors-blog. */
+  .search-bar {
+    width: 100%;
+    padding: 8px 8px 8px 18px;
+    gap: 4px;
+  }
+
+  .search-input {
+    font-size: 17px;
+  }
+
+  .search-btn {
+    width: 44px;
+    height: 44px;
+    border-radius: 15px;
+  }
+}
+
+@media (max-width: 480px) {
+  .filters-section {
+    gap: 4px;
+  }
+
+  /* Высота пола — 56px (44px кнопка + 12px паддинг). */
+  .search-bar {
+    padding: 6px 6px 6px 16px;
+    gap: 4px;
+  }
+
+  .search-input {
+    font-size: 17px;
+  }
+
+  .search-btn {
+    width: 44px;
+    height: 44px;
+    border-radius: 15px;
+  }
+
+  .search-icon {
+    width: 20px;
+    height: 20px;
+  }
+}
+
+/* ===== Сайдбар категорий (CategorySidebar) ===== */
+.sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  background: var(--color-surface);
+  border-radius: 16px;
+  padding: 20px 16px;
+  position: sticky;
+  top: 96px;
+}
+
+/* Десктоп (>900px, две колонки): сайдбар подтягиваем вровень с поиском и
+   липим на той же высоте, что и липкая строка фильтров. -64px сводит верх
+   карточки сайдбара с верхом плашки поиска (фильтры 68px + gap 8px −
+   12px padding-top липкой шапки). z-index выше фильтров (30): колонки не
+   пересекаются по X, но фон липкой шапки на всю ширину иначе скроет верх
+   карточки сайдбара. */
+@media (min-width: 901px) {
+  .sidebar.category-sidebar {
+    margin-top: -64px;
+    top: 12px;
+    z-index: 31;
+  }
+}
+
+/* Чекбокс «Избранное» — копия member-checkbox из book-club-web
+   (CategorySidebar.vue): бокс 18px, скругление 5px, заливка брендом.
+   padding-top сайдбара подобран так, чтобы центр строки совпадал с
+   центром плашки поиска (56px высоты → (56-38)/2 = 9px). */
+.sidebar.category-sidebar {
+  padding-top: 9px;
+}
+
+.fav-checkbox {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  user-select: none;
+  /* Разрыв от селекта категорий: у сайдбара gap 1px, одного
+      padding-top 10px мало — чекбокс слипался с селектом. 8px —
+      штатный отступ сайта (gap у .filters-section и др.). */
+  margin-top: 8px;
+  /* padding-left 0: бокс начинается по левому краю селекта категорий. */
+  padding: 10px 14px 10px 0;
+  border-radius: 10px;
+}
+
+.fav-checkbox-input {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.fav-checkbox-box {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  border-radius: 6px;
+  border: 1.5px solid var(--color-text-secondary);
+  color: transparent;
+  background: var(--color-surface);
+  transition: background 0.2s ease, border-color 0.2s ease, color 0.2s ease,
+    transform 0.15s ease;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .fav-checkbox:active .fav-checkbox-box {
+    transform: scale(0.92);
+  }
+}
+
+.fav-checkbox-input:checked + .fav-checkbox-box {
+  background: var(--color-brand);
+  border-color: var(--color-brand);
+  color: #FFFFFF;
+}
+
+.fav-checkbox-input:focus-visible + .fav-checkbox-box {
+  outline: 2px solid var(--color-brand);
+  outline-offset: 2px;
+}
+
+.fav-checkbox-label {
+  font-family: var(--font-body);
+  font-size: 15px;
+  font-weight: 500;
+  line-height: 1;
+  color: var(--color-text);
+  white-space: nowrap;
+}
+
+.sidebar-title {
+  font-family: var(--font-heading);
+  font-size: 22px;
+  font-weight: 500;
+  line-height: 1.2;
+  color: var(--color-text);
+  padding: 12px 12px 8px;
+}
+
+.cat-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5px;
+}
+
+.cat-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px;
+  width: 100%;
+  padding: 10px 12px;
+  border: none;
+  border-radius: 6px;
+  background: transparent;
+  font-family: var(--font-body);
+  font-size: 15px;
+  font-weight: 500;
+  line-height: 1.2;
+  color: var(--color-text);
+  cursor: pointer;
+  text-align: left;
+  text-decoration: none;
+  transition: background var(--duration-fast) ease, color var(--duration-fast) ease;
+}
+
+/* Выбранная категория — фон строки не меняется: вес 600 и синий
+   бейдж-галочка справа. Hover не подсвечивает — отклик даёт только
+   active (как у таблеток). */
+.cat-item.active {
+  font-weight: 600;
+}
+
+/* Галочка-бейдж: мотив чекбокса «Избранное» и аватаров — синий кружок
+   с белым глифом; акцент, а не плашка. */
+.cat-check {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: var(--color-brand);
+  color: #FFFFFF;
+}
+
+/* ===== Селект категории в сайдбаре — перенос sidebar-category-picker
+   с hirehi.ru (вакансии): триггер с плавающим лейблом и счётчиком,
+   дропдаун-список с зелёной галочкой, тултип-подсказка.
+   Их CSS-переменные заменены на литералы/переменные сайта. */
+.sidebar-category-picker { position: static; flex: 0 0 auto; }
+
+.category-select-wrap { position: relative; }
+
+.resume-select {
+  position: relative;
+  border-radius: 12px; /* как .club-card--grid */
+  background: var(--color-bg);
+  cursor: pointer;
+  padding: 10px 40px 10px 16px;
+  height: 44px;
+  box-sizing: border-box;
+  font-family: var(--font-body);
+  font-size: 16px;
+  line-height: 1.42;
+  letter-spacing: -0.02em;
+}
+
+.resume-select .resume-select-value {
+  position: absolute;
+  left: 16px;
+  right: 40px;
+  top: 19px;
+  font-size: 16px;
+  line-height: 1.42;
+  letter-spacing: -0.02em;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: var(--color-text);
+}
+
+.resume-select .floating-label {
+  position: absolute;
+  left: 16px;
+  top: 12px;
+  font-family: var(--font-body);
+  font-size: 16px;
+  line-height: 1.42;
+  letter-spacing: -0.02em;
+  color: var(--color-text-muted);
+  pointer-events: none;
+  transform-origin: left top;
+  transition: transform 0.2s cubic-bezier(0.2, 0, 0, 1), opacity 0.2s ease;
+}
+
+.resume-select .floating-label.active {
+  transform: translateY(-8px) scale(0.75);
+  opacity: 0.9;
+}
+
+.resume-select::after {
+  content: '';
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 24px;
+  height: 24px;
+  background-image: url("data:image/svg+xml,%3Csvg width='24' height='24' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M5.18762 8.20419C5.30791 8.08405 5.47096 8.01657 5.64097 8.01657C5.81098 8.01657 5.97403 8.08405 6.09432 8.20419L11.8425 13.9523L17.5906 8.20419C17.6493 8.14116 17.7202 8.0906 17.7989 8.05554C17.8776 8.02047 17.9625 8.00162 18.0486 8.0001C18.1348 7.99858 18.2203 8.01443 18.3002 8.04669C18.3801 8.07896 18.4527 8.12698 18.5136 8.1879C18.5745 8.24882 18.6225 8.32139 18.6548 8.40127C18.6871 8.48115 18.7029 8.56671 18.7014 8.65285C18.6999 8.73899 18.681 8.82394 18.646 8.90264C18.6109 8.98133 18.5603 9.05216 18.4973 9.11089L12.2958 15.3124C12.1755 15.4325 12.0125 15.5 11.8425 15.5C11.6725 15.5 11.5094 15.4325 11.3891 15.3124L5.18762 9.11089C5.06748 8.9906 5 8.82754 5 8.65754C5 8.48753 5.06748 8.32447 5.18762 8.20419Z' fill='%231A1C2B'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 24px 24px;
+  pointer-events: none;
+}
+
+.resume-select.open::after {
+  transform: translateY(-50%) rotate(180deg);
+}
+
+.category-select-trigger {
+  width: 100%;
+  border: 0;
+  color: var(--color-text);
+  font-family: var(--font-body);
+  text-align: left;
+}
+
+.category-select-content {
+  position: absolute;
+  inset: 0 36px 0 16px;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 8px;
+}
+
+.category-select-text { position: relative; min-width: 0; height: 44px; }
+
+.category-select-trigger .category-select-text .floating-label.active,
+.category-select-trigger .category-select-text .resume-select-value { left: 0; }
+
+.category-select-trigger .category-select-text .resume-select-value { right: 0; min-width: 0; }
+
+.category-select-name {
+  display: block;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.category-select-count { justify-self: end; color: var(--color-text-muted); }
+
+.vacancy-count { margin-right: 4px; }
+
+.resume-select.category-select-trigger::after { width: 20px; height: 20px; background-size: 20px 20px; }
+
+.sort-dropdown {
+  position: absolute;
+  top: 48px;
+  right: 0;
+  background-color: var(--color-surface);
+  border-radius: 12px; /* как .club-card--grid */
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  width: 226px;
+  padding: 0;
+  z-index: 100;
+  display: block;
+  opacity: 0;
+  transform: translateY(-10px);
+  transition: opacity 0.1s ease, transform 0.1s ease, visibility 0.1s ease;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.sort-dropdown.show {
+  display: block;
+  opacity: 1;
+  transform: translateY(0);
+  visibility: visible;
+  pointer-events: auto;
+}
+
+.category-select-dropdown {
+  top: 100%;
+  margin-top: 4px;
+  left: 0;
+  right: 0;
+  width: auto;
+  max-height: min(440px, 70vh);
+  overflow-y: auto;
+}
+
+.category-select-dropdown .sort-option { text-decoration: none; }
+
+.sort-option {
+  padding: 8px 16px;
+  font-family: var(--font-body);
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 1.42;
+  letter-spacing: -0.02em;
+  color: var(--color-text);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  transition: background-color 0.2s ease;
+}
+
+.sort-option:first-child { border-radius: 12px 12px 0 0; }
+
+.sort-option:last-child { border-radius: 0 0 12px 12px; }
+
+@media (hover: hover) and (pointer: fine) {
+  .sort-option:hover {
+    background-color: var(--color-bg);
+  }
+}
+
+.sort-option-text { display: flex; align-items: center; }
+
+/* Галочки в дропдауне категорий убраны по дизайну — остаётся только
+   выделение текущей категории весом шрифта. */
+
+.sidebar-empty {
+  font-family: var(--font-body);
+  font-size: 15px;
+  line-height: 1.5;
+  color: var(--color-text-secondary);
+  padding: 8px 12px;
+}
+
+@media (max-width: 768px) {
+  .sidebar {
+    position: static;
+    border-radius: 12px;
+    padding: 16px 12px;
+  }
+}
+
+/* ===== Карточка клуба — детали (ClubDetails) =====
+   Воздух «крошки → контент» берём с главной: там до белой плашки поиска
+   8px (gap у .clubs-content) + 20px (margin-bottom крошек) − 12px
+   (margin-top у .filters-section) + 12px (padding-top той же секции)
+   = 28px. Сюда ставим столько же. На телефоне главная даёт всего 10px
+   (gap 0 + margin-bottom 10), поэтому там держим прежние 20px —
+   крошки не должны прилипать к карточке. */
+.detail-page {
+  width: 100%;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+}
+
+/* Ширина контента на главной: .content-grid и .filters-section —
+   minmax(0,704px) + gap 16 + 300px = 1020px, по центру. Держим ту же. */
+.detail-card-wrap {
+  width: 100%;
+  max-width: 1020px;
+  margin: 0 auto;
+}
+
+.detail-card {
+  background: var(--color-surface);
+  border-radius: 16px; /* как .club-card (32px → 16px на главной) */
+  padding: 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* Белая панель контента: закругления точно как у карточек на главной —
+   база 16px, на десктопе карточки в сетке 12px (min-width 768). */
+@media (min-width: 768px) {
+  .detail-card {
+    border-radius: 12px;
+  }
+}
+
+/* ===== Кнопки на странице клуба — как на главной (стиль preplab) =====
+   Telegram — жёлтая, как «Читать»; «Поделиться» — чёрная, как «Кликну
+   сюда». Та же база: height 48, radius 8, 14/500/-0.02em, gap под
+   иконку, transition и hover-правила — дословно с лэндинга. */
+.detail-card .base-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  height: 48px;
+  padding: 12px 24px;
+  border-radius: 8px;
+  border: none;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 24px;
+  letter-spacing: -0.02em;
+  box-shadow: none;
+  transition: background-color 0.18s ease, filter 0.18s ease, transform 0.18s ease;
+}
+
+/* Telegram — жёлтая (#FFE266 на #191919), как «Читать» на главной. */
+.detail-card .base-btn--primary {
+  background: #ffe266;
+  color: #191919;
+  border: none;
+  box-shadow: none;
+}
+
+/* «Поделиться» — чёрная (#191919), как «Кликну сюда» на главной. */
+.detail-card .share-btn {
+  background: #191919;
+  color: #ffffff;
+  border: none;
+  box-shadow: none;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .detail-card .base-btn--primary:hover:not(:disabled) {
+    background: #ffe266;
+    border-color: transparent;
+    color: #191919;
+    box-shadow: none;
+    filter: brightness(0.96);
+    transform: translateY(-1px);
+  }
+
+  .detail-card .share-btn:hover:not(:disabled) {
+    background: #2e2e2e;
+    border-color: transparent;
+    color: #ffffff;
+    box-shadow: none;
+    filter: none;
+    transform: translateY(-1px);
+  }
+}
+
+/* Базовый :active .base-btn--primary (brightness 0.92) гасим —
+   на preplab для кнопок :active не описан. */
+.detail-card .base-btn--primary:active:not(:disabled) {
+  background: #ffe266;
+  border-color: transparent;
+  color: #191919;
+  box-shadow: none;
+  filter: none;
+  transform: none;
+}
+
+.detail-card .share-btn:active:not(:disabled) {
+  background: #191919;
+  border-color: transparent;
+  color: #ffffff;
+  box-shadow: none;
+  filter: none;
+  transform: none;
+}
+
+.card-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 16px;
+}
+
+.detail-card .card-title {
+  font-family: var(--font-heading);
+  font-size: 30px;
+  font-weight: 500;
+  line-height: 1.1;
+  color: var(--color-text);
+  margin: 0;
+}
+
+.detail-card .card-author {
+  margin: 0;
+}
+
+.author-head {
+  align-items: center;
+}
+
+.author-photo {
+  width: 88px;
+  height: 88px;
+  border-radius: 50%;
+  object-fit: cover;
+  flex-shrink: 0;
+  background: var(--color-brand-soft);
+}
+
+.author-photo--placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-heading);
+  font-size: 36px;
+  font-weight: 600;
+  color: var(--color-brand);
+}
+
+.author-head-info {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 0;
+}
+
+.club-type-badge {
+  align-self: flex-start;
+  padding: 3px 10px;
+  background: var(--color-brand-soft);
+  border-radius: 30px;
+  font-family: var(--font-body);
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1.2;
+  color: var(--color-brand);
+  white-space: nowrap;
+}
+
+.detail-card .now-reading {
+  font-weight: 500;
+  line-height: 1.5;
+  padding: 12px 16px;
+  background: var(--color-brand-soft);
+  border-radius: 16px;
+  margin-top: 0;
+}
+
+.card-divider {
+  height: 1px;
+  background: var(--color-stroke-subtle);
+}
+
+.detail-card .card-desc {
+  white-space: pre-line;
+  margin: 0;
+}
+
+/* Описание на странице клуба: обрезка line-clamp'ом + «Читать ещё»
+   под текстом. Кнопку показывает JS (static/js/desc.js) только когда
+   текст реально не влез — короткое описание остаётся без кнопки. */
+.desc-expand {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+}
+
+.desc-expand.is-open .card-desc {
+  display: block;
+  overflow: visible;
+}
+
+.desc-more {
+  padding: 0;
+  border: none;
+  background: none;
+  font-family: var(--font-body);
+  font-size: 15px;
+  font-weight: 500;
+  line-height: 1.4;
+  color: var(--color-brand);
+  cursor: pointer;
+  transition: color var(--duration-fast) ease;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .desc-more:hover {
+    text-decoration: underline;
+  }
+}
+
+.desc-more[hidden] {
+  display: none;
+}
+
+/* Статистика карточки клуба: только участники (счётчик отзывов убран,
+   пока отзывы закомментированы). */
+.card-stats {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-body);
+  font-size: 15px;
+  color: var(--color-text-secondary);
+}
+
+.stat-num {
+  font-weight: 600;
+  color: var(--color-text);
+}
+
+.card-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+/* ===== Share (кнопка «Поделиться» на странице клуба) ===== */
+.share {
+  position: relative;
+  display: inline-flex;
+}
+
+/* Панель повторяет дизайн .header-panel: те же радиус, отступы,
+   тень и hover пунктов (stroke-subtle), чтобы выпадающие списки
+   сайта выглядели одинаково. */
+.share-panel {
+  position: absolute;
+  top: calc(100% + 12px);
+  left: 0;
+  z-index: 50;
+  min-width: 232px;
+  padding: 8px;
+  border-radius: 14px;
+  background: var(--color-surface);
+  border: 1px solid var(--color-stroke-subtle);
+  box-shadow: var(--shadow-lg);
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-6px);
+  transition:
+    opacity 160ms ease,
+    transform 160ms ease,
+    visibility 160ms;
+  pointer-events: none;
+}
+
+.share-panel.is-open {
+  opacity: 1;
+  visibility: visible;
+  transform: none;
+  pointer-events: auto;
+}
+
+.share-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 10px 14px;
+  border: none;
+  border-radius: 8px;
+  background: transparent;
+  color: var(--color-text);
+  font-family: var(--font-body);
+  font-size: 15px;
+  font-weight: 500;
+  line-height: 1.4;
+  text-align: left;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background 140ms ease, color 140ms ease;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .share-item:hover {
+    background: var(--color-stroke-subtle);
+  }
+}
+
+.share-item svg {
+  flex-shrink: 0;
+}
+
+@media (max-width: 768px) {
+  .detail-page {
+    gap: 20px;
+  }
+
+  .detail-card {
+    padding: 24px;
+    gap: 16px;
+  }
+
+  .detail-card .card-title {
+    font-size: 24px;
+  }
+
+  .card-head {
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .author-head {
+    flex-direction: row;
+    align-items: center;
+  }
+
+  .author-photo {
+    width: 64px;
+    height: 64px;
+  }
+
+  .card-actions {
+    flex-direction: column;
+  }
+
+  .detail-card .card-desc {
+    font-size: 14px;
+  }
+
+  .desc-more {
+    font-size: 14px;
+  }
+
+  .share {
+    width: 100%;
+  }
+
+  .share-btn {
+    width: 100%;
+  }
+
+  .share-panel {
+    left: 0;
+    right: 0;
+    min-width: 0;
+  }
+}
+
+/* ===== Отзывы (ClubReviews) =====
+   Без border-top: раздел уже отделён .card-divider под кнопками действий. */
+.reviews {
+  margin-top: 32px;
+  padding-top: 32px;
+}
+
+.reviews-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.reviews-title {
+  font-family: var(--font-heading);
+  font-size: 24px;
+  font-weight: 500;
+  color: var(--color-text);
+}
+
+/* Кнопка «Добавить отзыв» — стиль пункта шапки (.header-nav-link),
+   только не сжимается в ряду с заголовком. */
+.reviews-add {
+  flex-shrink: 0;
+}
+
+.reviews-list {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.review-card {
+  background: var(--color-surface);
+  border-radius: 24px;
+  padding: 24px;
+}
+
+.review-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 16px;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.reviewer {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.reviewer-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: var(--color-brand);
+  color: #FFFFFF;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 15px;
+  font-weight: 600;
+  text-transform: uppercase;
+  flex-shrink: 0;
+}
+
+.reviewer-name {
+  font-size: 16px;
+  font-weight: 500;
+  font-family: var(--font-body);
+}
+
+.review-meta {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-shrink: 0;
+}
+
+.stars {
+  color: var(--color-brand);
+  font-size: 18px;
+  letter-spacing: 2px;
+}
+
+.pages-badge {
+  padding: 6px 14px;
+  background: var(--color-bg);
+  border-radius: 30px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--color-text-secondary);
+}
+
+.review-text {
+  font-size: 15px;
+  line-height: 1.7;
+  color: var(--color-text);
+  white-space: pre-line;
+  margin-bottom: 16px;
+}
+
+.review-foot {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  padding-top: 16px;
+  border-top: 1px solid var(--color-stroke-subtle);
+}
+
+.review-date {
+  font-size: 13px;
+  color: var(--color-text-secondary);
+}
+
+.empty {
+  text-align: center;
+  color: var(--color-text-secondary);
+  font-size: 15px;
+  padding: 40px 24px;
+  background: var(--color-surface);
+  border-radius: 24px;
+}
+
+@media (max-width: 600px) {
+  .review-head {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
+
+/* ===== Modal: «Добавить книгу» =====
+   Минимальная модалка с одной задачей — открыть GitHub-шаблон.
+   Заголовок слева, крестик справа, пояснение, во всю ширину кнопка и
+   тихая ссылка внизу. Открытие/закрытие — modal.js (крестик, подложка,
+   Esc); подложка размыта, вход — короткий fade+lift. */
+body.modal-open {
+  overflow: hidden;
+}
+
+.modal {
+  position: fixed;
+  inset: 0;
+  z-index: 1100;
+  display: grid;
+  justify-items: center;
+  align-items: start;
+  padding: clamp(56px, 14vh, 160px) 20px 20px;
+}
+
+.modal[hidden] {
+  display: none;
+}
+
+.modal-backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(26, 28, 43, 0.5);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  animation: modal-fade var(--duration-fast) var(--ease-out);
+}
+
+.modal-panel {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: 420px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding: 24px;
+  background: var(--color-surface);
+  border-radius: 16px; /* как .club-card */
+  box-shadow: var(--shadow-lg);
+  animation: modal-in 0.2s var(--ease-out);
+}
+
+.modal-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.modal-title {
+  font-family: var(--font-heading);
+  font-size: 24px;
+  font-weight: 500;
+  line-height: 1.15;
+  color: var(--color-text);
+}
+
+.modal-close {
+  flex-shrink: 0;
+  width: 36px;
+  height: 36px;
+  display: grid;
+  place-items: center;
+  margin: -6px -6px 0 0;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  color: var(--color-text-muted);
+  cursor: pointer;
+  transition:
+    background var(--duration-fast) var(--ease-out),
+    color var(--duration-fast) var(--ease-out);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .modal-close:hover {
+    background: var(--color-bg);
+    color: var(--color-text);
+  }
+}
+
+.modal-close:focus-visible {
+  outline: 2px solid var(--color-brand);
+  outline-offset: 2px;
+}
+
+.modal-note {
+  font-size: 15px;
+  line-height: 1.5;
+  color: var(--color-text-secondary);
+  margin: -2px 0 0;
+}
+
+/* Кнопка 1-в-1 с главной (.landing-actions .base-btn):
+   height 48, padding 12/24, radius 8, 14/500, жёлтый #FFE266
+   на --c-ink: #191919, hover — только для мыши. */
+.modal-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  height: 48px;
+  padding: 12px 24px;
+  border-radius: 8px;
+  border: none;
+  background: #ffe266;
+  color: #191919;
+  box-shadow: none;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 24px;
+  letter-spacing: -0.02em;
+  transition: background-color 0.18s ease, filter 0.18s ease, transform 0.18s ease;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .modal-btn:hover:not(:disabled) {
+    background: #ffe266;
+    color: #191919;
+    box-shadow: none;
+    filter: brightness(0.96);
+    transform: translateY(-1px);
+  }
+}
+
+/* Гасим базовые hover/active .base-btn--primary (синяя тень, brand-фон). */
+.modal-btn:active:not(:disabled) {
+  background: #ffe266;
+  color: #191919;
+  box-shadow: none;
+  filter: none;
+  transform: none;
+}
+
+@keyframes modal-fade {
+  from {
+    opacity: 0;
+  }
+}
+
+@keyframes modal-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px) scale(0.97);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .modal-backdrop,
+  .modal-panel {
+    animation: none;
+  }
+}
+
+@media (max-width: 480px) {
+  .modal-panel {
+    padding: 20px;
+  }
+
+  .modal-title {
+    font-size: 21px;
+  }
+}
+
+/* ===== 404 (NotFound) ===== */
+.not-found {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.not-found-title {
+  font-family: var(--font-heading);
+  font-size: 28px;
+  font-weight: 500;
+  line-height: 1.1;
+  color: var(--color-text);
+  margin-bottom: 4px;
+}
+
+.not-found-text {
+  font-size: 16px;
+  line-height: 1.5;
+  color: var(--color-text-secondary);
+  max-width: 420px;
+  margin-bottom: 32px;
+}
+
+/* Ширина картинки подобрана, чтобы страница 404 целиком (шапка + текст
+   + футер) влезала в один экран десктопа и футер стоял прижатым к низу
+   без скролла: картинка 996×1068, при 300px по ширине высота ≈ 322px. */
+.not-found .not-found-img {
+  max-width: 100%;
+  width: 300px;
+  height: auto;
+  margin-bottom: 32px;
+}
+
+@media (max-width: 768px) {
+  .not-found .not-found-img {
+    width: 220px;
+  }
+
+  .not-found-title {
+    font-size: 22px;
+  }
+
+  .not-found-text {
+    font-size: 14px;
+  }
+}
+
+/* ===== Карта сайта (Sitemap) ===== */
+.sitemap-wrap {
+  width: 100%;
+  max-width: 704px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.sitemap-card {
+  background: var(--color-surface);
+  border-radius: var(--radius-2xl);
+  padding: 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.sitemap-title {
+  font-family: var(--font-heading);
+  font-size: 30px;
+  font-weight: 500;
+  line-height: 1.1;
+  color: var(--color-text);
+}
+
+.sitemap-section {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.sitemap-heading {
+  font-family: var(--font-body);
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1.2;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+}
+
+.sitemap-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.sitemap-link {
+  font-size: 15px;
+  font-weight: 500;
+  line-height: 1.4;
+  color: var(--color-text);
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.sitemap-link:hover {
+  color: var(--color-brand);
+}
+
+.sitemap-xml {
+  font-size: 13px;
+  line-height: 1.4;
+  color: var(--color-text-muted);
+  text-align: center;
+}
+
+.sitemap-xml-link {
+  color: var(--color-text-secondary);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  transition: color 0.2s ease;
+}
+
+.sitemap-xml-link:hover {
+  color: var(--color-brand);
+}
+
+@media (max-width: 768px) {
+  .sitemap-card {
+    padding: 20px;
+    gap: 20px;
+  }
+
+  .sitemap-title {
+    font-size: 24px;
+  }
+}
+
+/* ===== Лэндинг-хиро (layouts/partials/landing.html) =====
+   Первый экран на всю высоту (100svh минус шапка — шапка не липкая,
+   живёт в потоке, её высота — --lh-header-h; верхний отступ <main> на
+   главной снят, см. main.main--landing, — иначе первый экран был бы
+   выше одного экрана). Типографика и кнопки
+   в стилистике preplab.ru: заголовок 54/500/-0.03em, сабтайтл 16/24
+   #666, кнопки 48px, radius 8, жёлтая #FFE266 / тёмная #191919.
+   Заголовок — шрифт .card-title (Handil Pro, --font-heading), не Drabina.
+   Фон — интерактивная сетка static/js/interactive-grid.js (SVG, ячейки
+   загораются под указателем). */
+:root {
+  /* Высота шапки под хиро-во-весь-экран: десктоп 36+37+10,
+     мобильный (≤768) 14+36+10. */
+  --lh-header-h: 83px;
+}
+
+@media (max-width: 768px) {
+  :root {
+    /* + вырез iPhone: шапка выше на safe-area, хиро должно это учитывать,
+       иначе первый экран уезжает вниз и появляется скролл. */
+    --lh-header-h: calc(60px + env(safe-area-inset-top, 0px));
+  }
+}
+
+/* На главной <main> без верхнего отступа: первый экран целиком
+   занимают шапка (в потоке) + хиро (100svh минус шапка). Без этого
+   хиро упиралось бы на 24px ниже сгиба и не уезжало целиком. */
+main.main--landing {
+  padding-top: 0;
+}
+
+/* Вторая шапка на главной (home.html, внутри <main>) — она должна
+   встать ровно под шапкой сверху, а у <main> есть боковые поля.
+   Отрицательными полями возвращаем её во всю ширину страницы, а width
+   (100% + 2×поля) нужен потому, что margin сдвигает бокс, не меняя его
+   ширину: без width шапка-дубль оказывалась на 48/32/24px уже штатной
+   шапки на клубе и категории — навигацию сжимало (перенос текста рос
+   в высоту). Значения полей повторяют padding у main на каждом
+   брейкпоинте (24 / 16 / 12).
+   Липкости нет: шапка стоит в потоке и уезжает со страницей — так
+   задумано. «Читка» в ней остаётся путём на хиро, пока замок
+   js/scroll-lock.js не пускает выше верха #catalog. */
+.main--landing .header {
+  width: calc(100% + 48px);
+  margin-inline: -24px;
+}
+
+@media (max-width: 768px) {
+  .main--landing .header {
+    width: calc(100% + 32px);
+    margin-inline: -16px;
+  }
+}
+
+@media (max-width: 480px) {
+  .main--landing .header {
+    width: calc(100% + 24px);
+    margin-inline: -12px;
+  }
+}
+
+/* Hero — как .lp-hero на preplab: контент НЕ по центру экрана, а сверху
+   (padding-top 152px), колонка по центру. На мобиле (≤600) как на preplab:
+   padding-top 32px.
+   Фул-блид: ширина 100vw с отрицательными полями — хиро (и бегущая строка
+   внизу, которая тянется на всю ширину хиро) идут от края до края экрана,
+   игнорируя max-width/padding <main>. Лишние 7.5px под полосой прокрутки
+   срезает overflow-x: clip у body (см. комментарий там). */
+.landing-hero {
+  position: relative;
+  overflow: clip; /* сетка абсолютно в боксах хиро и не вылезает, но страхуем */
+  width: 100vw;
+  margin-inline: calc(50% - 50vw);
+  min-height: calc(100vh - var(--lh-header-h));
+  min-height: calc(100svh - var(--lh-header-h));
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  /* padding-bottom — расстояние бегущей строки от низа первого экрана. */
+  padding: 152px 0 56px;
+}
+
+/* Сетка: заполняет хиро, за контентом (pointer-events: none — текст и
+   кнопки кликабельны). Ячейки — цвет текста; неактивные прозрачны
+   (fill-opacity 0, видна только обводка 0.1). Радиальная маска 400px
+   от центра — как в demo.tsx: к краям круга квадратики уходят в цвет
+   фона. */
+.interactive-grid {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  color: var(--color-text);
+  -webkit-mask-image: radial-gradient(400px circle at center, white, transparent);
+  mask-image: radial-gradient(400px circle at center, white, transparent);
+}
+
+.interactive-grid rect {
+  fill-opacity: 0;
+  /* Гашение после ухода указателя — медленное. */
+  transition: fill-opacity 1s ease-out;
+}
+
+.interactive-grid rect.is-active {
+  /* Загорается мгновенно (duration-0 из компонента). */
+  transition: none;
+  fill-opacity: 0.15;
+}
+
+/* Типографика — 1-в-1 с preplab (.lp-hero__heads gap 16, .lp-hero__body
+   gap 32): заголовок 54/54/500/-0.03em #191919, сабтайтл 16/24/400/-0.02em
+   #666. На мобиле (≤600) как на preplab: заголовок 28/30, сабтайтл не
+   меняется. Шрифт заголовка — .card-title (Handil Pro, --font-heading),
+   как договаривались, вместо Google Sans с референса. */
+.landing-copy {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 32px /* .lp-hero__body */;
+  width: 893px;
+  max-width: 100%;
+  padding: 0 24px;
+}
+
+.landing-heads {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px /* .lp-hero__heads */;
+}
+
+.landing-title {
+  font-family: var(--font-heading);
+  font-size: 54px;
+  font-weight: 500;
+  line-height: 54px;
+  letter-spacing: -0.03em;
+  color: #191919; /* --c-ink */
+  text-align: center;
+  margin: 0;
+}
+
+.landing-sub {
+  font-family: var(--font-body);
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 24px;
+  letter-spacing: -0.02em;
+  color: #666666; /* --c-muted-lp */
+  text-align: center;
+  margin: 0;
+}
+
+.landing-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 12px /* .lp-hero--hub .lp-hero__cta: ряд, gap 12 */;
+}
+
+/* Кнопки 1-в-1 с preplab.ru (.lp-btn):
+   height 48, padding 12/24, radius 8, gap 10, 14/500, line-height 24,
+   letter-spacing -0.02em; transition background-color/filter/transform
+   .18s ease; hover — только для мыши ((hover:hover) and (pointer:fine)),
+   как на preplab, чтобы на таче ховер не «залипал».
+   .base-btn переопределяется точечно внутри хиро (шапка и карточки
+   остаются со своими кнопками). */
+.landing-actions .base-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  height: 48px;
+  min-width: 180px; /* кнопки одинаковой «адекватной» ширины, hug-контент preplab */
+  padding: 12px 24px;
+  border-radius: 8px;
+  border: none;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 24px;
+  letter-spacing: -0.02em;
+  box-shadow: none;
+  transition: background-color 0.18s ease, filter 0.18s ease, transform 0.18s ease;
+}
+
+/* Жёлтая «Читать» — --c-yellow-strong: #FFE266 на --c-ink: #191919
+   (.lp-btn без модификатора). */
+.landing-actions .base-btn--primary {
+  background: #ffe266;
+  color: #191919;
+  border: none;
+  box-shadow: none;
+}
+
+/* Тёмная «Кликну сюда» — .lp-btn--dark: --c-ink на --c-surface. */
+.landing-actions .base-btn--outline {
+  background: #191919;
+  color: #ffffff;
+  border: none;
+  box-shadow: none;
+}
+
+/* Ховеры — дословно из preplab (блок @media (hover: hover) and (pointer: fine)):
+   ховер только для мыши, чтобы на таче не «залипал». В declarations перечислено
+   всё: базовые hover/active .base-btn--primary и .base-btn--outline (синяя тень,
+   brand-фон, brand-текст, brightness 1.08) ниже по специфичности и продолжали
+   бы действовать — на preplab их нет. */
+@media (hover: hover) and (pointer: fine) {
+  .landing-actions .base-btn--primary:hover:not(:disabled) {
+    background: #ffe266;
+    border-color: transparent;
+    color: #191919;
+    box-shadow: none;
+    filter: brightness(0.96);
+    transform: translateY(-1px);
+  }
+
+  .landing-actions .base-btn--outline:hover:not(:disabled) {
+    background: #2e2e2e;
+    border-color: transparent;
+    color: #ffffff;
+    box-shadow: none;
+    filter: none;
+    transform: translateY(-1px);
+  }
+}
+
+/* У preplab :active для кнопок не описан — гасим базовые active-эффекты
+   .base-btn (brightness 0.92). */
+.landing-actions .base-btn--primary:active:not(:disabled) {
+  background: #ffe266;
+  border-color: transparent;
+  color: #191919;
+  box-shadow: none;
+  filter: none;
+  transform: none;
+}
+
+.landing-actions .base-btn--outline:active:not(:disabled) {
+  background: #191919;
+  border-color: transparent;
+  color: #ffffff;
+  box-shadow: none;
+  filter: none;
+  transform: none;
+}
+
+/* Якорь обеих кнопок хиро: #catalog открывается второй шапкой, дальше
+   каталог. Запас под скролл — как у обычных якорей сайта. */
+#catalog {
+  scroll-margin-top: 16px;
+}
+
+/* Бегущая строка (marquee) внизу хиро. Пока — рыбный текст-заглушка.
+   Трек шириной по контенту из двух одинаковых списков: translateX(-50%)
+   сдвигает ровно на один список, цикл бесшовный. overflow: clip на
+   .landing-hero режет всё, что уехало за края. Пауза на ховере — чтобы
+   строку можно было прочитать; под prefers-reduced-motion (глобальное
+   правило выше) анимация не играет, список стоит на месте. */
+.landing-marquee {
+  position: relative;
+  z-index: 1;
+  align-self: stretch;
+  margin-top: auto; /* прижимает строку к низу хиро */
+  overflow: hidden;
+  width: 100%;
+  padding-top: 40px;
+  /* Несколько линий бегущего текста. */
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+/* Чётный ряд едет справа налево — линии не сливаются в одну. */
+.landing-marquee__row:nth-child(even) .landing-marquee__track {
+  animation-direction: reverse;
+}
+
+.landing-marquee__track {
+  display: flex;
+  width: max-content;
+  animation: landing-marquee 32s linear infinite;
+}
+
+.landing-marquee:hover .landing-marquee__track {
+  animation-play-state: paused;
+}
+
+.landing-marquee__list {
+  display: flex;
+  flex: none;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.landing-marquee__item {
+  flex: none;
+  font-family: var(--font-body);
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 24px;
+  letter-spacing: -0.02em;
+  color: #666666;
+  white-space: nowrap;
+}
+
+/* Разделитель — россыпь между пунктами, включая стык двух списков. */
+.landing-marquee__item::after {
+  content: "·";
+  padding: 0 16px;
+  color: #cccccc;
+}
+
+@keyframes landing-marquee {
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+@media (max-width: 600px) {
+  .landing-marquee {
+    padding-top: 32px;
+  }
+
+  .landing-marquee__item::after {
+    padding: 0 12px;
+  }
+}
+
+/* Планшет / крупный телефон (≤768): между десктопным 152 и телефонным 32
+   padding-top 72 — текст ближе к верху, но экран не пустует. Заголовок
+   40/42: 54px на ширине 600-768 смотрится тяжело. Блок стоит ПЕРЕД
+   ≤600 — тот перебивает значения для телефона. */
+@media (max-width: 768px) {
+  .landing-hero {
+    padding: 72px 0 56px;
+  }
+
+  .landing-title {
+    font-size: 40px;
+    line-height: 42px;
+  }
+}
+
+/* Телефон (порт мобильного макета preplab, ≤600): заголовок 28/30,
+   hero padding-top 32, сабтайтл не меняется. Кнопки — в столбик во всю
+   ширину (как .lp-hero--cta-wide на preplab: flex-flow column + width 100%),
+   высота та же 48. Поля контента 16 — gutter мобильного макета preplab. */
+@media (max-width: 600px) {
+  .landing-hero {
+    padding: 32px 0 48px;
+  }
+
+  .landing-copy {
+    padding: 0 16px;
+  }
+
+  .landing-title {
+    font-size: 28px;
+    line-height: 30px;
+  }
+
+  /* Маска сетки пропорциональна экрану: круг 400px на телефоне
+     перекрывал бы всю ширину — края квадратиков не растворялись бы. */
+  .interactive-grid {
+    -webkit-mask-image: radial-gradient(300px circle at center, white, transparent);
+    mask-image: radial-gradient(300px circle at center, white, transparent);
+  }
+
+  .landing-actions {
+    /* Кнопка одна (вторая ниже display:none) — не растягиваем её
+       на всю строку: hug-контент по центру, ширина — как на десктопе. */
+    flex-direction: row;
+    width: 100%;
+    gap: 12px;
+  }
+
+  .landing-actions .base-btn {
+    flex: 0 0 auto;
+    width: auto;
+    min-width: 180px;
+    height: 48px;
+    padding: 12px 24px;
+    font-size: 14px;
+  }
+
+  /* На мобиле остаётся только «Читать»: hug-контент (min-width 180px),
+     по центру — без растяга на всю строку. */
+  .landing-actions .base-btn--outline {
+    display: none;
+  }
+}
+
+
+/* ===== Блог (/blog/) =====
+   Раскладка позаимствована у victors-blog (redsgn.css: .post-item) и
+   адаптирована под наши токены: колонка даты слева с разделительной
+   линией, справа заголовок и описание; карточка — белая плашка с нашим
+   radius и тенью, без neobrutalist-обводок и жёстких теней. */
+
+/* Шапка страницы: только крошки, h1 визуально скрыт (см. list.html). */
+.blog-sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* Ширина — как у .detail-card-wrap / .sitemap-wrap (704px в каталоге
+   контента, 1020px у карточки клуба; блог держим по 704px — колонка
+   ленты каталога). */
+.blog-wrap {
+  width: 100%;
+  max-width: 704px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.blog-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* Карточка поста: сетка «дата | контент» как .post-item в victors-blog.
+   Дата в первой колонке, под ней — линия-разделитель на всю высоту
+   строки (border-right, повторяем padding'ом). Клик — по всей карточке,
+   вложенных интерактивов нет. */
+.blog-card {
+  display: grid;
+  grid-template-columns: 96px minmax(0, 1fr);
+  gap: 4px 20px;
+  padding: 20px;
+  background: var(--color-surface);
+  border-radius: 16px;
+  text-decoration: none;
+  color: inherit;
+  transition: box-shadow var(--duration-normal) var(--ease-out), transform var(--duration-normal) var(--ease-out);
+}
+
+@media (min-width: 768px) {
+  .blog-card {
+    border-radius: 12px;
+  }
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .blog-card:hover {
+    box-shadow: var(--shadow-lg);
+    transform: translateY(-2px);
+  }
+}
+
+/* Дата — колонка-разделитель, как .post-data в victors-blog
+   (та же роль: значение слева, вертикальная линия справа). */
+.blog-card-date {
+  grid-column: 1;
+  grid-row: 1 / span 2;
+  align-self: start;
+  padding: 4px 20px 4px 0;
+  font-family: var(--font-body);
+  font-size: 14px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  color: var(--color-text-muted);
+  border-right: 1px solid var(--color-stroke-subtle);
+  min-height: 32px;
+}
+
+.blog-card-title {
+  grid-column: 2;
+  margin: 0;
+  font-family: var(--font-heading);
+  font-size: 20px;
+  font-weight: 500;
+  line-height: 1.25;
+  color: var(--color-text);
+}
+
+.blog-card-desc {
+  grid-column: 2;
+  margin: 0;
+  font-size: 15px;
+  line-height: 1.5;
+  color: var(--color-text-secondary);
+}
+
+/* Без описания дата всё равно держит высоту строки. */
+.blog-card:not(:has(.blog-card-desc)) .blog-card-date {
+  grid-row: 1;
+}
+
+.blog-empty {
+  background: var(--color-surface);
+  border-radius: 16px;
+  padding: 28px;
+  font-size: 15px;
+  color: var(--color-text-secondary);
+}
+
+@media (min-width: 768px) {
+  .blog-empty {
+    border-radius: 12px;
+  }
+}
+
+/* ===== Пост блога (/blog/<slug>/) =====
+   Шапка поста — та же сетка «дата | заголовок», что у карточки списка,
+   чтобы список и пост читались как один дизайн. */
+.blog-post {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding: 20px;
+  background: var(--color-surface);
+  border-radius: 16px;
+}
+
+@media (min-width: 768px) {
+  .blog-post {
+    border-radius: 12px;
+    padding: 28px;
+  }
+}
+
+.blog-post-head {
+  display: grid;
+  grid-template-columns: 96px minmax(0, 1fr);
+  gap: 4px 20px;
+}
+
+.blog-post-date {
+  grid-column: 1;
+  grid-row: 1;
+  align-self: start;
+  padding: 6px 20px 4px 0;
+  font-size: 14px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  color: var(--color-text-muted);
+  border-right: 1px solid var(--color-stroke-subtle);
+  min-height: 32px;
+}
+
+.blog-post-title {
+  grid-column: 2;
+  margin: 0;
+  font-family: var(--font-heading);
+  font-size: 30px;
+  font-weight: 500;
+  line-height: 1.1;
+  color: var(--color-text);
+}
+
+/* Типографика текста поста (goldmark-вывод .Content). */
+.blog-post-content {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  max-width: 720px;
+  font-size: 16px;
+  line-height: 1.6;
+  color: var(--color-text);
+  overflow-wrap: break-word;
+}
+
+.blog-post-content p {
+  margin: 0;
+}
+
+.blog-post-content h2 {
+  font-family: var(--font-heading);
+  font-size: 22px;
+  font-weight: 500;
+  line-height: 1.2;
+  margin-top: 8px;
+}
+
+.blog-post-content h3 {
+  font-family: var(--font-heading);
+  font-size: 18px;
+  font-weight: 500;
+  line-height: 1.25;
+  margin-top: 4px;
+}
+
+.blog-post-content ul,
+.blog-post-content ol {
+  margin: 0;
+  padding-left: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.blog-post-content a {
+  color: var(--color-brand);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.blog-post-content blockquote {
+  margin: 0;
+  padding: 12px 16px;
+  border-left: 3px solid var(--color-brand);
+  background: var(--color-brand-soft);
+  border-radius: 0 8px 8px 0;
+  color: var(--color-text-secondary);
+}
+
+.blog-post-content code {
+  font-family: var(--font-mono);
+  font-size: 0.9em;
+  background: var(--color-bg);
+  padding: 2px 6px;
+  border-radius: 6px;
+}
+
+.blog-post-content pre {
+  margin: 0;
+  padding: 16px;
+  border-radius: 12px;
+  overflow-x: auto;
+  font-size: 14px;
+}
+
+.blog-post-content img {
+  max-width: 100%;
+  border-radius: 12px;
+}
+
+.blog-post-content hr {
+  border: none;
+  border-top: 1px solid var(--color-stroke-subtle);
+  margin: 8px 0;
+}
+
+/* ===== «Читайте также» — .read-more из victors-blog, адаптированный:
+   список строк «дата | заголовок» внутри светлой плашки, ховер —
+   подсветка бренд-цветом, без жёстких теней. */
+.read-more {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding-top: 20px;
+  border-top: 1px solid var(--color-stroke-subtle);
+}
+
+.read-more-header {
+  margin: 0;
+  font-family: var(--font-body);
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1.2;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+}
+
+.read-more-posts {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.read-more-post {
+  display: grid;
+  grid-template-columns: 96px minmax(0, 1fr);
+  gap: 4px 20px;
+  padding: 14px 16px;
+  background: var(--color-bg);
+  border-radius: 12px;
+  text-decoration: none;
+  color: inherit;
+  transition: background var(--duration-fast) ease;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .read-more-post:hover {
+    background: var(--color-brand-soft);
+  }
+}
+
+.read-more-date {
+  grid-column: 1;
+  align-self: start;
+  padding: 2px 20px 2px 0;
+  font-size: 13px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  color: var(--color-text-muted);
+  border-right: 1px solid var(--color-stroke-subtle);
+  min-height: 24px;
+}
+
+.read-more-title {
+  grid-column: 2;
+  margin: 0;
+  font-family: var(--font-heading);
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 1.3;
+  color: var(--color-text);
+}
+
+/* ===== Нижнее меню (bottom nav) =====
+   На десктопе — плавающая pill-панель по центру (bottom-nav.html).
+   На мобилке (≤768) — прижата к низу экрана во всю ширину, как
+   штатная таб-бар iOS/Android: скругление только сверху, снизу
+   отступ учитывает safe-area. Появляется, только когда шапка ушла
+   из вида — bottom-nav.js (IntersectionObserver). */
+.bnav {
+  position: fixed;
+  left: 50%;
+  bottom: max(16px, env(safe-area-inset-bottom, 0px));
+  transform: translateX(-50%);
+  z-index: 1050;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+}
+
+.bnav[hidden] {
+  display: none;
+}
+
+.bnav-bar {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px;
+  border-radius: 18px;
+  border: 1px solid var(--color-stroke-subtle);
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  box-shadow: var(--shadow-md);
+}
+
+/* Мобилка (≤768): панель прижата к самому низу и во всю ширину —
+   скругляем только верх, боковые/нижнюю границы убираем, кнопки
+   растягиваем равными долями (flex 1), низ отдаём safe-area. */
+@media (max-width: 768px) {
+  .bnav {
+    left: 0;
+    right: 0;
+    bottom: 0;
+    width: auto;
+    transform: none;
+    align-items: stretch;
+  }
+
+  .bnav-bar {
+    width: 100%;
+    gap: 0;
+    padding: 6px 8px calc(6px + env(safe-area-inset-bottom, 0px));
+    border-width: 1px 0 0;
+    border-radius: 18px 18px 0 0;
+    background: rgba(255, 255, 255, 0.94);
+    box-shadow: 0 -6px 24px 0 rgba(0, 0, 0, 0.08);
+  }
+
+  .bnav-btn {
+    flex: 1 1 0;
+    width: auto;
+    min-width: 0;
+    height: 48px;
+  }
+}
+
+.bnav-btn {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border: 0;
+  border-radius: 14px;
+  background: transparent;
+  color: var(--color-text-muted);
+  cursor: pointer;
+  text-decoration: none;
+  transition:
+    background var(--duration-fast) var(--ease-out),
+    color var(--duration-fast) var(--ease-out);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .bnav-btn:hover {
+    background: var(--color-bg);
+    color: var(--color-text);
+  }
+}
+
+/* «Избранное» включено (aria-pressed=true) — закладка брендом и залита,
+   как у .chip--fav.chip--active. */
+.bnav-btn[aria-pressed='true'] {
+  color: var(--color-brand);
+}
+
+.bnav-btn[aria-pressed='true'] svg path {
+  fill: currentColor;
+}
+
+/* Подсказка сверху кнопки: контент — data-tip, хвост как у category-tooltip.
+   Показывается только при наведении мышью (media hover+fine pointer ниже) —
+   на тач-устройствах ховера нет, подсказка не мешает. */
+.bnav-btn {
+  position: relative;
+}
+
+.bnav-btn::after {
+  content: attr(data-tip);
+  position: absolute;
+  left: 50%;
+  bottom: calc(100% + 10px);
+  transform: translateX(-50%) translateY(4px);
+  padding: 8px 12px;
+  border-radius: 10px;
+  background: #1D1E20;
+  color: #fff;
+  font-family: var(--font-body);
+  font-size: 13px;
+  font-weight: 400;
+  line-height: 1.3;
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--duration-fast) var(--ease-out), transform var(--duration-fast) var(--ease-out);
+  z-index: 1;
+}
+
+.bnav-btn::before {
+  /* Хвост стрелки — тот же треугольник, что у category-tooltip. */
+  content: '';
+  position: absolute;
+  left: 50%;
+  bottom: calc(100% + 4px);
+  transform: translateX(-50%) translateY(4px);
+  border-left: 5px solid transparent;
+  border-right: 5px solid transparent;
+  border-bottom: 6px solid #1D1E20;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--duration-fast) var(--ease-out), transform var(--duration-fast) var(--ease-out);
+  z-index: 1;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .bnav-btn:hover::after,
+  .bnav-btn:hover::before {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+}
+
+/* Тач-устройства: ховера нет в принципе, подсказки не показываем даже
+   если media-запрос где-то совпал (например, гибридный ноутбук). */
+@media (hover: none), (pointer: coarse) {
+  .bnav-btn::after,
+  .bnav-btn::before {
+    display: none;
+  }
+}

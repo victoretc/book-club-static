@@ -1,0 +1,77 @@
+// Модалки («Добавить книгу», «Создать клуб»): открытие по клику на
+// [data-modal-open] — в атрибуте id модалки, пустое значение = «Добавить
+// книгу» (пункты меню в шапке). Закрытие — крестиком, по подложке и по Esc.
+// Фокус уходит в модалку и возвращается на триггер при закрытии;
+// Tab зациклен внутри. Пока модалка открыта, бургер-панель закрывается.
+// Без JS ссылка спокойно ведёт на GitHub-шаблон (см. hugo.toml).
+;(function () {
+  var modal = null // открытая модалка
+  var lastTrigger = null
+
+  function focusables() {
+    return modal.querySelectorAll('a[href], button:not([disabled])')
+  }
+
+  function closeBurger() {
+    // Шапок две на главной (вторая под хиро) — закрываем открытую панель.
+    var burgers = document.querySelectorAll('[data-burger]')
+    Array.prototype.forEach.call(burgers, function (burger) {
+      var panel = burger.parentNode.querySelector('[data-burger-panel]')
+      if (panel && panel.classList.contains('is-open')) burger.click()
+    })
+  }
+
+  function open(trigger) {
+    var id = trigger.getAttribute('data-modal-open') || 'add-book-modal'
+    modal = document.getElementById(id)
+    if (!modal) return
+    lastTrigger = trigger || null
+    closeBurger()
+    modal.hidden = false
+    document.body.classList.add('modal-open')
+    var first = focusables()[0]
+    if (first) first.focus()
+  }
+
+  function close() {
+    if (!modal || modal.hidden) return
+    modal.hidden = true
+    document.body.classList.remove('modal-open')
+    if (lastTrigger) lastTrigger.focus()
+    lastTrigger = null
+    modal = null
+  }
+
+  document.addEventListener('click', function (event) {
+    var trigger = event.target.closest('[data-modal-open]')
+    if (trigger) {
+      event.preventDefault()
+      open(trigger)
+      return
+    }
+    if (event.target.closest('[data-modal-close]')) close()
+  })
+
+  document.addEventListener('keydown', function (event) {
+    if (!modal || modal.hidden) return
+
+    if (event.key === 'Escape') {
+      close()
+      return
+    }
+
+    if (event.key === 'Tab') {
+      var items = focusables()
+      if (!items.length) return
+      var first = items[0]
+      var last = items[items.length - 1]
+      if (event.shiftKey && document.activeElement === first) {
+        event.preventDefault()
+        last.focus()
+      } else if (!event.shiftKey && document.activeElement === last) {
+        event.preventDefault()
+        first.focus()
+      }
+    }
+  })
+})()

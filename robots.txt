@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://victoretc.github.io/book-club-static/sitemap.xml
