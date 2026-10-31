@@ -1,52 +1,68 @@
-{{- /* Футер: логотип и копирайт слева (копирайт — прямо под «Читкой»),
-     колонки «Разделы» и «Категории», справа отдельные ссылки GitHub и
-     Карта сайта — без заголовка, как простые ссылки. Высота футера —
-     только его контент: он одинаков на всех страницах и прижат к низу
-     страницы паттерном из .app-layout (min-height: 100svh) и main
+{{- /* Футер в стиле minimal-footer: узкая центрованная рамка (max 896px)
+     с волосяными линиями сверху/снизу и вертикальными краями на десктопе,
+     радиальный wash от левого верха. Внутри — сетка на 6 колонок:
+     бренд (логотип, подпись, соцсети) на 4 колонки и две колонки-ссылки.
+     Внизу — центрированный копирайт. Высота — только контент: прижат
+     к низу страницы паттерном .app-layout (min-height: 100svh) и main
      (flex: 1) в main.css. */ -}}
 {{- $cats := partial "categories-active.html" -}}
 <footer class="footer">
-  <div class="footer-inner">
-    <div class="footer-main">
+  <div class="footer-frame">
+    <span class="footer-hairline footer-hairline--top" aria-hidden="true"></span>
+
+    {{- /* Без категорий колонок меньше — расширяем «Разделы» до 2 колонок,
+           чтобы сетка по-прежнему заполняла 6. */ -}}
+    <div class="footer-grid{{ if not $cats }} footer-grid--solo{{ end }}">
       <div class="footer-brand">
-        <a href="{{ relURL "" }}" class="footer-brand-link" aria-label="Читка — на главную">Читка</a>
-        <p class="footer-copyright">© {{ now.Year }} Читка</p>
-      </div>
-
-      <div class="footer-cols">
-        <nav class="footer-col" aria-label="Разделы сайта">
-          <h2 class="footer-heading">Разделы</h2>
-          <ul class="footer-list">
-            {{- range site.Menus.main }}
-            {{- /* «Клубы» → каталог (#catalog), как в шапке: хиро-главная
-                 открывается только кликом по «Читка». */ -}}
-            <li><a href="{{ .URL }}{{ if eq .Name "Клубы" }}#catalog{{ end }}" class="footer-link">{{ .Name }}</a></li>
-            {{- end }}
-            {{- /* «Мы в Telegram» — site.Params.telegram, как в шапке. */ -}}
-            {{- with site.Params.telegram }}
-            <li><a href="{{ . }}" class="footer-link" target="_blank" rel="noopener">Мы в Telegram</a></li>
-            {{- end }}
-          </ul>
-        </nav>
-
-        {{- if $cats }}
-        <nav class="footer-col" aria-label="Категории">
-          <h2 class="footer-heading">Категории</h2>
-          <ul class="footer-list">
-            {{- range $cats }}
-            <li><a href="{{ printf "categories/%s/" .slug | relURL }}" class="footer-link">{{ .name }}</a></li>
-            {{- end }}
-          </ul>
-        </nav>
-        {{- end }}
-
-        <div class="footer-col footer-col--plain">
-          {{- with site.Params.github }}
-          <a href="{{ . }}" class="footer-link" target="_blank" rel="noopener">GitHub</a>
+        <a href="{{ relURL "" }}" class="footer-logo" aria-label="Читка — на главную">Читка</a>
+        {{- /* Подпись под логотипом — статичный текст футера. */ -}}
+        <p class="footer-tagline">Читаешь книгу и не с кем обсудить? Найди клуб по названию книги. Не нашёл свою книгу — создай клуб по книге за несколько минут. Бесплатно и без регистрации.</p>
+        {{- /* Соцсети — иконки в стиле lucide (stroke 2, 16px),
+             ссылки из site.Params (hugo.toml). */ -}}
+        <div class="footer-socials">
+          {{- with site.Params.telegram }}
+          <a href="{{ . }}" class="footer-social" target="_blank" rel="noopener" aria-label="Читка в Telegram">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m22 2-7 20-4-9-9-4Z"/><path d="M22 2 11 13"/></svg>
+          </a>
           {{- end }}
-          <a href="{{ "sitemap/" | relURL }}" class="footer-link">Карта сайта</a>
+          {{- with site.Params.github }}
+          <a href="{{ . }}" class="footer-social" target="_blank" rel="noopener" aria-label="Читка на GitHub">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4"/><path d="M9 18c-4.51 2-5-2-7-2"/></svg>
+          </a>
+          {{- end }}
         </div>
       </div>
+
+      <nav class="footer-col" aria-label="Разделы сайта">
+        <span class="footer-heading">Разделы</span>
+        <div class="footer-list">
+          {{- range site.Menus.main }}
+          {{- /* «Клубы» → каталог (#catalog), как в шапке: хиро-главная
+               открывается только кликом по «Читка». */ -}}
+          <a href="{{ .URL }}{{ if eq .Name "Клубы" }}#catalog{{ end }}" class="footer-link">{{ .Name }}</a>
+          {{- end }}
+        </div>
+      </nav>
+
+      {{- if $cats }}
+      <nav class="footer-col" aria-label="Категории">
+        <span class="footer-heading">Категории</span>
+        <div class="footer-list">
+          {{- range $cats }}
+          <a href="{{ printf "categories/%s/" .slug | relURL }}" class="footer-link">{{ .name }}</a>
+          {{- end }}
+        </div>
+      </nav>
+      {{- end }}
+    </div>
+
+    <span class="footer-hairline" aria-hidden="true"></span>
+
+    <div class="footer-bottom">
+      <p class="footer-copy">
+        © {{ now.Year }} <a href="{{ relURL "" }}">Читка</a>
+        · <a href="{{ "sitemap/" | relURL }}">Карта сайта</a>
+      </p>
     </div>
   </div>
 </footer>

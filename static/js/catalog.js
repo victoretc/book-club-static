@@ -255,9 +255,11 @@
   }
 
   // === Режим grid / list (useClubsView, localStorage clubs-view-mode) ===
-  var savedMode = 'grid'
+  // По умолчанию — плоский список (list); grid — только по сохранённому
+  // выбору или явному клику в toggle.
+  var savedMode = 'list'
   try {
-    savedMode = localStorage.getItem('clubs-view-mode') || 'grid'
+    savedMode = localStorage.getItem('clubs-view-mode') || 'list'
   } catch (e) {}
 
   function setViewMode(mode) {
@@ -311,7 +313,6 @@
   // === Селект категории в сайдбаре (sidebar-category-picker, как hirehi) ===
   var catTrigger = document.getElementById('categoryButton')
   var catDropdown = document.getElementById('categoryDropdown')
-  var catTooltip = document.getElementById('category-tooltip')
 
   function setCatOpen(open) {
     if (!catTrigger || !catDropdown) return
@@ -319,15 +320,6 @@
     catDropdown.classList.toggle('show', open)
     catTrigger.setAttribute('aria-expanded', open ? 'true' : 'false')
     catDropdown.setAttribute('aria-hidden', open ? 'false' : 'true')
-    if (open) hideCatTooltip()
-  }
-
-  function hideCatTooltip() {
-    if (!catTooltip) return
-    catTooltip.classList.remove('visible')
-    try {
-      localStorage.setItem('book_club_cat_tooltip_seen', '1')
-    } catch (e) {}
   }
 
   if (catTrigger && catDropdown) {
@@ -346,21 +338,6 @@
       if (catDropdown.contains(event.target) || catTrigger.contains(event.target)) return
       setCatOpen(false)
     })
-  }
-
-  // Подсказка «Здесь можно выбрать категорию» — один раз за браузер.
-  if (catTooltip) {
-    var tooltipSeen = false
-    try {
-      tooltipSeen = localStorage.getItem('book_club_cat_tooltip_seen') === '1'
-    } catch (e) {}
-    if (!tooltipSeen) {
-      catTooltip.style.display = ''
-      window.setTimeout(function () {
-        catTooltip.classList.add('visible')
-      }, 600)
-      catTooltip.addEventListener('click', hideCatTooltip)
-    }
   }
 
   // === Первичная фильтрация ===

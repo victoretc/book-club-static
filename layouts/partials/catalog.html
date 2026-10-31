@@ -79,7 +79,7 @@
 
     <div class="content-grid">
       <div class="clubs-column">
-        <div class="clubs-list clubs-list--grid" data-catalog-list>
+        <div class="clubs-list" data-catalog-list>
           {{- range $clubs }}
             {{ partial "club-card.html" (dict "page" .) }}
           {{- end }}
@@ -144,10 +144,6 @@
               </a>
               {{- end }}
             </div>
-          </div>
-          <div id="category-tooltip" class="category-tooltip" style="display:none;">
-            <span class="category-tooltip-text">Здесь можно выбрать категорию клубов</span>
-            <span class="category-tooltip-arrow"></span>
           </div>
         </div>
         {{- else }}

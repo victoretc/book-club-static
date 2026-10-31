@@ -12,7 +12,7 @@
      и кликается без перехода по ссылке. data-* фильтров живут на обёртке —
      скрытие при фильтрации тоже её. */ -}}
 <div class="club-card-wrap" data-type="{{ $type }}" data-search="{{ $searchText }}" data-url="{{ $p.RelPermalink }}">
-  <a class="club-card club-card--grid" href="{{ $p.RelPermalink }}">
+  <a class="club-card" href="{{ $p.RelPermalink }}">
     <div class="card-header">
       <h3 class="card-title">
         {{- if $isAuthor -}}
