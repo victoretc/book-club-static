@@ -3970,10 +3970,11 @@ main.main--landing {
 }
 
 /* ===== Нижнее меню (bottom nav) =====
-   Плавающая pill-панель внизу экрана (bottom-nav.html). Появляется,
-   только когда шапка ушла из вида — bottom-nav.js (IntersectionObserver).
-   Подменю выезжают сверху панели с blur — порт motion-анимации из
-   исходного React-компонента на CSS. */
+   На десктопе — плавающая pill-панель по центру (bottom-nav.html).
+   На мобилке (≤768) — прижата к низу экрана во всю ширину, как
+   штатная таб-бар iOS/Android: скругление только сверху, снизу
+   отступ учитывает safe-area. Появляется, только когда шапка ушла
+   из вида — bottom-nav.js (IntersectionObserver). */
 .bnav {
   position: fixed;
   left: 50%;
@@ -4001,6 +4002,37 @@ main.main--landing {
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
   box-shadow: var(--shadow-md);
+}
+
+/* Мобилка (≤768): панель прижата к самому низу и во всю ширину —
+   скругляем только верх, боковые/нижнюю границы убираем, кнопки
+   растягиваем равными долями (flex 1), низ отдаём safe-area. */
+@media (max-width: 768px) {
+  .bnav {
+    left: 0;
+    right: 0;
+    bottom: 0;
+    width: auto;
+    transform: none;
+    align-items: stretch;
+  }
+
+  .bnav-bar {
+    width: 100%;
+    gap: 0;
+    padding: 6px 8px calc(6px + env(safe-area-inset-bottom, 0px));
+    border-width: 1px 0 0;
+    border-radius: 18px 18px 0 0;
+    background: rgba(255, 255, 255, 0.94);
+    box-shadow: 0 -6px 24px 0 rgba(0, 0, 0, 0.08);
+  }
+
+  .bnav-btn {
+    flex: 1 1 0;
+    width: auto;
+    min-width: 0;
+    height: 48px;
+  }
 }
 
 .bnav-btn {
@@ -4085,12 +4117,6 @@ main.main--landing {
   .bnav-btn:hover::before {
     opacity: 1;
     transform: translateX(-50%) translateY(0);
-  }
-}
-
-@media (max-width: 480px) {
-  .bnav {
-    width: calc(100% - 24px);
   }
 }
 
